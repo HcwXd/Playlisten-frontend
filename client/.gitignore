@@ -1,0 +1,15 @@
+# build output
+.next
+build
+
+# dependencies
+node_modules
+yarn.lock
+yarn-error.log
+package-lock.json
+
+# logs
+*.log
+
+/.idea/
+*.DS_Store
