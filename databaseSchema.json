@@ -1,0 +1,27 @@
+{
+    "Table": {
+        "User": {
+            "userId": { "type": "String" },
+            "userName": { "type": "String" },
+            "bio": { "type": "String" },
+            "avatar": { "type": "String" },
+            "password": { "type": "String" }
+        },
+        "Song":{
+            "songId": { "type": "Int" },
+            "listId": { "type": "Int" },
+            "url": { "type": "String" },
+            "songName": { "type": "String" },
+            "songCover": { "type": "String" },
+            "songDes": { "type": "String" }
+        },
+        "List":{
+            "listId": { "type": "Int" },
+            "userId": { "type": "String" },
+            "listName" : { "type": "String" },
+            "listDes" : { "type": "String" },
+            "date": { "type": "TimeStamp" },
+            "listCover": { "type": "String"}
+        }
+    }
+}
