@@ -5,7 +5,8 @@
             "userName": { "type": "String" },
             "bio": { "type": "String" },
             "avatar": { "type": "String" },
-            "password": { "type": "String" }
+            "password": { "type": "String" },
+            "createAt": {"type": "TimeStamp"}
         },
         "Song":{
             "songId": { "type": "Int" },
@@ -13,15 +14,18 @@
             "url": { "type": "String" },
             "songName": { "type": "String" },
             "songCover": { "type": "String" },
-            "songDes": { "type": "String" }
+            "songDes": { "type": "String" },
+            "createAt": { "type": "TimeStamp" },
+            "updateAt": { "type": "TimeStamp" }
         },
         "List":{
             "listId": { "type": "Int" },
             "userId": { "type": "String" },
             "listName" : { "type": "String" },
             "listDes" : { "type": "String" },
-            "date": { "type": "TimeStamp" },
-            "listCover": { "type": "String"}
+            "listCover": { "type": "String"},
+            "createAt": { "type": "TimeStamp" },
+            "updateAt": { "type": "TimeStamp" }
         }
     }
 }
