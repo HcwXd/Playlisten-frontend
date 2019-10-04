@@ -15,7 +15,7 @@ class Header extends Component {
     return (
       <div
         id="top-header"
-        className="fixed top-0 left-0 right-0 z-20 flex items-center justify-between">
+        className="top-0 left-0 right-0 z-20 flex items-center justify-between border-b">
         <div>Playlisten</div>
         <nav className="flex items-center mr-0">
           <div data-name="/signup" className="ml-8">
