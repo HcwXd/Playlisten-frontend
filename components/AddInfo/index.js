@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import { STAGE } from '../../containers/Publish/constant';
 
 class AddInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.handleNextStage = this.handleNextStage.bind(this);
-    this.handleBackStage = this.handleBackStage.bind(this);
+    this.handleEditSong = this.handleEditSong.bind(this);
+    this.handleEditImage = this.handleEditImage.bind(this);
+    this.handlePublishPlaylist = this.handlePublishPlaylist.bind(this);
   }
 
   handleSearch() {
@@ -19,12 +21,16 @@ class AddInfo extends Component {
     }
   }
 
-  handleBackStage() {
-    this.props.handleChangeStage('addImage');
+  handleEditImage() {
+    this.props.handleChangeStage(STAGE.ADD_IMAGE);
   }
 
-  handleNextStage() {
-    console.log('Go');
+  handleEditSong() {
+    this.props.handleChangeStage(STAGE.ADD_SONG);
+  }
+
+  handlePublishPlaylist() {
+    console.log('Publish');
   }
 
   render() {
@@ -39,6 +45,9 @@ class AddInfo extends Component {
               }
               alt="Cover"
             />
+            <div className="next_btn border" onClick={this.handleEditImage}>
+              Edit
+            </div>
             <ul className="songlist_wrap border flex flex-col">
               <li className="border flex">
                 <div>X</div>
@@ -57,17 +66,16 @@ class AddInfo extends Component {
                 <div>This is a song</div>
               </li>
             </ul>
+            <div className="next_btn border" onClick={this.handleEditSong}>
+              Edit
+            </div>
           </div>
-          <div className="songInfo_wrap border flex flex-col">
-            <input className="search_input" placeholder="標題" />
-            <textarea className="search_input" placeholder="文字" />
+          <div className="songInfo_wrap flex flex-col ml-4">
+            <input className="search_input border" placeholder="標題" />
+            <textarea className="search_input border" placeholder="文字" />
           </div>
-
-          <div className="next_btn border" onClick={this.handleBackStage}>
-            Back
-          </div>
-          <div className="next_btn border" onClick={this.handleNextStage}>
-            Next
+          <div className="next_btn border" onClick={this.handlePublishPlaylist}>
+            Publish
           </div>
         </div>
       </div>

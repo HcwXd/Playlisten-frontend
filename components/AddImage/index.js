@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { STAGE } from '../../containers/Publish/constant';
 
 class AddImage extends Component {
   constructor(props) {
@@ -9,11 +10,11 @@ class AddImage extends Component {
   }
 
   handleBackStage() {
-    this.props.handleChangeStage('addSong');
+    this.props.handleChangeStage(STAGE.ADD_SONG);
   }
 
   handleNextStage() {
-    this.props.handleChangeStage('addInfo');
+    this.props.handleChangeStage(STAGE.ADD_INFO);
   }
 
   render() {
@@ -28,11 +29,15 @@ class AddImage extends Component {
               className="w-full h-full cursor-pointer"
             />
           </div>
-          <div className="next_btn border" onClick={this.handleBackStage}>
-            Back
-          </div>
-          <div className="next_btn border" onClick={this.handleNextStage}>
-            Next
+          <div className="btn_wrap flex mt-4">
+            <div
+              className="next_btn border mr-4"
+              onClick={this.handleBackStage}>
+              Back
+            </div>
+            <div className="next_btn border" onClick={this.handleNextStage}>
+              Next
+            </div>
           </div>
         </div>
       </div>

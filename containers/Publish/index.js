@@ -8,12 +8,13 @@ import * as actions from './actions';
 import AddSong from '../../components/AddSong';
 import AddImage from '../../components/AddImage';
 import AddInfo from '../../components/AddInfo';
+import { STAGE } from './constant';
 
 class Publish extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stage: 'addInfo',
+      stage: STAGE.ADD_SONG,
     };
     this.handleChangeStage = this.handleChangeStage.bind(this);
   }
