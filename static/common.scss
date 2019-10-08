@@ -1,5 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Chivo&display=swap');
 @tailwind base;
 @tailwind components;
-
+* {
+  font-family: Chivo;
+}
 @tailwind utilities;
