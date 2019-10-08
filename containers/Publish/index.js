@@ -14,7 +14,8 @@ class Publish extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stage: STAGE.ADD_SONG,
+      // stage: STAGE.ADD_SONG,
+      stage: STAGE.ADD_IMAGE,
     };
     this.handleChangeStage = this.handleChangeStage.bind(this);
   }
