@@ -25,7 +25,7 @@ class Publish extends Component {
 
   render() {
     return (
-      <div id="publish" className="py-32 flex items-center justify-around">
+      <div id="publish" className="py-20 flex items-center justify-around">
         {this.state.stage === 'addSong' ? (
           <AddSong handleChangeStage={this.handleChangeStage} />
         ) : null}

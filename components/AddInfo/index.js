@@ -37,7 +37,7 @@ class AddInfo extends Component {
     return (
       <div className="border flex flex-col items-center w-full h-full">
         <img
-          className="w-3/4 h-3/4 shadow p-4 mt-8"
+          className="shadow p-4 mt-8"
           src={
             'https://image.shutterstock.com/image-vector/grunge-red-sample-word-round-260nw-1242668641.jpg'
           }
