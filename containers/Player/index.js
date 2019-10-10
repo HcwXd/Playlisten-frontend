@@ -6,6 +6,7 @@ import cx from 'classnames';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
+import HoverableIcon from '../../components/HoverableIcon';
 import BackwardIcon from '../../static/imgs/backward.svg';
 import ForwardIcon from '../../static/imgs/forward.svg';
 import PauseIcon from '../../static/imgs/pause.svg';
@@ -45,7 +46,7 @@ class Player extends Component {
         <div className="w-full h-full bg-black-90 flex justify-end">
           <div
             id="player"
-            className="w-5/12 h-full bg-white flex flex-col border items-center">
+            className="w-128 h-full bg-white flex flex-col border items-center">
             <div className="mt-4 w-11/12 p-4 rounded shadow flex flex-col items-center">
               <div className="relative flex flex-col items-center">
                 <div className="absolute rounded-full bg-white absolute-center w-8 h-8 shadow-inner"></div>
@@ -70,11 +71,31 @@ class Player extends Component {
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-around w-full">
-                <img className="w-6 h-6" src={RandomIcon} />
-                <img className="w-6 h-6" src={BackwardIcon} />
-                <img className="w-6 h-6" src={PlayIcon} />
-                <img className="w-6 h-6" src={ForwardIcon} />
-                <img className="w-6 h-6" src={RepeatIcon} />
+                <HoverableIcon
+                  size={6}
+                  Icon={RandomIcon}
+                  HoverIcon={RandomHoverIcon}
+                />
+                <HoverableIcon
+                  size={6}
+                  Icon={BackwardIcon}
+                  HoverIcon={BackwardHoverIcon}
+                />
+                <HoverableIcon
+                  size={6}
+                  Icon={PlayIcon}
+                  HoverIcon={PlayHoverIcon}
+                />
+                <HoverableIcon
+                  size={6}
+                  Icon={ForwardIcon}
+                  HoverIcon={ForwardHoverIcon}
+                />
+                <HoverableIcon
+                  size={6}
+                  Icon={RepeatIcon}
+                  HoverIcon={RepeatHoverIcon}
+                />
               </div>
             </div>
             <ul className="h-full flex flex-col border hidden">
