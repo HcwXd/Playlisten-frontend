@@ -23,7 +23,20 @@
   fill: #a0aec0;
 }
 
+.w-96 {
+  width: 24rem;
+}
+
 .w-128 {
   width: 32rem;
 }
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
 @tailwind utilities;
