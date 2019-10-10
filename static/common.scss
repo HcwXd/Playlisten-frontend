@@ -39,4 +39,22 @@
   transform: rotate(180deg);
 }
 
+.fullScreenPlayerAnimation-enter {
+  transform: translateY(100%);
+}
+
+.fullScreenPlayerAnimation-enter-active {
+  transform: translateY(0%);
+  transition: 300ms ease-in;
+}
+
+.fullScreenPlayerAnimation-exit {
+  opacity: 1;
+}
+
+.fullScreenPlayerAnimation-exit-active {
+  opacity: 0.01;
+  transition: 300ms ease-in;
+}
+
 @tailwind utilities;
