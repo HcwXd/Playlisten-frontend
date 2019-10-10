@@ -8,4 +8,18 @@
 .border-b-white {
   border-bottom-color: white;
 }
+
+.bg-black-90 {
+  background-color: rgba(black, 0.9);
+}
+
+.absolute-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.stroke-gray-500 {
+  fill: #a0aec0;
+}
 @tailwind utilities;
