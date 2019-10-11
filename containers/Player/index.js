@@ -249,29 +249,23 @@ class Player extends Component {
 
   render() {
     return (
-      <div
-        id="bg-cover"
-        className={cx('fixed w-full h-full', {
-          'z-50': this.state.showFullScreenPlayer,
-        })}>
-        <div
-          className={cx('w-full h-full flex justify-end', {
-            'items-end': !this.state.showFullScreenPlayer,
-            'bg-black-90': this.state.showFullScreenPlayer,
-          })}>
-          <TransitionGroup>
-            {this.state.showFullScreenPlayer ? (
+      <div id="bg-cover">
+        <TransitionGroup>
+          {this.state.showFullScreenPlayer ? (
+            <div className="fixed w-full h-full flex justify-end bg-black-90 z-50">
               <CSSTransition
                 in={this.state.showFullScreenPlayer}
                 timeout={300}
                 classNames="fullScreenPlayerAnimation">
                 {this.renderFullScreenPlayer()}
               </CSSTransition>
-            ) : (
-              this.renderMinimizePlayer()
-            )}
-          </TransitionGroup>
-        </div>
+            </div>
+          ) : (
+            <div className="fixed z-50 bottom-0 right-0">
+              {this.renderMinimizePlayer()}
+            </div>
+          )}
+        </TransitionGroup>
       </div>
     );
   }
