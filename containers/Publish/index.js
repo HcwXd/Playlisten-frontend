@@ -29,14 +29,22 @@ class Publish extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stage: STAGE.ADD_SONG,
+      // stage: STAGE.ADD_SONG,
+      stage: STAGE.ADD_IMAGE,
       playlist: fakePlaylist || [],
+      coverFile: null,
+      coverPreviewUrl: '',
     };
     this.handleChangeStage = this.handleChangeStage.bind(this);
+    this.handleChangeCoverPhoto = this.handleChangeCoverPhoto.bind(this);
   }
 
   handleChangeStage(newStage) {
     this.setState({ stage: newStage });
+  }
+
+  handleChangeCoverPhoto(coverFile, coverPreviewUrl) {
+    this.setState({ coverFile, coverPreviewUrl });
   }
 
   render() {
@@ -49,7 +57,11 @@ class Publish extends Component {
           />
         ) : null}
         {this.state.stage === 'addImage' ? (
-          <AddImage handleChangeStage={this.handleChangeStage} />
+          <AddImage
+            handleChangeStage={this.handleChangeStage}
+            handleChangeCoverPhoto={this.handleChangeCoverPhoto}
+            coverPreviewUrl={this.state.coverPreviewUrl}
+          />
         ) : null}
         {this.state.stage === 'addInfo' ? (
           <AddInfo handleChangeStage={this.handleChangeStage} />
