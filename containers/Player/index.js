@@ -250,22 +250,24 @@ class Player extends Component {
   render() {
     return (
       <div id="bg-cover">
-        <TransitionGroup>
-          {this.state.showFullScreenPlayer ? (
-            <div className="fixed w-full h-full flex justify-end bg-black-90 z-50">
-              <CSSTransition
-                in={this.state.showFullScreenPlayer}
-                timeout={300}
-                classNames="fullScreenPlayerAnimation">
-                {this.renderFullScreenPlayer()}
-              </CSSTransition>
-            </div>
-          ) : (
-            <div className="fixed z-50 bottom-0 right-0">
-              {this.renderMinimizePlayer()}
-            </div>
-          )}
-        </TransitionGroup>
+        {this.props.currentSong ? (
+          <TransitionGroup>
+            {this.state.showFullScreenPlayer ? (
+              <div className="fixed w-full h-full flex justify-end bg-black-90 z-50">
+                <CSSTransition
+                  in={this.state.showFullScreenPlayer}
+                  timeout={300}
+                  classNames="fullScreenPlayerAnimation">
+                  {this.renderFullScreenPlayer()}
+                </CSSTransition>
+              </div>
+            ) : (
+              <div className="fixed z-50 bottom-0 right-0">
+                {this.renderMinimizePlayer()}
+              </div>
+            )}
+          </TransitionGroup>
+        ) : null}
       </div>
     );
   }
