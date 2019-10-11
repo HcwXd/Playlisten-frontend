@@ -13,7 +13,7 @@ class AddSong extends Component {
   }
 
   handleSearch() {
-    console.log('handleSearch');
+    console.log(process.env.YOUTUBE_KEY);
   }
 
   handleKeyDown(e) {
