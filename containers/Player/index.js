@@ -46,6 +46,7 @@ class Player extends Component {
     } else {
       enableBodyScroll(document.querySelector('#bg-cover'));
     }
+    console.log(`Player`, this.props.currentPlayingSong, this.props);
   }
 
   toggleShowFullScreenPlayer() {
@@ -250,7 +251,7 @@ class Player extends Component {
   render() {
     return (
       <div id="bg-cover">
-        {this.props.currentSong ? (
+        {this.props.currentPlayingSong ? (
           <TransitionGroup>
             {this.state.showFullScreenPlayer ? (
               <div className="fixed w-full h-full flex justify-end bg-black-90 z-50">
@@ -283,6 +284,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps({ PlayerContainerReducer }) {
   return {
     PlayerReducer: PlayerContainerReducer,
+    currentPlayingSong: PlayerContainerReducer.currentPlayingSong,
   };
 }
 

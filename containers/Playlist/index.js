@@ -15,6 +15,9 @@ class Playlist extends Component {
     this.state = { isHoverOnCover: false };
     this.handleHoverInCover = this.handleHoverInCover.bind(this);
     this.handleHoverOutCover = this.handleHoverOutCover.bind(this);
+    this.handleChangeCurrentPlayingSong = this.handleChangeCurrentPlayingSong.bind(
+      this,
+    );
   }
 
   handleHoverInCover() {
@@ -23,6 +26,10 @@ class Playlist extends Component {
 
   handleHoverOutCover() {
     this.setState({ isHoverOnCover: false });
+  }
+
+  handleChangeCurrentPlayingSong() {
+    this.props.actions.changeCurrentPlayingSong('abc');
   }
 
   render() {
@@ -40,6 +47,7 @@ class Playlist extends Component {
                     size={12}
                     Icon={PlayHoverIcon}
                     HoverIcon={PlayIcon}
+                    onClick={this.handleChangeCurrentPlayingSong}
                   />
                 </div>
               ) : null}
