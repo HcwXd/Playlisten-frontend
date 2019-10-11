@@ -249,7 +249,11 @@ class Player extends Component {
 
   render() {
     return (
-      <div id="bg-cover" className="z-50 fixed w-full h-full">
+      <div
+        id="bg-cover"
+        className={cx('fixed w-full h-full', {
+          'z-50': this.state.showFullScreenPlayer,
+        })}>
         <div
           className={cx('w-full h-full flex justify-end', {
             'items-end': !this.state.showFullScreenPlayer,
