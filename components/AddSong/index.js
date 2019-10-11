@@ -3,10 +3,25 @@ import { STAGE } from '../../containers/Publish/constant';
 import SearchIcon from '../../static/imgs/search.svg';
 import YoutubeSearchInput from '../YoutubeSearchInput';
 
+const fakeSearchResults = [
+  { title: 'Mary See the Future 先知瑪莉｜Cheer（Official Video）', id: 1 },
+  {
+    title: '遊樂 Amuse - 徹夜狂歡 Dance All Night 【Official Music Video】',
+    id: 2,
+  },
+  {
+    title: '美秀集團 Amazing Show－細粒的目睭【Official Lyrics Video】',
+    id: 3,
+  },
+  { title: 'The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video', id: 4 },
+  { title: '杜爾與索克 –【 自己做愛】No one loves me 歌詞版MV', id: 5 },
+  { title: 'I Mean Us - 12345 I HATE YOU (Demo)', id: 6 },
+];
+
 class AddSong extends Component {
   constructor(props) {
     super(props);
-    this.state = { searchInput: '' };
+    this.state = { searchInput: '', searchResults: fakeSearchResults || [] };
     this.handleSearch = this.handleSearch.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleNextStage = this.handleNextStage.bind(this);
@@ -34,7 +49,42 @@ class AddSong extends Component {
     });
   }
 
+  renderSearchResults() {
+    return (
+      <div className="border flex flex-col w-1/2">
+        <p className="p-4">Select the song you want to add</p>
+        <ul className="flex flex-col w-full">
+          {this.state.searchResults.map(({ title, id }) => (
+            <li
+              className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer"
+              key={id}>
+              <div className="p-4">{title}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  renderCurrentPlaylist() {
+    return (
+      <div className="mt-4 border flex flex-col w-1/2">
+        <p className="p-4">Current Playlist</p>
+        <ul className="flex flex-col w-full">
+          {this.props.playlist.map(({ title, id }) => (
+            <li className="border-t border-b flex items-center" key={id}>
+              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
+              <div>{title}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
   render() {
+    const { playlist } = this.props;
+    const { searchResults } = this.state;
     return (
       <div
         id="AddSong"
@@ -51,98 +101,15 @@ class AddSong extends Component {
               <img className="w-full h-full" src={SearchIcon} alt="Cover" />
             </div>
           </div>
-          <div className="search_result border flex flex-col w-1/2">
-            <p className="p-4">Select the song you want to add</p>
-            <ul className="songlist_wrap flex flex-col w-full">
-              <li className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer">
-                <div className="p-4">
-                  Mary See the Future 先知瑪莉｜Cheer（Official Video）
-                </div>
-              </li>
-              <li className="border-b flex items-center hover:bg-gray-100 cursor-pointer">
-                <div className="p-4">
-                  遊樂 Amuse - 徹夜狂歡 Dance All Night 【Official Music Video】
-                </div>
-              </li>
-              <li className="border-b flex items-center hover:bg-gray-100 cursor-pointer">
-                <div className="p-4">
-                  美秀集團 Amazing Show－細粒的目睭【Official Lyrics Video】
-                </div>
-              </li>
-              <li className="border-b flex items-center hover:bg-gray-100 cursor-pointer">
-                <div className="p-4">
-                  The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video
-                </div>
-              </li>
-              <li className="border-b flex items-center hover:bg-gray-100 cursor-pointer">
-                <div className="p-4">
-                  杜爾與索克 –【 自己做愛】No one loves me 歌詞版MV
-                </div>
-              </li>
-              <li className="flex items-center hover:bg-gray-100 cursor-pointer">
-                <div className="p-4">I Mean Us - 12345 I HATE YOU (Demo)</div>
-              </li>
-            </ul>
-          </div>
-          <ul className="songlist_wrap mt-4 flex flex-col w-1/2 border">
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>Mary See the Future 先知瑪莉｜Cheer（Official Video）</div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>
-                遊樂 Amuse - 徹夜狂歡 Dance All Night 【Official Music Video】
-              </div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>
-                美秀集團 Amazing Show－細粒的目睭【Official Lyrics Video】
-              </div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>
-                The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video
-              </div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>杜爾與索克 –【 自己做愛】No one loves me 歌詞版MV</div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>I Mean Us - 12345 I HATE YOU (Demo)</div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>調澀盤 - 頹垣敗瓦(demo)</div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>五十赫茲 50Hz 《公路電影 Road Trip》 (Official Video)</div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>脆弱少女組-不如跳舞Demo</div>
-            </li>
-            <li className="border-b flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>雨國 Kingdom of Rain - 漩渦</div>
-            </li>
-            <li className="flex items-center">
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>
-                The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video
-              </div>
-            </li>
-          </ul>
-          <div
-            className="border mt-4 p-2 cursor-pointer hover:bg-gray-100 rounded"
-            onClick={this.handleNextStage}>
-            Next
-          </div>
+          {searchResults.length > 0 ? this.renderSearchResults() : null}
+          {playlist.length > 0 ? this.renderCurrentPlaylist() : null}
+          {playlist.length > 0 ? (
+            <div
+              className="border mt-4 p-2 cursor-pointer hover:bg-gray-100 rounded"
+              onClick={this.handleNextStage}>
+              Next
+            </div>
+          ) : null}
         </div>
       </div>
     );

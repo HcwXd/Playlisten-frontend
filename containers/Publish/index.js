@@ -10,11 +10,27 @@ import AddImage from '../../components/AddImage';
 import AddInfo from '../../components/AddInfo';
 import { STAGE } from './constant';
 
+const fakePlaylist = [
+  { title: 'Mary See the Future 先知瑪莉｜Cheer（Official Video）', id: 1 },
+  {
+    title: '遊樂 Amuse - 徹夜狂歡 Dance All Night 【Official Music Video】',
+    id: 2,
+  },
+  {
+    title: '美秀集團 Amazing Show－細粒的目睭【Official Lyrics Video】',
+    id: 3,
+  },
+  { title: 'The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video', id: 4 },
+  { title: '杜爾與索克 –【 自己做愛】No one loves me 歌詞版MV', id: 5 },
+  { title: 'I Mean Us - 12345 I HATE YOU (Demo)', id: 6 },
+];
+
 class Publish extends Component {
   constructor(props) {
     super(props);
     this.state = {
       stage: STAGE.ADD_SONG,
+      playlist: fakePlaylist || [],
     };
     this.handleChangeStage = this.handleChangeStage.bind(this);
   }
@@ -27,7 +43,10 @@ class Publish extends Component {
     return (
       <div id="publish" className="py-20 flex items-center justify-around">
         {this.state.stage === 'addSong' ? (
-          <AddSong handleChangeStage={this.handleChangeStage} />
+          <AddSong
+            handleChangeStage={this.handleChangeStage}
+            playlist={this.state.playlist}
+          />
         ) : null}
         {this.state.stage === 'addImage' ? (
           <AddImage handleChangeStage={this.handleChangeStage} />
