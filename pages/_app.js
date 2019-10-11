@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /**
  * Genreal propose:_app.js in NEXT.js is for customized initial process of pages
  * We using next-redux-wrapper to insert redux stores for our app
@@ -19,7 +20,7 @@ import { generateStore } from '../stores/index';
 import '../static/common.scss';
 
 const client = new ApolloClient({
-  uri: 'http://127.0.0.1:4000/',
+  uri: 'http://127.0.0.1:8000/graphql',
   fetch,
 });
 

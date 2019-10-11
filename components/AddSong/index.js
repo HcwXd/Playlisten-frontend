@@ -1,27 +1,31 @@
 import React, { Component } from 'react';
+import { Query, Mutation } from 'react-apollo';
+import { gql } from 'apollo-boost';
+
 import { STAGE } from '../../containers/Publish/constant';
 import SearchIcon from '../../static/imgs/search.svg';
 import YoutubeSearchInput from '../YoutubeSearchInput';
 
-const fakeSearchResults = [
-  { title: 'Mary See the Future 先知瑪莉｜Cheer（Official Video）', id: 1 },
-  {
-    title: '遊樂 Amuse - 徹夜狂歡 Dance All Night 【Official Music Video】',
-    id: 2,
-  },
-  {
-    title: '美秀集團 Amazing Show－細粒的目睭【Official Lyrics Video】',
-    id: 3,
-  },
-  { title: 'The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video', id: 4 },
-  { title: '杜爾與索克 –【 自己做愛】No one loves me 歌詞版MV', id: 5 },
-  { title: 'I Mean Us - 12345 I HATE YOU (Demo)', id: 6 },
-];
+const GET_SEARCH_RESULT = gql`
+  query($searchQuery: String!) {
+    searchResult(query: $searchQuery) {
+      url
+      name
+      cover
+      duration
+      id
+    }
+  }
+`;
 
 class AddSong extends Component {
   constructor(props) {
     super(props);
-    this.state = { searchInput: '', searchResults: fakeSearchResults || [] };
+    this.state = {
+      searchInput: '',
+      searchResults: [],
+      searchQuery: '',
+    };
     this.handleSearch = this.handleSearch.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleNextStage = this.handleNextStage.bind(this);
@@ -29,7 +33,7 @@ class AddSong extends Component {
   }
 
   handleSearch() {
-    console.log(this.state.searchInput);
+    this.setState({ searchQuery: this.state.searchInput });
   }
 
   handleKeyDown(e) {
@@ -51,18 +55,32 @@ class AddSong extends Component {
 
   renderSearchResults() {
     return (
-      <div className="border flex flex-col w-1/2">
-        <p className="p-4">Select the song you want to add</p>
-        <ul className="flex flex-col w-full">
-          {this.state.searchResults.map(({ title, id }) => (
-            <li
-              className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer"
-              key={id}>
-              <div className="p-4">{title}</div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Query
+        query={GET_SEARCH_RESULT}
+        variables={{ searchQuery: this.state.searchQuery }}>
+        {({ loading, error, data, refetch }) => {
+          if (error) {
+            console.log(error);
+            return null;
+          }
+          if (loading) return null;
+          const { searchResult } = data;
+          return (
+            <div className="border flex flex-col w-1/2">
+              <p className="p-4">Select the song you want to add</p>
+              <ul className="flex flex-col w-full">
+                {searchResult.map(({ name, url }) => (
+                  <li
+                    className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer"
+                    key={url}>
+                    <div className="p-4">{name}</div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        }}
+      </Query>
     );
   }
 
@@ -84,7 +102,7 @@ class AddSong extends Component {
 
   render() {
     const { playlist } = this.props;
-    const { searchResults } = this.state;
+    const { searchQuery } = this.state;
     return (
       <div
         id="AddSong"
@@ -101,7 +119,7 @@ class AddSong extends Component {
               <img className="w-full h-full" src={SearchIcon} alt="Cover" />
             </div>
           </div>
-          {searchResults.length > 0 ? this.renderSearchResults() : null}
+          {searchQuery ? this.renderSearchResults() : null}
           {playlist.length > 0 ? this.renderCurrentPlaylist() : null}
           {playlist.length > 0 ? (
             <div
