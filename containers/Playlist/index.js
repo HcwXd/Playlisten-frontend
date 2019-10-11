@@ -5,12 +5,24 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
+import HoverableIcon from '../../components/HoverableIcon';
 import PlayIcon from '../../static/imgs/play.svg';
+import PlayHoverIcon from '../../static/imgs/play-hover.svg';
 
 class Playlist extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { isHoverOnCover: false };
+    this.handleHoverInCover = this.handleHoverInCover.bind(this);
+    this.handleHoverOutCover = this.handleHoverOutCover.bind(this);
+  }
+
+  handleHoverInCover() {
+    this.setState({ isHoverOnCover: true });
+  }
+
+  handleHoverOutCover() {
+    this.setState({ isHoverOnCover: false });
   }
 
   render() {
@@ -18,7 +30,19 @@ class Playlist extends Component {
       <div id="playlist" className="py-20 flex items-center justify-around">
         <div className="flex flex-col border w-8/12">
           <div className="flex">
-            <div>
+            <div
+              className="relative"
+              onMouseEnter={this.handleHoverInCover}
+              onMouseLeave={this.handleHoverOutCover}>
+              {this.state.isHoverOnCover ? (
+                <div className="absolute w-full h-full bg-black-50 flex items-center justify-around">
+                  <HoverableIcon
+                    size={12}
+                    Icon={PlayHoverIcon}
+                    HoverIcon={PlayIcon}
+                  />
+                </div>
+              ) : null}
               <img
                 className="w-full h-full p-4 border"
                 src={

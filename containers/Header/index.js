@@ -18,6 +18,11 @@ class Header extends Component {
         className="top-0 left-0 right-0 z-20 flex items-center justify-between fixed shadow py-2 px-4 bg-white">
         <div className="p-2">Playlisten</div>
         <nav className="flex items-center">
+          <div data-name="/playlist" className="p-2 ml-8">
+            <Link href="/playlist" prefetch>
+              <a>Playlist (test)</a>
+            </Link>
+          </div>
           <div data-name="/profile" className="p-2 ml-8">
             <Link href="/profile" prefetch>
               <a>Profile</a>
