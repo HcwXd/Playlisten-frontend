@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { STAGE } from '../../containers/Publish/constant';
 import SearchIcon from '../../static/imgs/search.svg';
+import YoutubeSearchInput from '../YoutubeSearchInput';
 
 class AddSong extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-
+    this.state = { searchInput: '' };
     this.handleSearch = this.handleSearch.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleNextStage = this.handleNextStage.bind(this);
+    this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
   }
 
   handleSearch() {
-    console.log(process.env.YOUTUBE_KEY);
+    console.log(this.state.searchInput);
   }
 
   handleKeyDown(e) {
@@ -27,6 +28,12 @@ class AddSong extends Component {
     this.props.handleChangeStage(STAGE.ADD_IMAGE);
   }
 
+  handleSearchInputChange(query) {
+    this.setState({
+      searchInput: query,
+    });
+  }
+
   render() {
     return (
       <div
@@ -34,11 +41,9 @@ class AddSong extends Component {
         className="mt-8 flex items-center justify-around w-full">
         <div className="addSong_container flex flex-col items-center justify-between w-full">
           <div className="search_wrap flex justify-center w-1/2 shadow">
-            <input
-              id="search"
-              className="search_input p-4 w-full"
-              placeholder="Search Youtube / Type a Youtube Song Url / Type a Youtube Playlist Url"
-              onKeyDown={this.handleKeyDown}
+            <YoutubeSearchInput
+              handleSearchInputChange={this.handleSearchInputChange}
+              handleKeyDown={this.handleKeyDown}
             />
             <div
               className="cursor-pointer p-4 hover:bg-gray-100"
