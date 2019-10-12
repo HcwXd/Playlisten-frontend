@@ -9,7 +9,7 @@ import YoutubeSearchInput from '../YoutubeSearchInput';
 const GET_SEARCH_RESULT = gql`
   query($searchQuery: String!) {
     searchResult(query: $searchQuery) {
-      url
+      sourceId
       name
       cover
       duration
@@ -65,12 +65,12 @@ class AddSong extends Component {
       <div className="border flex flex-col w-1/2">
         <p className="p-4">Select the song you want to add</p>
         <ul className="flex flex-col w-full">
-          {searchResult.map(({ name, url }) => (
+          {searchResult.map(({ name, sourceId }) => (
             <li
               className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer"
-              key={url}
+              key={sourceId}
               onClick={this.handleClickOnSearchResult}>
-              <div className="p-4" data-id={url}>
+              <div className="p-4" data-id={sourceId}>
                 {name}
               </div>
             </li>
@@ -102,7 +102,6 @@ class AddSong extends Component {
 
   render() {
     const { playlist } = this.props;
-    const { searchQuery } = this.state;
     return (
       <div
         id="AddSong"
