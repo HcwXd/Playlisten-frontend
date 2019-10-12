@@ -10,21 +10,6 @@ import AddImage from '../../components/AddImage';
 import AddInfo from '../../components/AddInfo';
 import { STAGE } from './constant';
 
-const fakePlaylist = [
-  { title: 'Mary See the Future 先知瑪莉｜Cheer（Official Video）', id: 1 },
-  {
-    title: '遊樂 Amuse - 徹夜狂歡 Dance All Night 【Official Music Video】',
-    id: 2,
-  },
-  {
-    title: '美秀集團 Amazing Show－細粒的目睭【Official Lyrics Video】',
-    id: 3,
-  },
-  { title: 'The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video', id: 4 },
-  { title: '杜爾與索克 –【 自己做愛】No one loves me 歌詞版MV', id: 5 },
-  { title: 'I Mean Us - 12345 I HATE YOU (Demo)', id: 6 },
-];
-
 class Publish extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +17,7 @@ class Publish extends Component {
       stage: STAGE.ADD_SONG,
       // stage: STAGE.ADD_IMAGE,
       // stage: STAGE.ADD_INFO,
-      playlist: fakePlaylist || [],
+      playlist: [],
       coverFile: null,
       coverPreviewUrl: '',
       title: '',
@@ -43,10 +28,15 @@ class Publish extends Component {
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
     this.handlePublishPlaylist = this.handlePublishPlaylist.bind(this);
+    this.handleChangePlaylist = this.handleChangePlaylist.bind(this);
   }
 
   handleChangeStage(newStage) {
     this.setState({ stage: newStage });
+  }
+
+  handleChangePlaylist(playlist) {
+    this.setState({ playlist });
   }
 
   handleChangeCoverPhoto(coverFile, coverPreviewUrl) {
@@ -72,6 +62,7 @@ class Publish extends Component {
           <AddSong
             handleChangeStage={this.handleChangeStage}
             playlist={this.state.playlist}
+            handleChangePlaylist={this.handleChangePlaylist}
           />
         ) : null}
         {this.state.stage === 'addImage' ? (

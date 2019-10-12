@@ -57,7 +57,12 @@ class AddSong extends Component {
   }
 
   handleClickOnSearchResult(e) {
-    console.log(e.target.dataset);
+    console.log(e.target.dataset.id);
+    const targetSong = this.state.searchResult.find(
+      ({ sourceId }) => sourceId === e.target.dataset.id,
+    );
+    this.props.handleChangePlaylist([...this.props.playlist, targetSong]);
+    this.setState({ searchResult: [] });
   }
 
   renderSearchResult(searchResult) {
@@ -89,10 +94,10 @@ class AddSong extends Component {
       <div className="mt-4 border flex flex-col w-1/2">
         <p className="p-4">Current Playlist</p>
         <ul className="flex flex-col w-full">
-          {this.props.playlist.map(({ title, id }) => (
-            <li className="border-t border-b flex items-center" key={id}>
+          {this.props.playlist.map(({ name, sourceId }) => (
+            <li className="border-t border-b flex items-center" key={sourceId}>
               <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
-              <div>{title}</div>
+              <div>{name}</div>
             </li>
           ))}
         </ul>
