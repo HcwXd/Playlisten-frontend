@@ -68,13 +68,14 @@ class AddSong extends Component {
   renderSearchResult(searchResult) {
     return (
       <div className="border flex flex-col w-1/2">
-        <p className="p-4">Select the song you want to add</p>
+        <p className="p-4 shadow">Select the song you want to add</p>
         <ul className="flex flex-col w-full">
           {searchResult.map(({ name, sourceId }) => (
             <li
               className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer"
               key={sourceId}
-              onClick={this.handleClickOnSearchResult}>
+              onClick={this.handleClickOnSearchResult}
+              data-id={sourceId}>
               <div className="p-4" data-id={sourceId}>
                 {name}
               </div>
@@ -92,7 +93,7 @@ class AddSong extends Component {
   renderCurrentPlaylist() {
     return (
       <div className="mt-4 border flex flex-col w-1/2">
-        <p className="p-4">Current Playlist</p>
+        <p className="p-4 shadow">Current Playlist</p>
         <ul className="flex flex-col w-full">
           {this.props.playlist.map(({ name, sourceId }) => (
             <li className="border-t border-b flex items-center" key={sourceId}>
