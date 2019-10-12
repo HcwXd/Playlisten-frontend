@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Query, Mutation } from 'react-apollo';
+import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
 import { STAGE } from '../../containers/Publish/constant';
@@ -23,13 +23,16 @@ class AddSong extends Component {
     super(props);
     this.state = {
       searchInput: '',
-      searchResults: [],
+      searchResult: [],
       searchQuery: '',
     };
     this.handleSearch = this.handleSearch.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleNextStage = this.handleNextStage.bind(this);
     this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
+    this.renderSearchResult = this.renderSearchResult.bind(this);
+    this.handleRenderSearchResult = this.handleRenderSearchResult.bind(this);
+    this.handleClickOnSearchResult = this.handleClickOnSearchResult.bind(this);
   }
 
   handleSearch() {
@@ -53,35 +56,32 @@ class AddSong extends Component {
     });
   }
 
-  renderSearchResults() {
+  handleClickOnSearchResult(e) {
+    console.log(e.target.dataset);
+  }
+
+  renderSearchResult(searchResult) {
     return (
-      <Query
-        query={GET_SEARCH_RESULT}
-        variables={{ searchQuery: this.state.searchQuery }}>
-        {({ loading, error, data, refetch }) => {
-          if (error) {
-            console.log(error);
-            return null;
-          }
-          if (loading) return null;
-          const { searchResult } = data;
-          return (
-            <div className="border flex flex-col w-1/2">
-              <p className="p-4">Select the song you want to add</p>
-              <ul className="flex flex-col w-full">
-                {searchResult.map(({ name, url }) => (
-                  <li
-                    className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer"
-                    key={url}>
-                    <div className="p-4">{name}</div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        }}
-      </Query>
+      <div className="border flex flex-col w-1/2">
+        <p className="p-4">Select the song you want to add</p>
+        <ul className="flex flex-col w-full">
+          {searchResult.map(({ name, url }) => (
+            <li
+              className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer"
+              key={url}
+              onClick={this.handleClickOnSearchResult}>
+              <div className="p-4" data-id={url}>
+                {name}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
+  }
+
+  handleRenderSearchResult() {
+    return this.renderSearchResult(this.state.searchResult);
   }
 
   renderCurrentPlaylist() {
@@ -113,13 +113,27 @@ class AddSong extends Component {
               handleSearchInputChange={this.handleSearchInputChange}
               handleKeyDown={this.handleKeyDown}
             />
-            <div
-              className="cursor-pointer p-4 hover:bg-gray-100"
-              onClick={this.handleSearch}>
-              <img className="w-full h-full" src={SearchIcon} alt="Cover" />
-            </div>
+            <ApolloConsumer>
+              {client => (
+                <div
+                  className="cursor-pointer p-4 hover:bg-gray-100"
+                  onClick={async () => {
+                    const { data } = await client.query({
+                      query: GET_SEARCH_RESULT,
+                      variables: { searchQuery: this.state.searchInput },
+                    });
+
+                    const { searchResult } = data;
+                    this.setState({ searchResult });
+                  }}>
+                  <img className="w-full h-full" src={SearchIcon} alt="Cover" />
+                </div>
+              )}
+            </ApolloConsumer>
           </div>
-          {searchQuery ? this.renderSearchResults() : null}
+          {this.state.searchResult.length > 0
+            ? this.handleRenderSearchResult()
+            : null}
           {playlist.length > 0 ? this.renderCurrentPlaylist() : null}
           {playlist.length > 0 ? (
             <div
