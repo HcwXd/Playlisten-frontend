@@ -2,14 +2,14 @@ import React from 'react';
 import Layout from '../components/Layout';
 import Publish from '../containers/Publish';
 
-const SignupPage = props => (
+const PublishPage = props => (
   <Layout>
     <Publish />
   </Layout>
 );
 
-SignupPage.getInitialProps = async () => ({
+PublishPage.getInitialProps = async () => ({
   namespacesRequired: [],
 });
 
-export default SignupPage;
+export default PublishPage;
