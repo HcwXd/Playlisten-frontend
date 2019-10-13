@@ -4,7 +4,10 @@ const purgecss = require('@fullhuman/postcss-purgecss')({
   // Please include prefix of CSS classes that are not used in our .js files (ex. class to overwrite Draft CSS)
   // whitelistPatternsChildren: [
   // ],
-  defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
+
+  // Default Extractor for node js app
+  // ref: https://tailwindcss.com/docs/controlling-file-size/
+  defaultExtractor: content => content.match(/[\w-/:]*[\w-/:]/g) || [],
 });
 
 module.exports = {
