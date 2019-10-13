@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
+import { gql } from 'apollo-boost';
+import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -9,15 +11,46 @@ import HoverableIcon from '../../components/HoverableIcon';
 import PlayIcon from '../../static/imgs/play.svg';
 import PlayHoverIcon from '../../static/imgs/play-hover.svg';
 
+const GET_PLAYLIST = gql`
+  query($listId: String!) {
+    playlist(listId: $listId) {
+      owner {
+        name
+      }
+      id
+      name
+      des
+      cover
+      createAt
+      updateAt
+      songs {
+        sourceId
+        name
+        cover
+      }
+    }
+  }
+`;
+
 class Playlist extends Component {
   constructor(props) {
     super(props);
-    this.state = { isHoverOnCover: false };
+    this.state = { isHoverOnCover: false, listId: null, playlist: null };
     this.handleHoverInCover = this.handleHoverInCover.bind(this);
     this.handleHoverOutCover = this.handleHoverOutCover.bind(this);
     this.handleChangeCurrentPlayingSong = this.handleChangeCurrentPlayingSong.bind(
       this,
     );
+    this.fetchPlaylist = this.fetchPlaylist.bind(this);
+    this.renderPlaylist = this.renderPlaylist.bind(this);
+  }
+
+  async componentDidMount() {
+    const params = new URLSearchParams(window.location.search);
+    const listId = params.get('listId');
+    const data = await this.fetchPlaylist(this.props.client, listId);
+    const { playlist } = data;
+    this.setState({ listId, playlist });
   }
 
   handleHoverInCover() {
@@ -32,161 +65,83 @@ class Playlist extends Component {
     this.props.actions.changeCurrentPlayingSong('abc');
   }
 
-  render() {
+  async fetchPlaylist(client, listId) {
+    const { data } = await client.query({
+      query: GET_PLAYLIST,
+      variables: { listId },
+    });
+    return data;
+  }
+
+  renderPlaylist() {
+    if (!this.state.playlist) return null;
+    console.log(this.state.playlist);
+
+    const { cover, des, name, songs, owner, createAt } = this.state.playlist;
+
     return (
-      <div id="playlist" className="py-20 flex items-center justify-around">
-        <div className="flex flex-col border w-8/12">
-          <div className="flex">
-            <div
-              className="relative"
-              onMouseEnter={this.handleHoverInCover}
-              onMouseLeave={this.handleHoverOutCover}>
-              {this.state.isHoverOnCover ? (
-                <div className="absolute w-full h-full bg-black-50 flex items-center justify-around">
-                  <HoverableIcon
-                    size={12}
-                    Icon={PlayHoverIcon}
-                    HoverIcon={PlayIcon}
-                    onClick={this.handleChangeCurrentPlayingSong}
-                  />
-                </div>
-              ) : null}
-              <img
-                className="w-full h-full p-4 border"
-                src={
-                  'https://image.shutterstock.com/image-vector/grunge-red-sample-word-round-260nw-1242668641.jpg'
-                }
-                alt="Cover"
-              />
-            </div>
-            <div className="flex flex-col w-3/4">
-              <div className="flex justify-between w-full p-4 pb-0">
-                <h1 className="text-4xl font-bold">October Mood</h1>{' '}
-                <div className="text-gray-600">Jan 1</div>
+      <div className="flex flex-col border w-8/12">
+        <div className="flex">
+          <div
+            className="relative"
+            onMouseEnter={this.handleHoverInCover}
+            onMouseLeave={this.handleHoverOutCover}>
+            {this.state.isHoverOnCover ? (
+              <div className="absolute w-full h-full bg-black-50 flex items-center justify-around">
+                <HoverableIcon
+                  size={12}
+                  Icon={PlayHoverIcon}
+                  HoverIcon={PlayIcon}
+                  onClick={this.handleChangeCurrentPlayingSong}
+                />
               </div>
-              <div className="flex items-center">
-                <div className="px-4">
-                  by{' '}
-                  <span className="text-gray-600 cursor-pointer">
-                    winnieehu
-                  </span>
-                </div>
-              </div>
-              <div className="px-4 pt-2">
-                <p>A playlist that helps you be both high and down.</p>
-              </div>
+            ) : null}
+            <div className="w-96 h-64 border">
+              <img className="w-full h-full" src={cover} alt="Cover" />
             </div>
           </div>
-          <ul className="songlist_wrap flex flex-col w-full border">
-            <li className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between">
+          <div className="flex flex-col w-3/4">
+            <div className="flex justify-between w-full p-4 pb-0">
+              <h1 className="text-4xl font-bold">{name}</h1>{' '}
+              <div className="text-gray-600">{`${'Jan'} ${1}`}</div>
+            </div>
+            <div className="flex items-center">
+              <div className="px-4">
+                by{' '}
+                <span className="text-gray-600 cursor-pointer">
+                  {owner.name}
+                </span>
+              </div>
+            </div>
+            <div className="px-4 pt-2">
+              <p>{des}</p>
+            </div>
+          </div>
+        </div>
+        <ul className="songlist_wrap flex flex-col w-full border">
+          {songs.map(({ sourceId, name: songName, cover: songCover }) => (
+            <li
+              key={sourceId}
+              className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between">
               <div className="flex items-center">
                 <div className="w-12 text-right p-4">1</div>
-                <div>Mary See the Future 先知瑪莉｜Cheer（Official Video）</div>
+                <div>{songName}</div>
               </div>
               <div className="p-4">
                 <div>3:52</div>
               </div>
             </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">2</div>
-                <div>
-                  遊樂 Amuse - 徹夜狂歡 Dance All Night 【Official Music Video】
-                </div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">3</div>
-                <div>
-                  美秀集團 Amazing Show－細粒的目睭【Official Lyrics Video】
-                </div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">4</div>
-                <div>
-                  The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video
-                </div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">5</div>
-                <div>杜爾與索克 –【 自己做愛】No one loves me 歌詞版MV</div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">6</div>
-                <div>I Mean Us - 12345 I HATE YOU (Demo)</div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">7</div>
-                <div>調澀盤 - 頹垣敗瓦(demo)</div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">8</div>
-                <div>五十赫茲 50Hz 《公路電影 Road Trip》 (Official Video)</div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">9</div>
-                <div>脆弱少女組-不如跳舞Demo</div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">10</div>
-                <div>雨國 Kingdom of Rain - 漩渦</div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-            <li className="hover:bg-gray-100 cursor-pointer justify-between flex items-center">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">11</div>
-                <div>
-                  The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video
-                </div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-          </ul>
-        </div>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  render() {
+    if (!this.state.listId) return null;
+    return (
+      <div id="playlist" className="py-20 flex items-center justify-around">
+        {this.renderPlaylist()}
       </div>
     );
   }
