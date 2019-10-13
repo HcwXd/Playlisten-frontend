@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import ReactPlayer from 'react-player';
 import { Router, Link } from '../../routes';
+
 import * as actions from './actions';
 import HoverableIcon from '../../components/HoverableIcon';
 import BackwardIcon from '../../static/imgs/backward.svg';
@@ -26,10 +28,11 @@ import UpHoverIcon from '../../static/imgs/up-hover.svg';
 class Player extends Component {
   constructor(props) {
     super(props);
-    this.state = { showFullScreenPlayer: false };
+    this.state = { showFullScreenPlayer: false, playing: true };
     this.toggleShowFullScreenPlayer = this.toggleShowFullScreenPlayer.bind(
       this,
     );
+    this.togglePlaying = this.togglePlaying.bind(this);
   }
 
   componentDidMount() {
@@ -51,6 +54,10 @@ class Player extends Component {
 
   toggleShowFullScreenPlayer() {
     this.setState({ showFullScreenPlayer: !this.state.showFullScreenPlayer });
+  }
+
+  togglePlaying() {
+    this.setState({ playing: !this.state.playing });
   }
 
   renderFullScreenPlayer() {
@@ -107,7 +114,21 @@ class Player extends Component {
               Icon={BackwardIcon}
               HoverIcon={BackwardHoverIcon}
             />
-            <HoverableIcon size={6} Icon={PlayIcon} HoverIcon={PlayHoverIcon} />
+            {this.state.playing ? (
+              <HoverableIcon
+                size={6}
+                Icon={PauseIcon}
+                HoverIcon={PauseHoverIcon}
+                onClick={this.togglePlaying}
+              />
+            ) : (
+              <HoverableIcon
+                size={6}
+                Icon={PlayIcon}
+                HoverIcon={PlayHoverIcon}
+                onClick={this.togglePlaying}
+              />
+            )}
             <HoverableIcon
               size={6}
               Icon={ForwardIcon}
@@ -125,104 +146,6 @@ class Player extends Component {
             <div className="flex items-center">
               <div className="w-12 text-right p-4">1</div>
               <div>Mary See the Future 先知瑪莉｜Cheer（Official Video）</div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">2</div>
-              <div>
-                遊樂 Amuse - 徹夜狂歡 Dance All Night 【Official Music Video】
-              </div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">3</div>
-              <div>
-                美秀集團 Amazing Show－細粒的目睭【Official Lyrics Video】
-              </div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">4</div>
-              <div>
-                The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video
-              </div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">5</div>
-              <div>杜爾與索克 –【 自己做愛】No one loves me 歌詞版MV</div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">6</div>
-              <div>I Mean Us - 12345 I HATE YOU (Demo)</div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">7</div>
-              <div>調澀盤 - 頹垣敗瓦(demo)</div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">8</div>
-              <div>五十赫茲 50Hz 《公路電影 Road Trip》 (Official Video)</div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">9</div>
-              <div>脆弱少女組-不如跳舞Demo</div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between border-b flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">10</div>
-              <div>雨國 Kingdom of Rain - 漩渦</div>
-            </div>
-            <div className="p-4">
-              <div>3:52</div>
-            </div>
-          </li>
-          <li className="hover:bg-gray-100 cursor-pointer justify-between flex items-center">
-            <div className="flex items-center">
-              <div className="w-12 text-right p-4">11</div>
-              <div>
-                The Roadside Inn【怎麼喝】音樂錄影帶 Official Music Video
-              </div>
             </div>
             <div className="p-4">
               <div>3:52</div>
@@ -248,7 +171,21 @@ class Player extends Component {
           </div>
         </div>
         <div className="mt-4 flex items-center justify-around w-full">
-          <HoverableIcon size={6} Icon={PlayIcon} HoverIcon={PlayHoverIcon} />
+          {this.state.playing ? (
+            <HoverableIcon
+              size={6}
+              Icon={PauseIcon}
+              HoverIcon={PauseHoverIcon}
+              onClick={this.togglePlaying}
+            />
+          ) : (
+            <HoverableIcon
+              size={6}
+              Icon={PlayIcon}
+              HoverIcon={PlayHoverIcon}
+              onClick={this.togglePlaying}
+            />
+          )}
         </div>
       </div>
     );
@@ -259,6 +196,12 @@ class Player extends Component {
       <div id="bg-cover">
         {this.props.currentPlayingSong ? (
           <TransitionGroup>
+            <div className="opacity-0 w-0 h-0">
+              <ReactPlayer
+                url={`https://www.youtube.com/watch?v=${this.props.currentPlayingSong}`}
+                playing={this.state.playing}
+              />
+            </div>
             {this.state.showFullScreenPlayer ? (
               <div className="fixed w-full h-full flex justify-end bg-black-90 z-50">
                 <CSSTransition

@@ -64,6 +64,7 @@
     "react-infinite-scroll": "^0.1.5",
     "react-limited-infinite-scroll": "^2.0.4",
     "react-moment": "^0.8.4",
+    "react-player": "^1.13.0",
     "react-redux": "^7.1.1",
     "react-transition-group": "^4.3.0",
     "react-typeahead": "^2.0.0-alpha.8",
