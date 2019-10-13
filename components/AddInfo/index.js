@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Mutation, ApolloConsumer } from 'react-apollo';
-
 import { gql } from 'apollo-boost';
+import { Router, Link } from '../../routes';
+
 import { STAGE } from '../../containers/Publish/constant';
 
 const CREATE_PLAYLIST = gql`
   mutation($playlistInput: CreatePlaylistInput!) {
     createPlaylist(data: $playlistInput) {
+      id
       name
       des
       cover
@@ -109,7 +111,6 @@ class AddInfo extends Component {
             ],
           };
           console.log(playlistInput);
-
           const { data } = await client.mutate({
             mutation: CREATE_PLAYLIST,
             variables: {
@@ -117,6 +118,12 @@ class AddInfo extends Component {
             },
           });
           console.log(data);
+          const { createPlaylist } = data;
+
+          Router.push({
+            pathname: '/playlist',
+            query: { listId: createPlaylist.id },
+          });
         }}>
         Publish
       </div>
