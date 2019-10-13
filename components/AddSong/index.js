@@ -40,6 +40,7 @@ class AddSong extends Component {
   }
 
   handleKeyDown(e) {
+    // TODO: Need implemented w/ client.query
     if (e.key === 'Enter') {
       e.preventDefault();
       this.handleSearch();
@@ -109,17 +110,18 @@ class AddSong extends Component {
   render() {
     const { playlist } = this.props;
     return (
-      <div
-        id="AddSong"
-        className="mt-8 flex items-center justify-around w-full">
-        <div className="addSong_container flex flex-col items-center justify-between w-full">
-          <div className="search_wrap flex justify-center w-1/2 shadow">
-            <YoutubeSearchInput
-              handleSearchInputChange={this.handleSearchInputChange}
-              handleKeyDown={this.handleKeyDown}
-            />
-            <ApolloConsumer>
-              {client => (
+      <ApolloConsumer>
+        {client => (
+          <div
+            id="AddSong"
+            className="mt-8 flex items-center justify-around w-full">
+            <div className="addSong_container flex flex-col items-center justify-between w-full">
+              <div className="search_wrap flex justify-center w-1/2 shadow">
+                <YoutubeSearchInput
+                  handleSearchInputChange={this.handleSearchInputChange}
+                  handleKeyDown={this.handleKeyDown}
+                />
+
                 <div
                   className="cursor-pointer p-4 hover:bg-gray-100"
                   onClick={async () => {
@@ -133,22 +135,22 @@ class AddSong extends Component {
                   }}>
                   <img className="w-full h-full" src={SearchIcon} alt="Cover" />
                 </div>
-              )}
-            </ApolloConsumer>
-          </div>
-          {this.state.searchResult.length > 0
-            ? this.handleRenderSearchResult()
-            : null}
-          {playlist.length > 0 ? this.renderCurrentPlaylist() : null}
-          {playlist.length > 0 ? (
-            <div
-              className="border mt-4 p-2 cursor-pointer hover:bg-gray-100 rounded"
-              onClick={this.handleNextStage}>
-              Next
+              </div>
+              {this.state.searchResult.length > 0
+                ? this.handleRenderSearchResult()
+                : null}
+              {playlist.length > 0 ? this.renderCurrentPlaylist() : null}
+              {playlist.length > 0 ? (
+                <div
+                  className="border mt-4 p-2 cursor-pointer hover:bg-gray-100 rounded"
+                  onClick={this.handleNextStage}>
+                  Next
+                </div>
+              ) : null}
             </div>
-          ) : null}
-        </div>
-      </div>
+          </div>
+        )}
+      </ApolloConsumer>
     );
   }
 }
