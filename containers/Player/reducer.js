@@ -13,8 +13,8 @@ export default function reducer(state = initialState, actions) {
 
   switch (type) {
     case CHANGE_CURRENT_PLAYING_SONG:
-      const { currentPlayingSong } = payload;
-      return { ...state, currentPlayingSong };
+      const { currentPlayingSong, currentPlayingPlaylist } = payload;
+      return { ...state, currentPlayingSong, currentPlayingPlaylist };
     default:
       return state;
   }

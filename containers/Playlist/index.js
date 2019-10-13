@@ -62,7 +62,10 @@ class Playlist extends Component {
   }
 
   handleChangeCurrentPlayingSong() {
-    this.props.actions.changeCurrentPlayingSong('abc');
+    this.props.actions.changeCurrentPlayingSong(
+      this.state.playlist.songs[0].sourceId,
+      this.state.playlist,
+    );
   }
 
   async fetchPlaylist(client, listId) {

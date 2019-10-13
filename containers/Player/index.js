@@ -54,6 +54,8 @@ class Player extends Component {
   }
 
   renderFullScreenPlayer() {
+    if (!this.props.currentPlayingPlaylist) return;
+
     return (
       <div
         id="player"
@@ -74,12 +76,15 @@ class Player extends Component {
             <img
               className="w-32 h-32 rounded-full shadow-2xl"
               src={
+                this.props.currentPlayingPlaylist.songs[0].cover ||
                 'https://media.pitchfork.com/photos/5929b5bb13d197565213ace9/1:1/w_320/c5e30897.jpg'
               }
               alt="Cover"
             />
           </div>
-          <div className="mt-4">I Mean Us - 12345 I HATE YOU (Demo)</div>
+          <div className="mt-4">
+            {this.props.currentPlayingPlaylist.songs[0].name}
+          </div>
           <div className="mt-4 flex flex-col items-center w-full">
             <div className="relative w-10/12 h-0 border">
               <div
@@ -229,13 +234,14 @@ class Player extends Component {
   }
 
   renderMinimizePlayer() {
+    if (!this.props.currentPlayingPlaylist) return;
     return (
       <div
         id="player"
         className="w-96 bg-white flex flex-col border items-center py-4 rounded-lg">
         <div className="flex w-full">
           <div className="w-full px-4 truncate">
-            I Mean Us - 12345 I HATE YOU (Demo)
+            {this.props.currentPlayingPlaylist.songs[0].name}
           </div>
           <div className="mr-4" onClick={this.toggleShowFullScreenPlayer}>
             <HoverableIcon size={6} Icon={UpIcon} HoverIcon={UpHoverIcon} />
@@ -285,6 +291,7 @@ function mapStateToProps({ PlayerContainerReducer }) {
   return {
     PlayerReducer: PlayerContainerReducer,
     currentPlayingSong: PlayerContainerReducer.currentPlayingSong,
+    currentPlayingPlaylist: PlayerContainerReducer.currentPlayingPlaylist,
   };
 }
 
