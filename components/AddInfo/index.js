@@ -1,5 +1,24 @@
 import React, { Component } from 'react';
+import { Mutation, ApolloConsumer } from 'react-apollo';
+
+import { gql } from 'apollo-boost';
 import { STAGE } from '../../containers/Publish/constant';
+
+const CREATE_PLAYLIST = gql`
+  mutation($playlistInput: CreatePlaylistInput!) {
+    createPlaylist(data: $playlistInput) {
+      name
+      des
+      cover
+      songs {
+        sourceId
+        name
+        cover
+        duration
+      }
+    }
+  }
+`;
 
 class AddInfo extends Component {
   constructor(props) {
@@ -9,6 +28,9 @@ class AddInfo extends Component {
     this.handleEditImage = this.handleEditImage.bind(this);
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
+    this.renderPublishPlaylistButton = this.renderPublishPlaylistButton.bind(
+      this,
+    );
   }
 
   handleEditImage() {
@@ -70,55 +92,87 @@ class AddInfo extends Component {
     this.props.handleChangeDescription(e.target.value);
   }
 
+  renderPublishPlaylistButton(client) {
+    return (
+      <div
+        className="right-0 absolute p-4 border-l cursor-pointer hover:bg-gray-100 rounded"
+        onClick={async () => {
+          const { data } = await client.mutate({
+            mutation: CREATE_PLAYLIST,
+            variables: {
+              playlistInput: {
+                name: 'happy_playlist',
+                ownerId: '123',
+                des: 'This is a Happy playlist',
+                cover: 'https://i.imgur.com/wh33YhY.png',
+                songs: [
+                  {
+                    sourceId: 'WWCsGEarExg',
+                    name:
+                      'New Songs Alan Walker 2019 - Top 20 Alan Walker Songs 2019',
+                    cover:
+                      'https://img.youtube.com/vi/WWCsGEarExg/sddefault.jpg',
+                    duration: 'PT0M0S',
+                  },
+                ],
+              },
+            },
+          });
+        }}>
+        Publish
+      </div>
+    );
+  }
+
   render() {
     return (
-      <div id="AddInfo" className="flex items-center justify-around w-full">
-        <div className="addInfo_container flex justify-between w-10/12">
-          <div className="flex flex-col w-1/2">
-            <div className="flex">
-              <p
-                className={
-                  this.state.tab === 'cover'
-                    ? 'p-4 cursor-pointer border border-b-white -mb-px z-10 '
-                    : 'p-4 cursor-pointer'
-                }
-                onClick={() => this.setState({ tab: 'cover' })}>
-                Cover
-              </p>
-              <p
-                className={
-                  this.state.tab === 'playlist'
-                    ? 'p-4 cursor-pointer border border-b-white -mb-px z-10'
-                    : 'p-4 cursor-pointer'
-                }
-                onClick={() => this.setState({ tab: 'playlist' })}>
-                Playlist
-              </p>
+      <ApolloConsumer>
+        {client => (
+          <div id="AddInfo" className="flex items-center justify-around w-full">
+            <div className="addInfo_container flex justify-between w-10/12">
+              <div className="flex flex-col w-1/2">
+                <div className="flex">
+                  <p
+                    className={
+                      this.state.tab === 'cover'
+                        ? 'p-4 cursor-pointer border border-b-white -mb-px z-10 '
+                        : 'p-4 cursor-pointer'
+                    }
+                    onClick={() => this.setState({ tab: 'cover' })}>
+                    Cover
+                  </p>
+                  <p
+                    className={
+                      this.state.tab === 'playlist'
+                        ? 'p-4 cursor-pointer border border-b-white -mb-px z-10'
+                        : 'p-4 cursor-pointer'
+                    }
+                    onClick={() => this.setState({ tab: 'playlist' })}>
+                    Playlist
+                  </p>
+                </div>
+                {this.state.tab === 'cover'
+                  ? this.renderCover()
+                  : this.renderPlaylist()}
+              </div>
+              <div className="border relative flex flex-col ml-4 h-full w-1/2">
+                <input
+                  className="border-b p-4"
+                  placeholder="Title"
+                  onChange={this.handleChangeTitle}
+                />
+                <textarea
+                  rows="20"
+                  className="p-4 h-full"
+                  placeholder="Description"
+                  onChange={this.handleChangeDescription}
+                />
+                {this.renderPublishPlaylistButton(client)}
+              </div>
             </div>
-            {this.state.tab === 'cover'
-              ? this.renderCover()
-              : this.renderPlaylist()}
           </div>
-          <div className="border relative flex flex-col ml-4 h-full w-1/2">
-            <input
-              className="border-b p-4"
-              placeholder="Title"
-              onChange={this.handleChangeTitle}
-            />
-            <textarea
-              rows="20"
-              className="p-4 h-full"
-              placeholder="Description"
-              onChange={this.handleChangeDescription}
-            />
-            <div
-              className="right-0 absolute p-4 border-l cursor-pointer hover:bg-gray-100 rounded"
-              onClick={this.props.handlePublishPlaylist}>
-              Publish
-            </div>
-          </div>
-        </div>
-      </div>
+        )}
+      </ApolloConsumer>
     );
   }
 }
