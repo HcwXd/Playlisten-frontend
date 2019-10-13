@@ -14,8 +14,8 @@ class Publish extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // stage: STAGE.ADD_SONG,
-      stage: STAGE.ADD_IMAGE,
+      stage: STAGE.ADD_SONG,
+      // stage: STAGE.ADD_IMAGE,
       // stage: STAGE.ADD_INFO,
       playlist: [],
       coverFile: null,
@@ -75,9 +75,11 @@ class Publish extends Component {
         ) : null}
         {this.state.stage === 'addInfo' ? (
           <AddInfo
-            handleChangeStage={this.handleChangeStage}
             coverPreviewUrl={this.state.coverPreviewUrl}
             playlist={this.state.playlist}
+            title={this.state.title}
+            description={this.state.description}
+            handleChangeStage={this.handleChangeStage}
             handleChangeTitle={this.handleChangeTitle}
             handleChangeDescription={this.handleChangeDescription}
             handlePublishPlaylist={this.handlePublishPlaylist}

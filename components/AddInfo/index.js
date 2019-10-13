@@ -97,27 +97,26 @@ class AddInfo extends Component {
       <div
         className="right-0 absolute p-4 border-l cursor-pointer hover:bg-gray-100 rounded"
         onClick={async () => {
+          const playlistInput = {
+            name: this.props.title,
+            ownerId: '123',
+            des: this.props.description,
+            cover: this.props.coverPreviewUrl,
+            songs: [
+              ...this.props.playlist.map(({ id, __typename, ...others }) => {
+                return { ...others };
+              }),
+            ],
+          };
+          console.log(playlistInput);
+
           const { data } = await client.mutate({
             mutation: CREATE_PLAYLIST,
             variables: {
-              playlistInput: {
-                name: 'happy_playlist',
-                ownerId: '123',
-                des: 'This is a Happy playlist',
-                cover: 'https://i.imgur.com/wh33YhY.png',
-                songs: [
-                  {
-                    sourceId: 'WWCsGEarExg',
-                    name:
-                      'New Songs Alan Walker 2019 - Top 20 Alan Walker Songs 2019',
-                    cover:
-                      'https://img.youtube.com/vi/WWCsGEarExg/sddefault.jpg',
-                    duration: 'PT0M0S',
-                  },
-                ],
-              },
+              playlistInput,
             },
           });
+          console.log(data);
         }}>
         Publish
       </div>
