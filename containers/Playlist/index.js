@@ -122,19 +122,21 @@ class Playlist extends Component {
           </div>
         </div>
         <ul className="songlist_wrap flex flex-col w-full border">
-          {songs.map(({ sourceId, name: songName, cover: songCover }) => (
-            <li
-              key={sourceId}
-              className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="w-12 text-right p-4">1</div>
-                <div>{songName}</div>
-              </div>
-              <div className="p-4">
-                <div>3:52</div>
-              </div>
-            </li>
-          ))}
+          {songs.map(
+            ({ sourceId, name: songName, cover: songCover }, index) => (
+              <li
+                key={sourceId}
+                className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="w-12 text-right p-4">{index + 1}</div>
+                  <div>{songName}</div>
+                </div>
+                <div className="p-4">
+                  <div>3:52</div>
+                </div>
+              </li>
+            ),
+          )}
         </ul>
       </div>
     );
