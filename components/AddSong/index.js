@@ -31,7 +31,9 @@ class AddSong extends Component {
     this.renderSearchResult = this.renderSearchResult.bind(this);
     this.handleRenderSearchResult = this.handleRenderSearchResult.bind(this);
     this.handleClickOnSearchResult = this.handleClickOnSearchResult.bind(this);
-    this.handleClickOnSearchResult = this.handleClickOnSearchResult.bind(this);
+    this.handleDeleteSongFromPlaylist = this.handleDeleteSongFromPlaylist.bind(
+      this,
+    );
   }
 
   handleNextStage() {
@@ -51,6 +53,16 @@ class AddSong extends Component {
     );
     this.props.handleChangePlaylist([...this.props.playlist, targetSong]);
     this.setState({ searchResult: [] });
+  }
+
+  handleDeleteSongFromPlaylist(e) {
+    const targetSongIdx = this.props.playlist.findIndex(
+      ({ sourceId }) => sourceId === e.target.dataset.id,
+    );
+
+    const newArr = this.props.playlist.slice();
+    newArr.splice(targetSongIdx, 1);
+    this.props.handleChangePlaylist(newArr);
   }
 
   renderSearchResult(searchResult) {
@@ -85,7 +97,12 @@ class AddSong extends Component {
         <ul className="flex flex-col w-full">
           {this.props.playlist.map(({ name, sourceId }) => (
             <li className="border-t border-b flex items-center" key={sourceId}>
-              <div className="p-4 cursor-pointer hover:bg-gray-100">X</div>
+              <div
+                className="p-4 cursor-pointer hover:bg-gray-100"
+                onClick={this.handleDeleteSongFromPlaylist}
+                data-id={sourceId}>
+                X
+              </div>
               <div>{name}</div>
             </li>
           ))}
