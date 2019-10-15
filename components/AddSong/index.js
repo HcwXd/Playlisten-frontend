@@ -26,25 +26,12 @@ class AddSong extends Component {
       searchResult: [],
       searchQuery: '',
     };
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleNextStage = this.handleNextStage.bind(this);
     this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
     this.renderSearchResult = this.renderSearchResult.bind(this);
     this.handleRenderSearchResult = this.handleRenderSearchResult.bind(this);
     this.handleClickOnSearchResult = this.handleClickOnSearchResult.bind(this);
-  }
-
-  handleSearch() {
-    this.setState({ searchQuery: this.state.searchInput });
-  }
-
-  handleKeyDown(e) {
-    // TODO: Need implemented w/ client.query
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      this.handleSearch();
-    }
+    this.handleClickOnSearchResult = this.handleClickOnSearchResult.bind(this);
   }
 
   handleNextStage() {
@@ -107,6 +94,16 @@ class AddSong extends Component {
     );
   }
 
+  async getSearchResult(client) {
+    const { data } = await client.query({
+      query: GET_SEARCH_RESULT,
+      variables: { searchQuery: this.state.searchInput },
+    });
+
+    const { searchResult } = data;
+    this.setState({ searchResult });
+  }
+
   render() {
     const { playlist } = this.props;
     return (
@@ -119,19 +116,17 @@ class AddSong extends Component {
               <div className="search_wrap flex justify-center w-1/2 shadow">
                 <YoutubeSearchInput
                   handleSearchInputChange={this.handleSearchInputChange}
-                  handleKeyDown={this.handleKeyDown}
+                  handleKeyDown={async e => {
+                    console.log(e.key);
+                    if (e.key === 'Enter') {
+                      await this.getSearchResult(client);
+                    }
+                  }}
                 />
-
                 <div
                   className="cursor-pointer p-4 hover:bg-gray-100"
                   onClick={async () => {
-                    const { data } = await client.query({
-                      query: GET_SEARCH_RESULT,
-                      variables: { searchQuery: this.state.searchInput },
-                    });
-
-                    const { searchResult } = data;
-                    this.setState({ searchResult });
+                    await this.getSearchResult(client);
                   }}>
                   <img className="w-full h-full" src={SearchIcon} alt="Cover" />
                 </div>
