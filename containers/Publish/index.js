@@ -71,6 +71,7 @@ class Publish extends Component {
             handleChangeCoverPhoto={this.handleChangeCoverPhoto}
             coverPreviewUrl={this.state.coverPreviewUrl}
             coverFile={this.state.coverFile}
+            playlist={this.state.playlist}
           />
         ) : null}
         {this.state.stage === 'addInfo' ? (

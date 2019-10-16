@@ -12,6 +12,14 @@ class AddImage extends Component {
     this.uploadImage = this.uploadImage.bind(this);
   }
 
+  componentDidMount() {
+    const { coverPreviewUrl, playlist } = this.props;
+    const defaultCoverUrl = playlist[0].cover;
+    if (!coverPreviewUrl) {
+      this.props.handleChangeCoverPhoto(null, defaultCoverUrl);
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (!prevProps.coverFile && this.props.coverFile) {
       this.uploadImage();
@@ -76,7 +84,7 @@ class AddImage extends Component {
             />
           ) : null}
           <div className="relative mt-4 p-2 border hover:bg-gray-100 rounded cursor-pointer">
-            <p>Pick a Photo</p>
+            <p>Pick your own Photo</p>
             <input
               className="top-0 right-0 left-0 bottom-0 w-full h-full opacity-0 absolute cursor-pointer"
               type="file"
