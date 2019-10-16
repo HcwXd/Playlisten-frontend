@@ -49,6 +49,7 @@ class YoutubeSearchInput extends Component {
           className={'w-full'}
           onKeyDown={this.props.handleKeyDown}
           onOptionSelected={this.handleOptionSelected}
+          customClasses={{ hover: 'bg-gray-100' }}
         />
       </div>
     );
