@@ -8,6 +8,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ReactPlayer from 'react-player';
 import { Router, Link } from '../../routes';
 
+import { convertSecToMinSec } from '../../utils/generalUtils';
 import * as actions from './actions';
 import HoverableIcon from '../../components/HoverableIcon';
 import BackwardIcon from '../../static/imgs/backward.svg';
@@ -28,13 +29,20 @@ import UpHoverIcon from '../../static/imgs/up-hover.svg';
 class Player extends Component {
   constructor(props) {
     super(props);
-    this.state = { showFullScreenPlayer: false, playing: true };
+    this.state = {
+      showFullScreenPlayer: false,
+      playing: true,
+      currentDuration: null,
+      currentProgress: null,
+    };
     this.toggleShowFullScreenPlayer = this.toggleShowFullScreenPlayer.bind(
       this,
     );
     this.togglePlaying = this.togglePlaying.bind(this);
     this.forwardSong = this.forwardSong.bind(this);
     this.backwardSong = this.backwardSong.bind(this);
+    this.handleOnDuration = this.handleOnDuration.bind(this);
+    this.handleOnProgress = this.handleOnProgress.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +84,7 @@ class Player extends Component {
       nextSongId,
       currentPlayingPlaylist,
     );
+    this.setState({ currentDuration: null, currentProgress: null });
   }
 
   backwardSong() {
@@ -92,11 +101,18 @@ class Player extends Component {
       prevSongId,
       currentPlayingPlaylist,
     );
+    this.setState({ currentDuration: null, currentProgress: null });
   }
 
   renderFullScreenPlayer() {
     if (!this.props.currentPlayingPlaylist) return;
     const { name, cover } = this.props.currentPlayingSongInfo;
+    const progress = this.state.currentProgress
+      ? this.state.currentProgress.played
+      : 0;
+    const progressSeconds = this.state.currentProgress
+      ? this.state.currentProgress.playedSeconds
+      : 0;
     return (
       <div
         id="player"
@@ -125,19 +141,24 @@ class Player extends Component {
             <div className="relative w-10/12 h-0 border">
               <div
                 className="absolute bg-gray-500 w-2 h-2 rounded-full absolute-center"
-                style={{ left: '15%' }}></div>
+                style={{ left: `${progress * 100}%` }}></div>
             </div>
             <div className="mt-4 w-10/12 flex justify-between">
-              <p className="text-gray-500">1:12</p>
-              <p className="text-gray-500">3:34</p>
+              <p className="text-gray-500">
+                {convertSecToMinSec(progressSeconds)}
+              </p>
+              <p className="text-gray-500">
+                {convertSecToMinSec(this.state.currentDuration)}
+              </p>
             </div>
           </div>
           <div className="mt-4 flex items-center justify-around w-full">
-            <HoverableIcon
-              size={6}
-              Icon={RandomIcon}
-              HoverIcon={RandomHoverIcon}
-            />
+            {/*
+              <HoverableIcon
+                size={6}
+                Icon={RandomIcon}
+                HoverIcon={RandomHoverIcon}
+              /> */}
             <HoverableIcon
               size={6}
               Icon={BackwardIcon}
@@ -165,11 +186,12 @@ class Player extends Component {
               HoverIcon={ForwardHoverIcon}
               onClick={this.forwardSong}
             />
+            {/*
             <HoverableIcon
               size={6}
               Icon={RepeatIcon}
               HoverIcon={RepeatHoverIcon}
-            />
+            /> */}
           </div>
         </div>
         <ul className="h-full flex flex-col border hidden">
@@ -221,6 +243,14 @@ class Player extends Component {
     );
   }
 
+  handleOnDuration(duration) {
+    this.setState({ currentDuration: duration });
+  }
+
+  handleOnProgress(progress) {
+    this.setState({ currentProgress: progress });
+  }
+
   render() {
     return (
       <div id="bg-cover">
@@ -230,6 +260,9 @@ class Player extends Component {
               <ReactPlayer
                 url={`https://www.youtube.com/watch?v=${this.props.currentPlayingSong}`}
                 playing={this.state.playing}
+                onEnded={this.forwardSong}
+                onDuration={this.handleOnDuration}
+                onProgress={this.handleOnProgress}
               />
             </div>
             {this.state.showFullScreenPlayer ? (
