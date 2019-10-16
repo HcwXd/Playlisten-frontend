@@ -190,7 +190,7 @@ class Player extends Component {
       <div id="bg-cover">
         {this.props.currentPlayingSong ? (
           <TransitionGroup>
-            <div className="opacity-0 w-0 h-0">
+            <div className="opacity-0 w-0 h-0 overflow-hidden">
               <ReactPlayer
                 url={`https://www.youtube.com/watch?v=${this.props.currentPlayingSong}`}
                 playing={this.state.playing}
