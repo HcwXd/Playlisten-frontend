@@ -59,7 +59,6 @@ class Player extends Component {
     } else {
       enableBodyScroll(document.querySelector('#bg-cover'));
     }
-    console.log(`Player`, this.props.currentPlayingSong, this.props);
   }
 
   toggleShowFullScreenPlayer() {
@@ -153,12 +152,12 @@ class Player extends Component {
             </div>
           </div>
           <div className="mt-4 flex items-center justify-around w-full">
-            {/*
-              <HoverableIcon
-                size={6}
-                Icon={RandomIcon}
-                HoverIcon={RandomHoverIcon}
-              /> */}
+            <HoverableIcon
+              size={6}
+              Icon={RandomIcon}
+              HoverIcon={RandomHoverIcon}
+              style={'opacity-0'}
+            />
             <HoverableIcon
               size={6}
               Icon={BackwardIcon}
@@ -186,12 +185,12 @@ class Player extends Component {
               HoverIcon={ForwardHoverIcon}
               onClick={this.forwardSong}
             />
-            {/*
             <HoverableIcon
               size={6}
               Icon={RepeatIcon}
               HoverIcon={RepeatHoverIcon}
-            /> */}
+              style={'opacity-0'}
+            />
           </div>
         </div>
         <ul className="h-full flex flex-col border hidden">

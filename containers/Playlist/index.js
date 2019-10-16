@@ -88,6 +88,8 @@ class Playlist extends Component {
     if (!this.state.playlist) return null;
     const { cover, des, name, songs, owner, createAt } = this.state.playlist;
 
+    const timestamp = new Date(+createAt);
+
     return (
       <div className="flex flex-col border w-8/12">
         <div className="flex">
@@ -112,7 +114,9 @@ class Playlist extends Component {
           <div className="flex flex-col w-3/4">
             <div className="flex justify-between w-full p-4 pb-0">
               <h1 className="text-4xl font-bold">{name}</h1>{' '}
-              <div className="text-gray-600">{`${'Jan'} ${1}`}</div>
+              <div className="text-gray-600">
+                {timestamp.toLocaleDateString()}
+              </div>
             </div>
             <div className="flex items-center">
               <div className="px-4">
