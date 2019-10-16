@@ -9,15 +9,6 @@ const CREATE_PLAYLIST = gql`
   mutation($playlistInput: CreatePlaylistInput!) {
     createPlaylist(data: $playlistInput) {
       id
-      name
-      des
-      cover
-      songs {
-        sourceId
-        name
-        cover
-        duration
-      }
     }
   }
 `;
