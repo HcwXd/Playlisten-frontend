@@ -51,7 +51,6 @@ class AddSong extends Component {
   }
 
   handleClickOnSearchResult(e) {
-    console.log(e.target.dataset.id);
     const targetSong = this.state.searchResult.find(
       ({ sourceId }) => sourceId === e.target.dataset.id,
     );
@@ -156,7 +155,16 @@ class AddSong extends Component {
     });
 
     const { searchResult } = data;
-    this.setState({ searchResult });
+
+    // TODO: Should use typeName instead of checking list length for importing checklist
+    if (searchResult.length > 5) {
+      this.props.handleChangePlaylist([
+        ...this.props.playlist,
+        ...searchResult,
+      ]);
+    } else {
+      this.setState({ searchResult });
+    }
   }
 
   render() {
@@ -172,7 +180,6 @@ class AddSong extends Component {
                 <YoutubeSearchInput
                   handleSearchInputChange={this.handleSearchInputChange}
                   handleKeyDown={async e => {
-                    console.log(e.key);
                     if (e.key === 'Enter') {
                       await this.getSearchResult(client);
                     }
