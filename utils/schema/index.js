@@ -41,8 +41,8 @@ const schema = gql`
     name: String!
     des: String!
     cover: String!
-    createAt: String!
-    updateAt: String!
+    createdAt: Date!
+    updatedAt: Date!
     songs: [Song!]!
   }
 
