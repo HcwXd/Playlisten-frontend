@@ -33,6 +33,8 @@ class Player extends Component {
       this,
     );
     this.togglePlaying = this.togglePlaying.bind(this);
+    this.forwardSong = this.forwardSong.bind(this);
+    this.backwardSong = this.backwardSong.bind(this);
   }
 
   componentDidMount() {
@@ -58,6 +60,38 @@ class Player extends Component {
 
   togglePlaying() {
     this.setState({ playing: !this.state.playing });
+  }
+
+  forwardSong() {
+    const { currentPlayingPlaylist, currentPlayingSong } = this.props;
+    const { songs } = currentPlayingPlaylist;
+    const currentIdx = songs.findIndex(
+      ({ sourceId }) => sourceId === currentPlayingSong,
+    );
+    const nextSongId =
+      currentIdx + 1 === songs.length
+        ? songs[0].sourceId
+        : songs[currentIdx + 1].sourceId;
+    this.props.actions.changeCurrentPlayingSong(
+      nextSongId,
+      currentPlayingPlaylist,
+    );
+  }
+
+  backwardSong() {
+    const { currentPlayingPlaylist, currentPlayingSong } = this.props;
+    const { songs } = currentPlayingPlaylist;
+    const currentIdx = songs.findIndex(
+      ({ sourceId }) => sourceId === currentPlayingSong,
+    );
+    const prevSongId =
+      currentIdx === 0
+        ? songs[songs.length - 1].sourceId
+        : songs[currentIdx - 1].sourceId;
+    this.props.actions.changeCurrentPlayingSong(
+      prevSongId,
+      currentPlayingPlaylist,
+    );
   }
 
   renderFullScreenPlayer() {
@@ -108,6 +142,7 @@ class Player extends Component {
               size={6}
               Icon={BackwardIcon}
               HoverIcon={BackwardHoverIcon}
+              onClick={this.backwardSong}
             />
             {this.state.playing ? (
               <HoverableIcon
@@ -128,6 +163,7 @@ class Player extends Component {
               size={6}
               Icon={ForwardIcon}
               HoverIcon={ForwardHoverIcon}
+              onClick={this.forwardSong}
             />
             <HoverableIcon
               size={6}
