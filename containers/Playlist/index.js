@@ -10,6 +10,7 @@ import * as actions from './actions';
 import HoverableIcon from '../../components/HoverableIcon';
 import PlayIcon from '../../static/imgs/play.svg';
 import PlayHoverIcon from '../../static/imgs/play-hover.svg';
+import { convertYoutubeDurationToMinSec } from '../../utils/generalUtils';
 
 const GET_PLAYLIST = gql`
   query($listId: String!) {
@@ -21,12 +22,13 @@ const GET_PLAYLIST = gql`
       name
       des
       cover
-      createAt
-      updateAt
+      createdAt
+      updatedAt
       songs {
         sourceId
         name
         cover
+        duration
       }
     }
   }
@@ -86,9 +88,8 @@ class Playlist extends Component {
 
   renderPlaylist() {
     if (!this.state.playlist) return null;
-    const { cover, des, name, songs, owner, createAt } = this.state.playlist;
-
-    const timestamp = new Date(+createAt);
+    const { cover, des, name, songs, owner, createdAt } = this.state.playlist;
+    const timestamp = new Date(createdAt);
 
     return (
       <div className="flex flex-col border w-8/12">
@@ -133,7 +134,10 @@ class Playlist extends Component {
         </div>
         <ul className="songlist_wrap flex flex-col w-full border">
           {songs.map(
-            ({ sourceId, name: songName, cover: songCover }, index) => (
+            (
+              { sourceId, name: songName, cover: songCover, duration },
+              index,
+            ) => (
               <li
                 key={sourceId}
                 className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between"
@@ -146,7 +150,9 @@ class Playlist extends Component {
                   <div data-id={sourceId}>{songName}</div>
                 </div>
                 <div className="p-4" data-id={sourceId}>
-                  <div data-id={sourceId}>3:52</div>
+                  <div data-id={sourceId}>
+                    {convertYoutubeDurationToMinSec(duration)}
+                  </div>
                 </div>
               </li>
             ),
