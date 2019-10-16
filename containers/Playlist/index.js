@@ -43,6 +43,7 @@ class Playlist extends Component {
     );
     this.fetchPlaylist = this.fetchPlaylist.bind(this);
     this.renderPlaylist = this.renderPlaylist.bind(this);
+    this.handleClickOnCover = this.handleClickOnCover.bind(this);
   }
 
   async componentDidMount() {
@@ -61,7 +62,14 @@ class Playlist extends Component {
     this.setState({ isHoverOnCover: false });
   }
 
-  handleChangeCurrentPlayingSong() {
+  handleChangeCurrentPlayingSong(e) {
+    this.props.actions.changeCurrentPlayingSong(
+      e.target.dataset.id,
+      this.state.playlist,
+    );
+  }
+
+  handleClickOnCover() {
     this.props.actions.changeCurrentPlayingSong(
       this.state.playlist.songs[0].sourceId,
       this.state.playlist,
@@ -78,8 +86,6 @@ class Playlist extends Component {
 
   renderPlaylist() {
     if (!this.state.playlist) return null;
-    console.log(this.state.playlist);
-
     const { cover, des, name, songs, owner, createAt } = this.state.playlist;
 
     return (
@@ -95,7 +101,7 @@ class Playlist extends Component {
                   size={12}
                   Icon={PlayHoverIcon}
                   HoverIcon={PlayIcon}
-                  onClick={this.handleChangeCurrentPlayingSong}
+                  onClick={this.handleClickOnCover}
                 />
               </div>
             ) : null}
@@ -126,13 +132,17 @@ class Playlist extends Component {
             ({ sourceId, name: songName, cover: songCover }, index) => (
               <li
                 key={sourceId}
-                className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="w-12 text-right p-4">{index + 1}</div>
-                  <div>{songName}</div>
+                className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between"
+                data-id={sourceId}
+                onClick={this.handleChangeCurrentPlayingSong}>
+                <div className="flex items-center" data-id={sourceId}>
+                  <div className="w-12 text-right p-4" data-id={sourceId}>
+                    {index + 1}
+                  </div>
+                  <div data-id={sourceId}>{songName}</div>
                 </div>
-                <div className="p-4">
-                  <div>3:52</div>
+                <div className="p-4" data-id={sourceId}>
+                  <div data-id={sourceId}>3:52</div>
                 </div>
               </li>
             ),
