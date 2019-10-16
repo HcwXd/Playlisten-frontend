@@ -1,6 +1,9 @@
+/* eslint-disable no-shadow */
 import React, { Component } from 'react';
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { reorder } from '../../utils/generalUtils';
 
 import { STAGE } from '../../containers/Publish/constant';
 import SearchIcon from '../../static/imgs/search.svg';
@@ -34,6 +37,7 @@ class AddSong extends Component {
     this.handleDeleteSongFromPlaylist = this.handleDeleteSongFromPlaylist.bind(
       this,
     );
+    this.onDragEnd = this.onDragEnd.bind(this);
   }
 
   handleNextStage() {
@@ -60,9 +64,9 @@ class AddSong extends Component {
       ({ sourceId }) => sourceId === e.target.dataset.id,
     );
 
-    const newArr = this.props.playlist.slice();
-    newArr.splice(targetSongIdx, 1);
-    this.props.handleChangePlaylist(newArr);
+    const newPlaylist = this.props.playlist.slice();
+    newPlaylist.splice(targetSongIdx, 1);
+    this.props.handleChangePlaylist(newPlaylist);
   }
 
   renderSearchResult(searchResult) {
@@ -90,24 +94,58 @@ class AddSong extends Component {
     return this.renderSearchResult(this.state.searchResult);
   }
 
+  onDragEnd(result) {
+    if (!result.destination) {
+      return;
+    }
+
+    const newPlaylist = reorder(
+      this.props.playlist,
+      result.source.index,
+      result.destination.index,
+    );
+    this.props.handleChangePlaylist(newPlaylist);
+  }
+
   renderCurrentPlaylist() {
     return (
-      <div className="mt-4 border flex flex-col w-1/2">
-        <p className="p-4 shadow">Current Playlist</p>
-        <ul className="flex flex-col w-full">
-          {this.props.playlist.map(({ name, sourceId }) => (
-            <li className="border-t border-b flex items-center" key={sourceId}>
-              <div
-                className="p-4 cursor-pointer hover:bg-gray-100"
-                onClick={this.handleDeleteSongFromPlaylist}
-                data-id={sourceId}>
-                X
-              </div>
-              <div>{name}</div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="mt-4 border flex flex-col w-1/2">
+              <p className="p-4 shadow">Current Playlist</p>
+              <ul className="flex flex-col w-full">
+                {this.props.playlist.map(({ name, sourceId }, index) => (
+                  <Draggable
+                    key={sourceId}
+                    draggableId={sourceId}
+                    index={index}>
+                    {(provided, snapshot) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="border-t border-b flex items-center"
+                        key={sourceId}>
+                        <div
+                          className="p-4 cursor-pointer hover:bg-gray-100"
+                          onClick={this.handleDeleteSongFromPlaylist}
+                          data-id={sourceId}>
+                          X
+                        </div>
+                        <div>{name}</div>
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+              </ul>
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     );
   }
 

@@ -69,9 +69,9 @@ class AddInfo extends Component {
       <div className="border flex flex-col items-center w-full h-full">
         <ul className="flex flex-col w-full">
           <p className="p-4 text-sm">{`There are ${playlist.length} songs in the list`}</p>
-          {playlist.map(({ name, url }) => (
+          {playlist.map(({ name, sourceId }) => (
             <li
-              key={url}
+              key={sourceId}
               className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer">
               <div className="px-4 py-2 text-sm">{name}</div>
             </li>
