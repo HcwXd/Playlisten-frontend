@@ -115,8 +115,15 @@ class Playlist extends Component {
           <div className="flex flex-col w-3/4">
             <div className="flex justify-between w-full p-4 pb-0">
               <h1 className="text-4xl font-bold">{name}</h1>{' '}
-              <div className="text-gray-600">
+              <div className="text-gray-600 flex items-end flex-col">
                 {timestamp.toLocaleDateString()}
+                <div
+                  className="text-black mt-2 p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+                  onClick={() => {
+                    alert(`Share this page "${window.location}"`);
+                  }}>
+                  Share
+                </div>
               </div>
             </div>
             <div className="flex items-center">
