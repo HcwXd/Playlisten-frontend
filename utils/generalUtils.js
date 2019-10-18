@@ -27,10 +27,10 @@ export const convertYoutubeDurationToMinSec = durationString => {
     [sec, rawDuration] = rawDuration.split('S');
   }
   if (hour) {
-    return `${hour}:${paddingLeft(min)}:${paddingLeft(sec)}`;
+    return `${hour}:${paddingLeft(min || 0)}:${paddingLeft(sec || 0)}`;
   }
   if (min) {
-    return `${min}:${paddingLeft(sec)}`;
+    return `${min}:${paddingLeft(sec || 0)}`;
   }
   if (sec) {
     return `${sec}`;
