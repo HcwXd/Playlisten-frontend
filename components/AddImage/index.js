@@ -78,7 +78,7 @@ class AddImage extends Component {
           <div className="mb-4">Add a Cover Photo to Playlist</div>
           {coverPreviewUrl ? (
             <img
-              className="w-full h-full shadow p-4"
+              className="w-96 h-64 shadow p-4"
               src={coverPreviewUrl}
               alt="Cover"
             />

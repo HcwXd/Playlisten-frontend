@@ -38,7 +38,7 @@ class AddInfo extends Component {
     return (
       <div className="border flex flex-col items-center w-full h-full">
         <img
-          className="shadow p-4 mt-8"
+          className="w-96 h-64 shadow p-4 mt-8"
           src={
             this.props.coverPreviewUrl ||
             'https://image.shutterstock.com/image-vector/grunge-red-sample-word-round-260nw-1242668641.jpg'
