@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { STAGE } from '../../containers/Publish/constant';
 import { IMGUR_UPLOAD_URL } from '../../utils/configConst';
+import Loader from '../loader';
 
 class AddImage extends Component {
   constructor(props) {
@@ -14,7 +15,10 @@ class AddImage extends Component {
 
   componentDidMount() {
     const { coverPreviewUrl, playlist } = this.props;
-    const defaultCoverUrl = playlist[0].cover;
+    const defaultCoverUrl =
+      playlist.length > 0
+        ? playlist[0].cover
+        : 'https://image.shutterstock.com/image-vector/grunge-red-sample-word-round-260nw-1242668641.jpg';
     if (!coverPreviewUrl) {
       this.props.handleChangeCoverPhoto(null, defaultCoverUrl);
     }
@@ -76,6 +80,7 @@ class AddImage extends Component {
       <div id="AddImage" className="mt-8 flex items-center justify-around">
         <div className="addImage_container flex flex-col items-center justify-between">
           <div className="mb-4">Add a Cover Photo to Playlist</div>
+          <Loader />
           {coverPreviewUrl ? (
             <img
               className="w-96 h-64 shadow p-4"

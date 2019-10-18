@@ -14,8 +14,8 @@ class Publish extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stage: STAGE.ADD_SONG,
-      // stage: STAGE.ADD_IMAGE,
+      // stage: STAGE.ADD_SONG,
+      stage: STAGE.ADD_IMAGE,
       // stage: STAGE.ADD_INFO,
       playlist: [],
       coverFile: null,
