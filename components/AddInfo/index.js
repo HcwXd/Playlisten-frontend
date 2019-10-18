@@ -157,12 +157,14 @@ class AddInfo extends Component {
                   className="border-b p-4"
                   placeholder="Title"
                   onChange={this.handleChangeTitle}
+                  value={this.props.title}
                 />
                 <textarea
                   rows="20"
                   className="p-4 h-full"
                   placeholder="Description"
                   onChange={this.handleChangeDescription}
+                  value={this.props.description}
                 />
                 {this.renderPublishPlaylistButton(client)}
               </div>
