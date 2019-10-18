@@ -26,12 +26,14 @@ class Header extends Component {
           <div data-name="/profile" className="p-2 ml-8 cursor-pointer">
             <Link href="/profile" prefetch>
               <div className="flex items-center justify-between">
+                {/**
                 <img
                   className="w-8 h-8 rounded-full mr-4"
                   src={
                     'https://scontent-tpe1-1.xx.fbcdn.net/v/t1.0-1/c0.0.1904.1904a/69681988_2392214307542292_5502145657873367040_o.jpg?_nc_cat=104&_nc_oc=AQleVdZ81D-o5Cij9mV4HOneYEW8Hb1u2Jj-ZoSYuRIguAE8258P6KYqg-MT2Gydncc&_nc_ht=scontent-tpe1-1.xx&oh=1c795b32174f6f844db9981b44114874&oe=5E2E4F6B'
                   }
                 />
+                 */}
                 <a>Profile</a>
               </div>
             </Link>
@@ -46,21 +48,21 @@ class Header extends Component {
                 className="absolute bt-4 zIndex-50 bg-white shadow"
                 style={{ right: '25px', top: '60px' }}>
                 <li className="p-4 border cursor-pointer hover:bg-gray-100">
-                  <div>蔡儀瑾</div>
+                  <div>User1</div>
                   <div className="text-gray-500">
-                    Share your song with your friend 蔡儀瑾
+                    Share your song with your friend User1
                   </div>
                 </li>
                 <li className="p-4 border cursor-pointer hover:bg-gray-100">
-                  <div>馬愷若</div>
+                  <div>User2</div>
                   <div className="text-gray-500">
-                    Share your song with your friend 馬愷若
+                    Share your song with your friend User2
                   </div>
                 </li>
                 <li className="p-4 border cursor-pointer hover:bg-gray-100">
-                  <div>黃若依</div>
+                  <div>User3</div>
                   <div className="text-gray-500">
-                    Share your song with your friend 黃若依
+                    Share your song with your friend User3
                   </div>
                 </li>
               </ul>
