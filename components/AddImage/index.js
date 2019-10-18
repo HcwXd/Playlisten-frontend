@@ -6,7 +6,7 @@ import Loader from '../loader';
 class AddImage extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { isUploadingPhoto: false };
     this.handleNextStage = this.handleNextStage.bind(this);
     this.handleBackStage = this.handleBackStage.bind(this);
     this.handlePhotoUpload = this.handlePhotoUpload.bind(this);
@@ -52,12 +52,13 @@ class AddImage extends Component {
       'Authorization',
       `Client-ID ${process.env.IMGUR_KEY}`,
     );
-    console.log(process.env.IMGUR_KEY);
+    this.setState({ isUploadingPhoto: true });
     request.onreadystatechange = function() {
       if (request.status === 200 && request.readyState === 4) {
         const res = JSON.parse(request.responseText);
         const coverUrl = `https://i.imgur.com/${res.data.id}.png`;
         self.props.handleChangeCoverPhoto(file, coverUrl);
+        self.setState({ isUploadingPhoto: false });
       }
     };
     request.send(formData);
@@ -80,8 +81,9 @@ class AddImage extends Component {
       <div id="AddImage" className="mt-8 flex items-center justify-around">
         <div className="addImage_container flex flex-col items-center justify-between">
           <div className="mb-4">Add a Cover Photo to Playlist</div>
-          <Loader />
-          {coverPreviewUrl ? (
+          {this.state.isUploadingPhoto ? (
+            <Loader />
+          ) : coverPreviewUrl ? (
             <img
               className="w-96 h-64 shadow p-4"
               src={coverPreviewUrl}
