@@ -46,15 +46,21 @@ class Header extends Component {
                 className="absolute bt-4 zIndex-50 bg-white shadow"
                 style={{ right: '25px', top: '60px' }}>
                 <li className="p-4 border cursor-pointer hover:bg-gray-100">
-                  <div>User1</div>
+                  <div>蔡儀瑾</div>
                   <div className="text-gray-500">
-                    Share your song with your friend User1
+                    Share your song with your friend 蔡儀瑾
                   </div>
                 </li>
                 <li className="p-4 border cursor-pointer hover:bg-gray-100">
-                  <div>User2</div>
+                  <div>馬愷若</div>
                   <div className="text-gray-500">
-                    Share your song with your friend User2
+                    Share your song with your friend 馬愷若
+                  </div>
+                </li>
+                <li className="p-4 border cursor-pointer hover:bg-gray-100">
+                  <div>黃若依</div>
+                  <div className="text-gray-500">
+                    Share your song with your friend 黃若依
                   </div>
                 </li>
               </ul>
