@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
+import Logo from '../../static/imgs/logo.png';
 
 class Header extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class Header extends Component {
       <div
         id="top-header"
         className="top-0 left-0 right-0 z-20 flex items-center justify-between fixed shadow py-2 px-4 bg-white">
-        <div className="p-2">Playlisten</div>
+        <img className="h-6 mr-4" src={Logo} />
         <nav className="flex items-center">
           <div data-name="/profile" className="p-2 ml-8 cursor-pointer">
             <Link href="/profile" prefetch>
