@@ -90,6 +90,10 @@ class AddInfo extends Component {
       <div
         className="right-0 absolute p-4 border-l cursor-pointer hover:bg-gray-100 rounded"
         onClick={async () => {
+          if (this.props.title === '') {
+            alert('Please add a title for your playlist:)');
+            return;
+          }
           const playlistInput = {
             name: this.props.title,
             ownerId: '123',
