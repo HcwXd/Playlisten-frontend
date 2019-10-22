@@ -12,24 +12,12 @@ import PlayIcon from '../../static/imgs/play.svg';
 import PlayHoverIcon from '../../static/imgs/play-hover.svg';
 import { convertYoutubeDurationToMinSec } from '../../utils/generalUtils';
 
-const GET_PLAYLIST = gql`
-  query($listId: String!) {
-    playlist(listId: $listId) {
-      owner {
-        name
-      }
+const GET_USER = gql`
+  query($userId: String!) {
+    user(userId: $userId) {
       id
       name
-      des
-      cover
-      createdAt
-      updatedAt
-      songs {
-        sourceId
-        name
-        cover
-        duration
-      }
+      bio
     }
   }
 `;
@@ -37,21 +25,22 @@ const GET_PLAYLIST = gql`
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { userId: '' };
+    this.fetchUser = this.fetchUser.bind(this);
   }
 
   async componentDidMount() {
-    // const params = new URLSearchParams(window.location.search);
-    // const profileId = params.get('profileId');
-    // const data = await this.fetchPlaylist(this.props.client, profileId);
-    // const { playlist } = data;
-    // this.setState({ profileId, playlist });
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
+    const data = await this.fetchUser(this.props.client, userId);
+    console.log(data);
+    this.setState({ userId });
   }
 
-  async fetchPlaylist(client, listId) {
+  async fetchUser(client, userId) {
     const { data } = await client.query({
-      query: GET_PLAYLIST,
-      variables: { listId },
+      query: GET_USER,
+      variables: { userId },
     });
     return data;
   }
