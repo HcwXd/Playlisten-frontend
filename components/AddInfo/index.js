@@ -16,7 +16,7 @@ const CREATE_PLAYLIST = gql`
 class AddInfo extends Component {
   constructor(props) {
     super(props);
-    this.state = { tab: 'cover' };
+    this.state = { tab: 'playlist' };
     this.handleEditSong = this.handleEditSong.bind(this);
     this.handleEditImage = this.handleEditImage.bind(this);
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
@@ -131,21 +131,21 @@ class AddInfo extends Component {
                 <div className="flex">
                   <p
                     className={
-                      this.state.tab === 'cover'
-                        ? 'p-4 cursor-pointer border border-b-white -mb-px z-10 '
-                        : 'p-4 cursor-pointer'
-                    }
-                    onClick={() => this.setState({ tab: 'cover' })}>
-                    Cover
-                  </p>
-                  <p
-                    className={
                       this.state.tab === 'playlist'
                         ? 'p-4 cursor-pointer border border-b-white -mb-px z-10'
                         : 'p-4 cursor-pointer'
                     }
                     onClick={() => this.setState({ tab: 'playlist' })}>
                     Playlist
+                  </p>
+                  <p
+                    className={
+                      this.state.tab === 'cover'
+                        ? 'p-4 cursor-pointer border border-b-white -mb-px z-10 '
+                        : 'p-4 cursor-pointer'
+                    }
+                    onClick={() => this.setState({ tab: 'cover' })}>
+                    Cover
                   </p>
                 </div>
                 {this.state.tab === 'cover'
