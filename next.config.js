@@ -5,7 +5,10 @@ const compose = require('next-compose');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const webpack = require('webpack');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
-require('dotenv').config();
+
+require('dotenv').config(
+  process.env.NODE_ENV === 'dev' ? { path: `${process.cwd()}/.env.dev` } : null,
+);
 
 module.exports = compose([
   withCSS,
