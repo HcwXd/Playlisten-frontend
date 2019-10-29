@@ -20,7 +20,7 @@ import { generateStore } from '../stores/index';
 import '../static/common.scss';
 
 const client = new ApolloClient({
-  uri: 'http://127.0.0.1:8000/graphql',
+  uri: `${process.env.API_URI}/graphql`,
   fetch,
   // This cache solve query an array return duplicate first item
   // Refer to: https://stackoverflow.com/questions/48840223/apollo-duplicates-first-result-to-every-node-in-array-of-edges
