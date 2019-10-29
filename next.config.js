@@ -7,7 +7,9 @@ const webpack = require('webpack');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 
 require('dotenv').config(
-  process.env.NODE_ENV === 'dev' ? { path: `${process.cwd()}/.env.dev` } : null,
+  process.env.ENV === 'development'
+    ? { path: `${process.cwd()}/.env.dev` }
+    : null,
 );
 
 module.exports = compose([
