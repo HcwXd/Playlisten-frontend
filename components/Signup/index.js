@@ -9,7 +9,7 @@ import { capitalize } from '../../utils/generalUtils';
 const CREATE_USER = gql`
   mutation($userInput: CreateUserInput!) {
     createUser(data: $userInput) {
-      id
+      result
     }
   }
 `;
@@ -87,6 +87,11 @@ class Signup extends Component {
     });
 
     console.log(data);
+    if (data.result !== 'success') {
+      alert('Username has been used');
+    } else {
+      alert('success');
+    }
   }
 
   checkAllInputValid() {
