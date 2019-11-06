@@ -41,9 +41,10 @@ class Signup extends Component {
   }
 
   handleClickOutside(event) {
+    if (!this.wrapperRef.current) return;
     if (!this.wrapperRef.current.contains(event.target)) {
-      this.props.toggleSignupForm();
       document.removeEventListener('mousedown', this.handleClickOutside);
+      this.props.toggleSignupForm();
     }
   }
 
@@ -239,10 +240,6 @@ class Signup extends Component {
     );
   }
 
-  /**
-   * All render logic
-   * Including all conditional rendering.
-   */
   render() {
     return (
       <div className="fixed w-full h-full flex items-center justify-around bg-black-90 z-50">
