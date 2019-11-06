@@ -87,7 +87,7 @@ class Signup extends Component {
     });
 
     console.log(data);
-    if (data.result !== 'success') {
+    if (data.createUser.result !== 'success') {
       alert('Username has been used');
     } else {
       alert('success');

@@ -1,27 +1,37 @@
 import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import sha256 from 'sha256';
+import { Mutation, ApolloConsumer } from 'react-apollo';
+import { gql } from 'apollo-boost';
 import { validPattern } from '../../utils/configConst';
 import { capitalize } from '../../utils/generalUtils';
+
+const SIGN_IN = gql`
+  mutation($userInput: SignInInput!) {
+    signIn(data: $userInput) {
+      result
+    }
+  }
+`;
 
 class Signin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasEmailError: false,
+      hasUsernameError: false,
       hasPasswordError: false,
 
-      emailErrorType: '',
+      usernameErrorType: '',
       passwordErrorType: '',
 
-      email: '',
+      username: '',
       password: '',
       isButtonActive: false,
     };
     this.wrapperRef = React.createRef();
     this.handleInputOnChange = this.handleInputOnChange.bind(this);
     this.handleInputOnBlur = this.handleInputOnBlur.bind(this);
-    this.handleRegist = this.handleRegist.bind(this);
+    this.handleSignIn = this.handleSignIn.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.doValidate = this.doValidate.bind(this);
@@ -39,26 +49,40 @@ class Signin extends Component {
     }
   }
 
-  handleRegist() {
+  checkAllInputValid() {
     let isValid = true;
-    const isValidPromise = ['email', 'password'].map(async type =>
-      this.doValidate(type),
-    );
-
-    Promise.all(isValidPromise).then(response => {
-      response.forEach(check => {
-        if (!check) {
-          isValid = false;
-        }
-      });
-      if (isValid) {
-        this.doRegist();
+    ['username', 'password'].forEach(type => {
+      if (!this.doValidate(type)) {
+        isValid = false;
       }
     });
+    return isValid;
+  }
+
+  async handleSignIn(client) {
+    if (this.checkAllInputValid()) {
+      const userInput = {
+        userName: this.state.username,
+        password: sha256(this.state.password),
+      };
+      const { data } = await client.mutate({
+        mutation: SIGN_IN,
+        variables: {
+          userInput,
+        },
+      });
+
+      console.log(data);
+      if (data.signIn.result !== 'success') {
+        alert('Username has been used');
+      } else {
+        alert('Sign in failed');
+      }
+    }
   }
 
   checkInputDone() {
-    const fields = ['email', 'password'];
+    const fields = ['username', 'password'];
     let result = true;
     for (let i = 0; i < fields.length; i++) {
       if (
@@ -84,16 +108,16 @@ class Signin extends Component {
     const value = this.state[type];
     if (value) {
       switch (type) {
-        case 'email':
-          if (!validPattern.emailPattern.test(value)) {
+        case 'username':
+          if (!validPattern.usernamePattern.test(value)) {
             this.setState({
-              hasEmailError: true,
-              emailErrorType: 'This email format is invalid.',
+              hasusernameError: true,
+              usernameErrorType: 'This username format is invalid.',
             });
           } else {
             this.setState({
-              hasEmailError: false,
-              emailErrorType: '',
+              hasusernameError: false,
+              usernameErrorType: '',
             });
             return true;
           }
@@ -145,7 +169,7 @@ class Signin extends Component {
   handleKeyUp(e) {
     if (e.key === 'Enter' && this.state.isButtonActive) {
       this.setState({ isButtonActive: false });
-      this.handleRegist(e);
+      this.handleSignIn(e);
     }
   }
 
@@ -180,28 +204,36 @@ class Signin extends Component {
 
   render() {
     return (
-      <div className="fixed w-full h-full flex items-center justify-around bg-black-90 z-50">
-        <div
-          ref={this.wrapperRef}
-          id="signup"
-          className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
-          <div className="text-xl mb-8">Sign In to Playlisten</div>
-          <form
-            onKeyDown={this.handleKeyDown}
-            onKeyUp={this.handleKeyUp}
-            className="w-full">
-            {this.renderInputField('email')}
-            {this.renderInputField('password')}
-          </form>
-          <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
-            <span
-              className={this.checkInputDone() ? 'text-gray' : 'text-gray-500'}
-              onClick={this.handleRegist}>
-              Sign In
-            </span>
+      <ApolloConsumer>
+        {client => (
+          <div className="fixed w-full h-full flex items-center justify-around bg-black-90 z-50">
+            <div
+              ref={this.wrapperRef}
+              id="signup"
+              className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
+              <div className="text-xl mb-8">Sign In to Playlisten</div>
+              <form
+                onKeyDown={this.handleKeyDown}
+                onKeyUp={this.handleKeyUp}
+                className="w-full">
+                {this.renderInputField('username')}
+                {this.renderInputField('password')}
+              </form>
+              <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
+                <span
+                  className={
+                    this.checkInputDone() ? 'text-gray' : 'text-gray-500'
+                  }
+                  onClick={() => {
+                    this.handleSignIn(client);
+                  }}>
+                  Sign In
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        )}
+      </ApolloConsumer>
     );
   }
 }
