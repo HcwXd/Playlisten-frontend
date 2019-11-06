@@ -9,7 +9,7 @@ import Logo from '../../static/imgs/logo.png';
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.state = { openMessage: false };
+    this.state = { showSignup: false, showLogin: false };
     this.toggleMessageBox = this.toggleMessageBox.bind(this);
   }
 
@@ -19,15 +19,22 @@ class Header extends Component {
 
   render() {
     return (
-      <div
-        id="top-header"
-        className="top-0 left-0 right-0 z-20 flex items-center justify-between fixed shadow py-2 px-4 bg-white">
-        <img className="h-6 mr-4" src={Logo} />
-        <nav className="flex items-center">
-          <div data-name="/profile" className="p-2 ml-8 cursor-pointer">
-            <Link href="/profile" prefetch>
-              <div className="flex items-center justify-between">
-                {/**
+      <>
+        {this.state.showLogin || this.state.showSignup ? (
+          <div className="fixed w-full h-full flex items-center justify-between bg-black-90 z-50">
+            {this.state.showLogin && 'A'}
+          </div>
+        ) : null}
+
+        <div
+          id="top-header"
+          className="top-0 left-0 right-0 z-20 flex items-center justify-between fixed shadow py-2 px-4 bg-white">
+          <img className="h-6 mr-4" src={Logo} />
+          <nav className="flex items-center">
+            <div data-name="/profile" className="p-2 ml-8 cursor-pointer">
+              <Link href="/profile" prefetch>
+                <div className="flex items-center justify-between">
+                  {/**
                 <img
                   className="w-8 h-8 rounded-full mr-4"
                   src={
@@ -35,11 +42,11 @@ class Header extends Component {
                   }
                 />
                  */}
-                <a>Profile</a>
-              </div>
-            </Link>
-          </div>
-          <div
+                  <a>Profile</a>
+                </div>
+              </Link>
+            </div>
+            {/* <div
             data-name="/publish"
             className="p-2 ml-8 cursor-pointer"
             onClick={this.toggleMessageBox}>
@@ -68,14 +75,21 @@ class Header extends Component {
                 </li>
               </ul>
             )}
-          </div>
-          <div data-name="/publish" className="p-2 ml-8">
-            <Link href="/publish" prefetch>
-              <a>Publish</a>
-            </Link>
-          </div>
-        </nav>
-      </div>
+            </div> */}
+            <div data-name="/publish" className="p-2 ml-8">
+              <Link href="/publish" prefetch>
+                <a>Publish</a>
+              </Link>
+            </div>
+            <div data-name="/publish" className="p-2 ml-8">
+              <a className="cursor-pointer">Signup</a>
+            </div>
+            <div data-name="/publish" className="p-2 ml-8">
+              <a className="cursor-pointer">Login</a>
+            </div>
+          </nav>
+        </div>
+      </>
     );
   }
 }

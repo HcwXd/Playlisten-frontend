@@ -1,1 +1,11 @@
-{}
+{
+  "alert": {
+    "email_exist": "email_exist",
+    "username_exist": "username_exist",
+    "email_format": "email_format",
+    "password_too_short": "password_too_short",
+    "password_too_long": "password_too_long",
+    "username_format": "username_format"
+  },
+  "sign_up": "sign_up"
+}
