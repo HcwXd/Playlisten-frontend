@@ -1,8 +1,18 @@
 import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import sha256 from 'sha256';
+import { Mutation, ApolloConsumer } from 'react-apollo';
+import { gql } from 'apollo-boost';
 import { validPattern } from '../../utils/configConst';
 import { capitalize } from '../../utils/generalUtils';
+
+const CREATE_USER = gql`
+  mutation($userInput: CreateUserInput!) {
+    createUser(data: $userInput) {
+      id
+    }
+  }
+`;
 
 class Signup extends Component {
   constructor(props) {
@@ -34,6 +44,8 @@ class Signup extends Component {
     this.handleEmailExist = this.handleEmailExist.bind(this);
     this.handleUsernameExist = this.handleUsernameExist.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.doRegist = this.doRegist.bind(this);
+    this.checkAllInputValid = this.checkAllInputValid.bind(this);
   }
 
   componentDidMount() {
@@ -61,31 +73,49 @@ class Signup extends Component {
     });
   }
 
-  handleRegist() {
-    let isValid = true;
-    const isValidPromise = [
-      'email',
-      'password',
-      'confirmPassword',
-      'username',
-    ].map(async type => this.doValidate(type));
-
-    Promise.all(isValidPromise).then(response => {
-      response.forEach(check => {
-        if (!check) {
-          isValid = false;
-        }
-      });
-      if (isValid) {
-        this.doRegist();
-      }
+  async doRegist(client) {
+    const userInput = {
+      userName: this.state.username,
+      email: this.state.email,
+      password: sha256(this.state.password),
+    };
+    const { data } = await client.mutate({
+      mutation: CREATE_USER,
+      variables: {
+        userInput,
+      },
     });
+
+    console.log(data);
   }
 
-  checkInputDone(fields) {
+  checkAllInputValid() {
+    let isValid = true;
+    ['email', 'password', 'confirmPassword', 'username'].forEach(type => {
+      if (!this.doValidate(type)) {
+        isValid = false;
+      }
+    });
+    return isValid;
+  }
+
+  handleRegist(client) {
+    if (this.checkAllInputValid()) this.doRegist(client);
+  }
+
+  checkInputDone() {
+    const fields = ['email', 'password', 'confirmPassword', 'username'];
     let result = true;
     for (let i = 0; i < fields.length; i++) {
-      if (!this.state[fields[i]]) {
+      console.log(
+        this.state[`has${capitalize(fields[i])}Error`],
+        `has${capitalize(fields[i])}Error`,
+      );
+
+      if (
+        !this.state[fields[i]] ||
+        this.state[`has${capitalize(fields[i])}Error`]
+      ) {
         result = false;
         break;
       }
@@ -121,7 +151,7 @@ class Signup extends Component {
     });
   }
 
-  async doValidate(type) {
+  doValidate(type) {
     const value = this.state[type];
     if (value) {
       switch (type) {
@@ -166,17 +196,21 @@ class Signup extends Component {
         case 'username':
           if (!validPattern.usernamePattern.test(value)) {
             this.setState({
-              hasEmailError: true,
+              hasUsernameError: true,
               usernameErrorType:
                 'Username only supported alphabet, number, underline.',
             });
           } else if (value.length > 20) {
             this.setState({
-              hasEmailError: true,
+              hasUsernameError: true,
               usernameErrorType:
                 'Your username should be less than 20 characters.',
             });
           } else {
+            this.setState({
+              hasUsernameError: false,
+              usernameErrorType: '',
+            });
             return true;
           }
           break;
@@ -241,30 +275,40 @@ class Signup extends Component {
 
   render() {
     return (
-      <div className="fixed w-full h-full flex items-center justify-around bg-black-90 z-50">
-        <div
-          ref={this.wrapperRef}
-          id="signup"
-          className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
-          <div className="text-xl mb-8">
-            Register to Share Your Music and Story
+      <ApolloConsumer>
+        {client => (
+          <div className="fixed w-full h-full flex items-center justify-around bg-black-90 z-50">
+            <div
+              ref={this.wrapperRef}
+              id="signup"
+              className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
+              <div className="text-xl mb-8">
+                Register to Share Your Music and Story
+              </div>
+              <form
+                onKeyDown={this.handleKeyDown}
+                onKeyUp={this.handleKeyUp}
+                className="w-full">
+                {this.renderInputField('email')}
+                {this.renderInputField('password')}
+                {this.renderInputField('confirmPassword')}
+                {this.renderInputField('username')}
+              </form>
+              <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
+                <span
+                  className={
+                    this.checkInputDone() ? 'text-gray' : 'text-gray-500'
+                  }
+                  onClick={() => {
+                    this.handleRegist(client);
+                  }}>
+                  Create Account
+                </span>
+              </div>
+            </div>
           </div>
-          <form
-            onKeyDown={this.handleKeyDown}
-            onKeyUp={this.handleKeyUp}
-            className="w-full">
-            {this.renderInputField('email')}
-            {this.renderInputField('password')}
-            {this.renderInputField('confirmPassword')}
-            {this.renderInputField('username')}
-          </form>
-          <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
-            <span className="" onClick={this.handleRegist}>
-              Create Account
-            </span>
-          </div>
-        </div>
-      </div>
+        )}
+      </ApolloConsumer>
     );
   }
 }
