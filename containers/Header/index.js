@@ -58,36 +58,6 @@ class Header extends Component {
                 </div>
               </Link>
             </div>
-            {/* <div
-            data-name="/publish"
-            className="p-2 ml-8 cursor-pointer"
-            onClick={this.toggleMessageBox}>
-            <a>Messages</a>
-            {this.state.openMessage && (
-              <ul
-                className="absolute bt-4 zIndex-50 bg-white shadow"
-                style={{ right: '25px', top: '60px' }}>
-                <li className="p-4 border cursor-pointer hover:bg-gray-100">
-                  <div>User1</div>
-                  <div className="text-gray-500">
-                    Share your song with your friend User1
-                  </div>
-                </li>
-                <li className="p-4 border cursor-pointer hover:bg-gray-100">
-                  <div>User2</div>
-                  <div className="text-gray-500">
-                    Share your song with your friend User2
-                  </div>
-                </li>
-                <li className="p-4 border cursor-pointer hover:bg-gray-100">
-                  <div>User3</div>
-                  <div className="text-gray-500">
-                    Share your song with your friend User3
-                  </div>
-                </li>
-              </ul>
-            )}
-            </div> */}
             <div data-name="/publish" className="p-2 ml-8">
               <Link href="/publish" prefetch>
                 <a>Publish</a>

@@ -57,10 +57,14 @@ class Signin extends Component {
     });
   }
 
-  checkInputDone(fields) {
+  checkInputDone() {
+    const fields = ['email', 'password'];
     let result = true;
     for (let i = 0; i < fields.length; i++) {
-      if (!this.state[fields[i]]) {
+      if (
+        !this.state[fields[i]] ||
+        this.state[`has${capitalize(fields[i])}Error`]
+      ) {
         result = false;
         break;
       }
@@ -190,7 +194,9 @@ class Signin extends Component {
             {this.renderInputField('password')}
           </form>
           <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
-            <span className="" onClick={this.handleRegist}>
+            <span
+              className={this.checkInputDone() ? 'text-gray' : 'text-gray-500'}
+              onClick={this.handleRegist}>
               Sign In
             </span>
           </div>

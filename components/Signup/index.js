@@ -107,11 +107,6 @@ class Signup extends Component {
     const fields = ['email', 'password', 'confirmPassword', 'username'];
     let result = true;
     for (let i = 0; i < fields.length; i++) {
-      console.log(
-        this.state[`has${capitalize(fields[i])}Error`],
-        `has${capitalize(fields[i])}Error`,
-      );
-
       if (
         !this.state[fields[i]] ||
         this.state[`has${capitalize(fields[i])}Error`]
