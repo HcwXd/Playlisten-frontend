@@ -16,6 +16,7 @@ class Signup extends Component {
       emailErrorType: '',
       passwordErrorType: '',
       usernameErrorType: '',
+      confirmPasswordErrorType: '',
 
       email: '',
       password: '',
@@ -23,6 +24,7 @@ class Signup extends Component {
       username: '',
       isButtonActive: false,
     };
+    this.wrapperRef = React.createRef();
     this.handleInputOnChange = this.handleInputOnChange.bind(this);
     this.handleInputOnBlur = this.handleInputOnBlur.bind(this);
     this.handleRegist = this.handleRegist.bind(this);
@@ -31,19 +33,31 @@ class Signup extends Component {
     this.doValidate = this.doValidate.bind(this);
     this.handleEmailExist = this.handleEmailExist.bind(this);
     this.handleUsernameExist = this.handleUsernameExist.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  handleClickOutside(event) {
+    if (!this.wrapperRef.current.contains(event.target)) {
+      this.props.toggleSignupForm();
+      document.removeEventListener('mousedown', this.handleClickOutside);
+    }
   }
 
   handleEmailExist() {
     this.setState({
       hasEmailError: true,
-      emailErrorType: this.props.t('common:alert.email_exist'),
+      emailErrorType: 'email_exist',
     });
   }
 
   handleUsernameExist() {
     this.setState({
       hasUsernameError: true,
-      usernameErrorType: this.props.t('common:alert.username_exist'),
+      usernameErrorType: 'username_exist',
     });
   }
 
@@ -86,10 +100,17 @@ class Signup extends Component {
       });
       return true;
     }
+    if (this.state.confirmPassword.length !== 0) {
+      this.setState({
+        hasConfirmPasswordError: true,
+        confirmPasswordErrorType: 'The password is inconsistent.',
+      });
+      return false;
+    }
     this.setState({
-      hasConfirmPasswordError: this.state.confirmPassword.length !== 0,
+      hasConfirmPasswordError: false,
     });
-    return false;
+    return true;
   }
 
   handleInputOnChange({ target }) {
@@ -108,9 +129,13 @@ class Signup extends Component {
           if (!validPattern.emailPattern.test(value)) {
             this.setState({
               hasEmailError: true,
-              emailErrorType: this.props.t('common:alert.email_format'),
+              emailErrorType: 'This email format is invalid.',
             });
           } else {
+            this.setState({
+              hasEmailError: false,
+              emailErrorType: '',
+            });
             return true;
           }
           break;
@@ -119,14 +144,14 @@ class Signup extends Component {
           if (value.length < 8) {
             this.setState({
               hasPasswordError: true,
-              passwordErrorType: this.props.t(
-                'common:alert.password_too_short',
-              ),
+              passwordErrorType:
+                'Your password should be at least 8 characters long.',
             });
           } else if (value.length > 20) {
             this.setState({
               hasPasswordError: true,
-              passwordErrorType: this.props.t('common:alert.password_too_long'),
+              passwordErrorType:
+                'Your password should be less than 20 characters.',
             });
           } else {
             this.setState({
@@ -142,7 +167,14 @@ class Signup extends Component {
           if (!validPattern.usernamePattern.test(value)) {
             this.setState({
               hasEmailError: true,
-              usernameErrorType: this.props.t('common:alert.username_format'),
+              usernameErrorType:
+                'Username only supported alphabet, number, underline.',
+            });
+          } else if (value.length > 20) {
+            this.setState({
+              hasEmailError: true,
+              usernameErrorType:
+                'Your username should be less than 20 characters.',
             });
           } else {
             return true;
@@ -181,17 +213,18 @@ class Signup extends Component {
   renderInputField(type) {
     const inputStyle = cx(
       {
-        'border-red-500': this.state[`has${capitalize(type)}Error`],
-        'border-green-500': !this.state[`has${capitalize(type)}Error`],
+        'border-red-500 border-b border-solid': this.state[
+          `has${capitalize(type)}Error`
+        ],
       },
-      ['border-b', 'border-solid'],
+      ['shadow w-full p-4'],
     );
     return (
-      <div className="mb-2">
+      <div className="mb-4 w-full">
         <input
-          type={type}
+          type={type === 'confirmPassword' ? 'password' : type}
           className={inputStyle}
-          placeholder={this.props.t(type)}
+          placeholder={type}
           data-name={type}
           value={this.state[type]}
           onChange={this.handleInputOnChange}
@@ -212,17 +245,26 @@ class Signup extends Component {
    */
   render() {
     return (
-      <div id="signup" className="h-full">
-        <div className="flex flex-col items-center h-full w-full mt-20 border">
-          <form onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp}>
+      <div className="fixed w-full h-full flex items-center justify-around bg-black-90 z-50">
+        <div
+          ref={this.wrapperRef}
+          id="signup"
+          className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
+          <div className="text-xl mb-8">
+            Register to Share Your Music and Story
+          </div>
+          <form
+            onKeyDown={this.handleKeyDown}
+            onKeyUp={this.handleKeyUp}
+            className="w-full">
             {this.renderInputField('email')}
             {this.renderInputField('password')}
             {this.renderInputField('confirmPassword')}
             {this.renderInputField('username')}
           </form>
-          <div className="bottom_wrap">
-            <span className={``} onClick={this.handleRegist}>
-              {this.props.t('sign_up')}
+          <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
+            <span className="" onClick={this.handleRegist}>
+              Create Account
             </span>
           </div>
         </div>

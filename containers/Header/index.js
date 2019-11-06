@@ -5,27 +5,30 @@ import { connect } from 'react-redux';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import Logo from '../../static/imgs/logo.png';
+import Signup from '../../components/Signup';
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = { showSignup: false, showLogin: false };
     this.toggleMessageBox = this.toggleMessageBox.bind(this);
+    this.toggleSignupForm = this.toggleSignupForm.bind(this);
   }
 
   toggleMessageBox() {
     this.setState({ openMessage: !this.state.openMessage });
   }
 
+  toggleSignupForm() {
+    this.setState({ showSignup: !this.state.showSignup });
+  }
+
   render() {
     return (
       <>
-        {this.state.showLogin || this.state.showSignup ? (
-          <div className="fixed w-full h-full flex items-center justify-between bg-black-90 z-50">
-            {this.state.showLogin && 'A'}
-          </div>
-        ) : null}
-
+        {this.state.showSignup && (
+          <Signup toggleSignupForm={this.toggleSignupForm} />
+        )}
         <div
           id="top-header"
           className="top-0 left-0 right-0 z-20 flex items-center justify-between fixed shadow py-2 px-4 bg-white">
@@ -82,7 +85,9 @@ class Header extends Component {
               </Link>
             </div>
             <div data-name="/publish" className="p-2 ml-8">
-              <a className="cursor-pointer">Signup</a>
+              <a className="cursor-pointer" onClick={this.toggleSignupForm}>
+                Signup
+              </a>
             </div>
             <div data-name="/publish" className="p-2 ml-8">
               <a className="cursor-pointer">Login</a>
