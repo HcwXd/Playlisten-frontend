@@ -4,24 +4,18 @@ import sha256 from 'sha256';
 import { validPattern } from '../../utils/configConst';
 import { capitalize } from '../../utils/generalUtils';
 
-class Signup extends Component {
+class Signin extends Component {
   constructor(props) {
     super(props);
     this.state = {
       hasEmailError: false,
       hasPasswordError: false,
-      hasConfirmPasswordError: false,
-      hasUsernameError: false,
 
       emailErrorType: '',
       passwordErrorType: '',
-      usernameErrorType: '',
-      confirmPasswordErrorType: '',
 
       email: '',
       password: '',
-      confirmPassword: '',
-      username: '',
       isButtonActive: false,
     };
     this.wrapperRef = React.createRef();
@@ -31,8 +25,6 @@ class Signup extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.doValidate = this.doValidate.bind(this);
-    this.handleEmailExist = this.handleEmailExist.bind(this);
-    this.handleUsernameExist = this.handleUsernameExist.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
@@ -42,33 +34,16 @@ class Signup extends Component {
 
   handleClickOutside(event) {
     if (!this.wrapperRef.current.contains(event.target)) {
+      this.props.toggleSigninForm();
       document.removeEventListener('mousedown', this.handleClickOutside);
-      this.props.toggleSignupForm();
     }
-  }
-
-  handleEmailExist() {
-    this.setState({
-      hasEmailError: true,
-      emailErrorType: 'email_exist',
-    });
-  }
-
-  handleUsernameExist() {
-    this.setState({
-      hasUsernameError: true,
-      usernameErrorType: 'username_exist',
-    });
   }
 
   handleRegist() {
     let isValid = true;
-    const isValidPromise = [
-      'email',
-      'password',
-      'confirmPassword',
-      'username',
-    ].map(async type => this.doValidate(type));
+    const isValidPromise = ['email', 'password'].map(async type =>
+      this.doValidate(type),
+    );
 
     Promise.all(isValidPromise).then(response => {
       response.forEach(check => {
@@ -91,26 +66,6 @@ class Signup extends Component {
       }
     }
     return result;
-  }
-
-  checkConfirmPassword() {
-    if (this.state.password === this.state.confirmPassword) {
-      this.setState({
-        hasConfirmPasswordError: false,
-      });
-      return true;
-    }
-    if (this.state.confirmPassword.length !== 0) {
-      this.setState({
-        hasConfirmPasswordError: true,
-        confirmPasswordErrorType: 'The password is inconsistent.',
-      });
-      return false;
-    }
-    this.setState({
-      hasConfirmPasswordError: false,
-    });
-    return true;
   }
 
   handleInputOnChange({ target }) {
@@ -140,7 +95,6 @@ class Signup extends Component {
           }
           break;
         case 'password':
-          this.checkConfirmPassword();
           if (value.length < 8) {
             this.setState({
               hasPasswordError: true,
@@ -158,25 +112,6 @@ class Signup extends Component {
               hasPasswordError: false,
               passwordErrorType: '',
             });
-            return true;
-          }
-          break;
-        case 'confirmPassword':
-          return this.checkConfirmPassword();
-        case 'username':
-          if (!validPattern.usernamePattern.test(value)) {
-            this.setState({
-              hasEmailError: true,
-              usernameErrorType:
-                'Username only supported alphabet, number, underline.',
-            });
-          } else if (value.length > 20) {
-            this.setState({
-              hasEmailError: true,
-              usernameErrorType:
-                'Your username should be less than 20 characters.',
-            });
-          } else {
             return true;
           }
           break;
@@ -246,21 +181,17 @@ class Signup extends Component {
           ref={this.wrapperRef}
           id="signup"
           className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
-          <div className="text-xl mb-8">
-            Register to Share Your Music and Story
-          </div>
+          <div className="text-xl mb-8">Sign In to Playlisten</div>
           <form
             onKeyDown={this.handleKeyDown}
             onKeyUp={this.handleKeyUp}
             className="w-full">
             {this.renderInputField('email')}
             {this.renderInputField('password')}
-            {this.renderInputField('confirmPassword')}
-            {this.renderInputField('username')}
           </form>
           <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
             <span className="" onClick={this.handleRegist}>
-              Create Account
+              Sign In
             </span>
           </div>
         </div>
@@ -269,4 +200,4 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+export default Signin;

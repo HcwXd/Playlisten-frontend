@@ -6,13 +6,15 @@ import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import Logo from '../../static/imgs/logo.png';
 import Signup from '../../components/Signup';
+import Signin from '../../components/Signin';
 
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.state = { showSignup: false, showLogin: false };
+    this.state = { showSignup: false, showSignin: false };
     this.toggleMessageBox = this.toggleMessageBox.bind(this);
     this.toggleSignupForm = this.toggleSignupForm.bind(this);
+    this.toggleSigninForm = this.toggleSigninForm.bind(this);
   }
 
   toggleMessageBox() {
@@ -23,11 +25,18 @@ class Header extends Component {
     this.setState({ showSignup: !this.state.showSignup });
   }
 
+  toggleSigninForm() {
+    this.setState({ showSignin: !this.state.showSignin });
+  }
+
   render() {
     return (
       <>
         {this.state.showSignup && (
           <Signup toggleSignupForm={this.toggleSignupForm} />
+        )}
+        {this.state.showSignin && (
+          <Signin toggleSigninForm={this.toggleSigninForm} />
         )}
         <div
           id="top-header"
@@ -86,11 +95,13 @@ class Header extends Component {
             </div>
             <div data-name="/publish" className="p-2 ml-8">
               <a className="cursor-pointer" onClick={this.toggleSignupForm}>
-                Signup
+                Sign up
               </a>
             </div>
             <div data-name="/publish" className="p-2 ml-8">
-              <a className="cursor-pointer">Login</a>
+              <a className="cursor-pointer" onClick={this.toggleSigninForm}>
+                Sign in
+              </a>
             </div>
           </nav>
         </div>
