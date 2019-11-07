@@ -15,10 +15,18 @@ class Header extends Component {
     this.toggleMessageBox = this.toggleMessageBox.bind(this);
     this.toggleSignupForm = this.toggleSignupForm.bind(this);
     this.toggleSigninForm = this.toggleSigninForm.bind(this);
+    this.handleSignout = this.handleSignout.bind(this);
   }
 
   toggleMessageBox() {
     this.setState({ openMessage: !this.state.openMessage });
+  }
+
+  handleSignout() {
+    localStorage.clear();
+    Router.push({
+      pathname: '/',
+    });
   }
 
   toggleSignupForm() {
@@ -63,16 +71,26 @@ class Header extends Component {
                 <a>Publish</a>
               </Link>
             </div>
-            <div data-name="/publish" className="p-2 ml-8">
-              <a className="cursor-pointer" onClick={this.toggleSignupForm}>
-                Sign up
-              </a>
-            </div>
-            <div data-name="/publish" className="p-2 ml-8">
-              <a className="cursor-pointer" onClick={this.toggleSigninForm}>
-                Sign in
-              </a>
-            </div>
+            {process.browser && localStorage.getItem('userId') ? (
+              <div data-name="/publish" className="p-2 ml-8">
+                <a className="cursor-pointer" onClick={this.handleSignout}>
+                  Sign out
+                </a>
+              </div>
+            ) : (
+              <>
+                <div data-name="/publish" className="p-2 ml-8">
+                  <a className="cursor-pointer" onClick={this.toggleSignupForm}>
+                    Sign up
+                  </a>
+                </div>
+                <div data-name="/publish" className="p-2 ml-8">
+                  <a className="cursor-pointer" onClick={this.toggleSigninForm}>
+                    Sign in
+                  </a>
+                </div>
+              </>
+            )}
           </nav>
         </div>
       </>

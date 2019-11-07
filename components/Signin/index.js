@@ -5,11 +5,17 @@ import { Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import { validPattern } from '../../utils/configConst';
 import { capitalize } from '../../utils/generalUtils';
+import { Router, Link } from '../../routes';
 
 const SIGN_IN = gql`
   mutation($userInput: SignInInput!) {
     signIn(data: $userInput) {
       result
+      token
+      user {
+        id
+        name
+      }
     }
   }
 `;
@@ -43,6 +49,7 @@ class Signin extends Component {
   }
 
   handleClickOutside(event) {
+    if (!this.wrapperRef.current) return;
     if (!this.wrapperRef.current.contains(event.target)) {
       this.props.toggleSigninForm();
       document.removeEventListener('mousedown', this.handleClickOutside);
@@ -72,11 +79,20 @@ class Signin extends Component {
         },
       });
 
-      console.log(data);
-      if (data.signIn.result !== 'success') {
-        alert('Username has been used');
-      } else {
+      const { signIn } = data;
+      const { result, token, user } = signIn;
+      if (result !== 'success') {
         alert('Sign in failed');
+      } else {
+        localStorage.setItem('token', token);
+        if (user) {
+          const { id, name } = user;
+          localStorage.setItem('userId', id);
+          localStorage.setItem('username', name);
+        }
+        Router.push({
+          pathname: '/',
+        });
       }
     }
   }
