@@ -51,10 +51,14 @@ class Header extends Component {
           className="top-0 left-0 right-0 z-20 flex items-center justify-between fixed shadow py-2 px-4 bg-white">
           <img className="h-6 mr-4" src={Logo} />
           <nav className="flex items-center">
-            <div data-name="/profile" className="p-2 ml-8 cursor-pointer">
-              <Link href="/profile" prefetch>
-                <div className="flex items-center justify-between">
-                  {/**
+            {process.browser && localStorage.getItem('userId') ? (
+              <>
+                <div data-name="/profile" className="p-2 ml-8">
+                  <Link
+                    href={`/profile?userId=${localStorage.getItem('userId')}`}
+                    prefetch>
+                    <div className="flex items-center justify-between">
+                      {/**
                 <img
                   className="w-8 h-8 rounded-full mr-4"
                   src={
@@ -62,15 +66,19 @@ class Header extends Component {
                   }
                 />
                  */}
-                  <a>Profile</a>
+
+                      <a className="cursor-pointer">Profile</a>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            </div>
-            <div data-name="/publish" className="p-2 ml-8">
-              <Link href="/publish" prefetch>
-                <a>Publish</a>
-              </Link>
-            </div>
+                <div data-name="/publish" className="p-2 ml-8">
+                  <Link href="/publish" prefetch>
+                    <a>Publish</a>
+                  </Link>
+                </div>
+              </>
+            ) : null}
+
             {process.browser && localStorage.getItem('userId') ? (
               <div data-name="/publish" className="p-2 ml-8">
                 <a className="cursor-pointer" onClick={this.handleSignout}>
