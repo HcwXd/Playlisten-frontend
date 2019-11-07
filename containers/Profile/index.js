@@ -18,6 +18,23 @@ const GET_USER = gql`
       id
       name
       bio
+      avatar
+      playlists {
+        id
+        name
+        des
+        cover
+        createdAt
+        updatedAt
+        songs {
+          id
+          listId
+          sourceId
+          name
+          cover
+          duration
+        }
+      }
     }
   }
 `;
@@ -25,7 +42,7 @@ const GET_USER = gql`
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = { userId: '' };
+    this.state = { userId: '', userInfo: '', playlists: '' };
     this.fetchUser = this.fetchUser.bind(this);
   }
 
@@ -34,7 +51,9 @@ class Profile extends Component {
     const userId = params.get('userId');
     const data = await this.fetchUser(this.props.client, userId);
     console.log(data);
-    this.setState({ userId });
+    const { user } = data;
+    const { playlists, ...userInfo } = user;
+    this.setState({ playlists, userInfo, userId });
   }
 
   async fetchUser(client, userId) {
