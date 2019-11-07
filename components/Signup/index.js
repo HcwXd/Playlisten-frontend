@@ -3,6 +3,7 @@ import cx from 'classnames';
 import sha256 from 'sha256';
 import { Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
+import Loader from '../loader';
 import { validPattern } from '../../utils/configConst';
 import { capitalize } from '../../utils/generalUtils';
 import { Router, Link } from '../../routes';
@@ -24,6 +25,7 @@ class Signup extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: false,
       hasEmailError: false,
       hasPasswordError: false,
       hasConfirmPasswordError: false,
@@ -86,6 +88,7 @@ class Signup extends Component {
       email: this.state.email,
       password: sha256(this.state.password),
     };
+    this.setState({ isLoading: true });
     const { data } = await client.mutate({
       mutation: CREATE_USER,
       variables: {
@@ -93,8 +96,9 @@ class Signup extends Component {
       },
     });
 
-    const { signIn } = data;
-    const { result, token, user } = signIn;
+    const { createUser } = data;
+    const { result, token, user } = createUser;
+
     if (result !== 'success') {
       alert('Username has been used');
     } else {
@@ -108,6 +112,7 @@ class Signup extends Component {
         pathname: '/',
       });
     }
+    this.setState({ isLoading: false });
   }
 
   checkAllInputValid() {
@@ -298,6 +303,7 @@ class Signup extends Component {
               ref={this.wrapperRef}
               id="signup"
               className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
+              {this.state.isLoading && <Loader />}
               <div className="text-xl mb-8">
                 Register to Share Your Music and Story
               </div>
