@@ -96,7 +96,7 @@ class AddInfo extends Component {
           }
           const playlistInput = {
             name: this.props.title,
-            ownerId: '123',
+            ownerId: localStorage.getItem('userId'),
             des: this.props.description,
             cover: this.props.coverPreviewUrl,
             songs: [
