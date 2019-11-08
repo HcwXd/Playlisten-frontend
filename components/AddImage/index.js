@@ -19,7 +19,10 @@ class AddImage extends Component {
       playlist.length > 0
         ? playlist[0].cover
         : 'https://image.shutterstock.com/image-vector/grunge-red-sample-word-round-260nw-1242668641.jpg';
-    if (!coverPreviewUrl) {
+    if (
+      !coverPreviewUrl ||
+      coverPreviewUrl.startsWith('https://img.youtube.com')
+    ) {
       this.props.handleChangeCoverPhoto(null, defaultCoverUrl);
     }
   }
