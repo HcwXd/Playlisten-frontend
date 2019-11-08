@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { gql } from 'apollo-boost';
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
-
 import { connect } from 'react-redux';
 import cx from 'classnames';
+
+import PlaylistCover from '../../components/PlaylistCover';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import HoverableIcon from '../../components/HoverableIcon';
@@ -44,6 +45,8 @@ class Profile extends Component {
     super(props);
     this.state = { userId: '', userInfo: '', playlists: '' };
     this.fetchUser = this.fetchUser.bind(this);
+    this.renderSinglePlaylist = this.renderSinglePlaylist.bind(this);
+    this.renderPlaylistWrap = this.renderPlaylistWrap.bind(this);
   }
 
   async componentDidMount() {
@@ -64,12 +67,43 @@ class Profile extends Component {
     return data;
   }
 
-  render() {
-    if (!this.state.listId) return null;
+  renderSinglePlaylist(playlist) {
+    return <PlaylistCover playlist={playlist} />;
+  }
+
+  renderRowOfPlaylist(singleRow) {
     return (
-      <div
-        id="profile"
-        className="py-20 flex items-center justify-around"></div>
+      <div className="flex justify-start w-full">
+        {singleRow.map(playlist => (
+          <PlaylistCover key={playlist.id} playlist={playlist} />
+        ))}
+      </div>
+    );
+  }
+
+  renderPlaylistWrap() {
+    const rowsOfPlaylist = [];
+    this.state.playlists.forEach((playlist, idx) => {
+      if (idx % 3 === 0) rowsOfPlaylist.push([]);
+      rowsOfPlaylist[rowsOfPlaylist.length - 1].push(playlist);
+    });
+    return (
+      <div className="flex flex-col items-center w-full lg:w-8/12">
+        {rowsOfPlaylist.map((singleRow, idx) =>
+          this.renderRowOfPlaylist(singleRow),
+        )}
+      </div>
+    );
+  }
+
+  render() {
+    if (!this.state.userId) return null;
+    return (
+      <div id="profile" className="py-20 flex items-center justify-around">
+        {this.state.playlists && this.state.playlists.length > 0
+          ? this.renderPlaylistWrap()
+          : null}
+      </div>
     );
   }
 }

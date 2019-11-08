@@ -34,7 +34,7 @@ class PlaylistCover extends Component {
       songs,
     } = this.props.playlist;
     return (
-      <div className="w-96 h-64 shadow cursor-pointer">
+      <div className="w-1/3 h-1/3 cursor-pointer p-4">
         <div
           className="relative"
           onMouseEnter={this.handleHoverInCover}
@@ -42,11 +42,11 @@ class PlaylistCover extends Component {
           {this.state.isHoverOnCover ? (
             <a href={`/playlist?listId=${id}`}>
               <div className="absolute w-full h-full bg-black-75 flex items-center justify-around">
-                <h3 className="text-4xl text-white">{name}</h3>
+                <h3 className="text-2xl text-white">{name}</h3>
               </div>
             </a>
           ) : null}
-          <div className="w-96 h-64 border">
+          <div className="w-full h-full shadow">
             <img className="w-full h-full" src={cover} alt="Cover" />
           </div>
         </div>
