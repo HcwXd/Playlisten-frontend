@@ -5,6 +5,7 @@ import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 
+import DefaultProfile from '../../static/imgs/default-profile.jpeg';
 import PlaylistCover from '../../components/PlaylistCover';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
@@ -45,8 +46,9 @@ class Profile extends Component {
     super(props);
     this.state = { userId: '', userInfo: '', playlists: '' };
     this.fetchUser = this.fetchUser.bind(this);
-    this.renderSinglePlaylist = this.renderSinglePlaylist.bind(this);
     this.renderPlaylistWrap = this.renderPlaylistWrap.bind(this);
+    this.renderRowOfPlaylist = this.renderRowOfPlaylist.bind(this);
+    this.renderUserWrap = this.renderUserWrap.bind(this);
   }
 
   async componentDidMount() {
@@ -67,10 +69,6 @@ class Profile extends Component {
     return data;
   }
 
-  renderSinglePlaylist(playlist) {
-    return <PlaylistCover playlist={playlist} />;
-  }
-
   renderRowOfPlaylist(singleRow) {
     return (
       <div className="flex justify-start w-full">
@@ -83,15 +81,32 @@ class Profile extends Component {
 
   renderPlaylistWrap() {
     const rowsOfPlaylist = [];
-    this.state.playlists.forEach((playlist, idx) => {
+    this.state.playlists.reverse().forEach((playlist, idx) => {
       if (idx % 3 === 0) rowsOfPlaylist.push([]);
       rowsOfPlaylist[rowsOfPlaylist.length - 1].push(playlist);
     });
     return (
       <div className="flex flex-col items-center w-full lg:w-8/12">
-        {rowsOfPlaylist.map((singleRow, idx) =>
-          this.renderRowOfPlaylist(singleRow),
-        )}
+        {rowsOfPlaylist.map(singleRow => this.renderRowOfPlaylist(singleRow))}
+      </div>
+    );
+  }
+
+  renderUserWrap() {
+    const { name, bio, avatar } = this.state.userInfo;
+    return (
+      <div className="flex justify-around mb-12">
+        <img
+          className="w-32 h-32 rounded-full shadow-2xl p-2"
+          src={DefaultProfile}
+        />
+        <div className="ml-12">
+          <div className="text-3xl">{name}</div>
+          <span className="text-xl text-gray-600">
+            {this.state.playlists.length}{' '}
+            <span className="text-gray-500">Playlists</span>
+          </span>
+        </div>
       </div>
     );
   }
@@ -99,7 +114,10 @@ class Profile extends Component {
   render() {
     if (!this.state.userId) return null;
     return (
-      <div id="profile" className="py-20 flex items-center justify-around">
+      <div
+        id="profile"
+        className="py-20 flex flex-col items-center justify-around">
+        {this.state.userInfo ? this.renderUserWrap() : null}
         {this.state.playlists && this.state.playlists.length > 0
           ? this.renderPlaylistWrap()
           : null}
