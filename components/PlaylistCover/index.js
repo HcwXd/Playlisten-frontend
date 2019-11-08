@@ -36,7 +36,7 @@ class PlaylistCover extends Component {
     return (
       <div className="w-1/3 h-1/3 cursor-pointer p-4">
         <div
-          className="relative"
+          className="relative w-full h-full"
           onMouseEnter={this.handleHoverInCover}
           onMouseLeave={this.handleHoverOutCover}>
           {this.state.isHoverOnCover ? (
