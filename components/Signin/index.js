@@ -185,7 +185,7 @@ class Signin extends Component {
   handleKeyUp(e) {
     if (e.key === 'Enter' && this.state.isButtonActive) {
       this.setState({ isButtonActive: false });
-      this.handleSignIn(e);
+      // this.handleSignIn(e);
     }
   }
 

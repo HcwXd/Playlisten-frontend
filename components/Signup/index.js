@@ -261,7 +261,7 @@ class Signup extends Component {
   handleKeyUp(e) {
     if (e.key === 'Enter' && this.state.isButtonActive) {
       this.setState({ isButtonActive: false });
-      this.handleRegist(e);
+      // this.handleRegist(e);
     }
   }
 
