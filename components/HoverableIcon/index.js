@@ -18,7 +18,7 @@ class HoverableIcon extends Component {
 
   render() {
     const { Icon, HoverIcon, size, style, onClick } = this.props;
-    const className = size === 6 ? `w-6 h-6` : `w-12 h-12`;
+    const className = `w-${size} h-${size}`;
     return (
       <div
         onMouseEnter={this.handleMouseEnter}

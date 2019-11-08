@@ -8,6 +8,7 @@ import cx from 'classnames';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import HoverableIcon from '../../components/HoverableIcon';
+import EditIcon from '../../static/imgs/edit.svg';
 import PlayIcon from '../../static/imgs/play.svg';
 import PlayHoverIcon from '../../static/imgs/play-hover.svg';
 import { convertYoutubeDurationToMinSec } from '../../utils/generalUtils';
@@ -113,32 +114,48 @@ class Playlist extends Component {
               <img className="w-full h-full" src={cover} alt="Cover" />
             </div>
           </div>
-          <div className="flex flex-col w-3/4">
-            <div className="flex justify-between w-full p-4 pb-0">
-              <h1 className="text-4xl font-bold">{name}</h1>{' '}
-              <div className="text-gray-600 flex items-end flex-col">
-                {timestamp.toLocaleDateString()}
-                <div
-                  className="text-black mt-2 p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-                  onClick={() => {
-                    alert(`Share this page "${window.location}"`);
-                  }}>
-                  Share
+          <div className="flex flex-col justify-between h-96 w-3/4">
+            <div>
+              <div className="flex justify-between w-full p-4 pb-0">
+                <h1 className="text-4xl font-bold">{name}</h1>{' '}
+                <div className="text-gray-600 flex items-end flex-col">
+                  {timestamp.toLocaleDateString()}
                 </div>
               </div>
-            </div>
-            <div className="flex items-center">
-              <div className="px-4">
-                by{' '}
-                <Link href={`/profile?userId=${owner.id}`} prefetch>
-                  <span className="text-gray-600 cursor-pointer">
-                    {owner.name}
-                  </span>
-                </Link>
+              <div className="flex items-center">
+                <div className="px-4">
+                  by{' '}
+                  <Link href={`/profile?userId=${owner.id}`} prefetch>
+                    <span className="text-gray-600 cursor-pointer">
+                      {owner.name}
+                    </span>
+                  </Link>
+                </div>
+              </div>
+              <div className="px-4 pt-2">
+                <p>{des}</p>
               </div>
             </div>
-            <div className="px-4 pt-2">
-              <p>{des}</p>
+            <div className="p-2 w-full flex items-center">
+              <div
+                className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+                onClick={this.handleClickOnCover}>
+                <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play All
+              </div>
+              {process.browser &&
+              owner.id === localStorage.getItem('userId') ? (
+                <div
+                  className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+                  onClick={() => {
+                    Router.push({
+                      pathname: '/edit',
+                      query: { listId: this.state.listId },
+                    });
+                  }}>
+                  <img className="w-4 h-4 mr-2" src={EditIcon} />
+                  Edit
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
