@@ -222,7 +222,7 @@ class Signin extends Component {
     return (
       <ApolloConsumer>
         {client => (
-          <div className="fixed w-full h-full flex items-center justify-around bg-black-90 z-50">
+          <div className="fixed w-full h-full flex items-center justify-around bg-black-75 z-50">
             <div
               ref={this.wrapperRef}
               id="signup"
