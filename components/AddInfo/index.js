@@ -13,6 +13,14 @@ const CREATE_PLAYLIST = gql`
   }
 `;
 
+const UPDATE_PLAYLIST = gql`
+  mutation($updatedPlaylistInput: UpdatePlaylistInput!) {
+    updatePlaylist(data: $updatedPlaylistInput) {
+      id
+    }
+  }
+`;
+
 class AddInfo extends Component {
   constructor(props) {
     super(props);
@@ -105,20 +113,43 @@ class AddInfo extends Component {
               }),
             ],
           };
-          console.log(playlistInput);
-          const { data } = await client.mutate({
-            mutation: CREATE_PLAYLIST,
-            variables: {
-              playlistInput,
-            },
-          });
-          console.log(data);
-          const { createPlaylist } = data;
+          if (this.props.type === 'edit') {
+            console.log(playlistInput);
+            const updatedPlaylistInput = {
+              listInfo: playlistInput,
+              oldId: this.props.listId,
+              createdAt: new Date(this.props.createdAt),
+            };
 
-          Router.push({
-            pathname: '/playlist',
-            query: { listId: createPlaylist.id },
-          });
+            const { data } = await client.mutate({
+              mutation: UPDATE_PLAYLIST,
+              variables: {
+                updatedPlaylistInput,
+              },
+            });
+            console.log(data);
+            const { updatePlaylist } = data;
+
+            Router.push({
+              pathname: '/playlist',
+              query: { listId: updatePlaylist.id },
+            });
+          } else {
+            console.log(playlistInput);
+            const { data } = await client.mutate({
+              mutation: CREATE_PLAYLIST,
+              variables: {
+                playlistInput,
+              },
+            });
+            console.log(data);
+            const { createPlaylist } = data;
+
+            Router.push({
+              pathname: '/playlist',
+              query: { listId: createPlaylist.id },
+            });
+          }
         }}>
         Publish
       </div>

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'next/router';
+import { gql } from 'apollo-boost';
 
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -10,11 +12,38 @@ import AddImage from '../../components/AddImage';
 import AddInfo from '../../components/AddInfo';
 import { STAGE } from './constant';
 
+const GET_PLAYLIST = gql`
+  query($listId: String!) {
+    playlist(listId: $listId) {
+      owner {
+        name
+        id
+      }
+      id
+      name
+      des
+      cover
+      createdAt
+      updatedAt
+      songs {
+        sourceId
+        name
+        cover
+        duration
+      }
+    }
+  }
+`;
+
 class Publish extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      stage: STAGE.ADD_SONG,
+      stage:
+        this.props.router.route === '/publish'
+          ? STAGE.ADD_SONG
+          : STAGE.ADD_INFO,
       // stage: STAGE.ADD_IMAGE,
       // stage: STAGE.ADD_INFO,
       playlist: [],
@@ -22,13 +51,40 @@ class Publish extends Component {
       coverPreviewUrl: '',
       title: '',
       description: '',
+      listId: null,
+      createdAt: null,
     };
     this.handleChangeStage = this.handleChangeStage.bind(this);
     this.handleChangeCoverPhoto = this.handleChangeCoverPhoto.bind(this);
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
-    this.handlePublishPlaylist = this.handlePublishPlaylist.bind(this);
     this.handleChangePlaylist = this.handleChangePlaylist.bind(this);
+  }
+
+  async componentDidMount() {
+    if (this.props.router.route === '/publish') return;
+    const params = new URLSearchParams(window.location.search);
+    const listId = params.get('listId');
+    const data = await this.fetchPlaylist(this.props.client, listId);
+    const { playlist } = data;
+    const { name, cover, des, songs, createdAt } = playlist;
+
+    this.setState({
+      listId,
+      createdAt,
+      title: name,
+      coverPreviewUrl: cover,
+      description: des,
+      playlist: songs,
+    });
+  }
+
+  async fetchPlaylist(client, listId) {
+    const { data } = await client.query({
+      query: GET_PLAYLIST,
+      variables: { listId },
+    });
+    return data;
   }
 
   handleChangeStage(newStage) {
@@ -49,10 +105,6 @@ class Publish extends Component {
 
   handleChangeDescription(description) {
     this.setState({ description });
-  }
-
-  handlePublishPlaylist() {
-    console.log(this.state);
   }
 
   render() {
@@ -83,7 +135,9 @@ class Publish extends Component {
             handleChangeStage={this.handleChangeStage}
             handleChangeTitle={this.handleChangeTitle}
             handleChangeDescription={this.handleChangeDescription}
-            handlePublishPlaylist={this.handlePublishPlaylist}
+            type={this.props.router.route.slice(1)}
+            listId={this.state.listId}
+            createdAt={this.state.createdAt}
           />
         ) : null}
       </div>
@@ -107,4 +161,4 @@ function mapStateToProps({ PublishContainerReducer }) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Publish);
+)(withRouter(Publish));
