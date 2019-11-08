@@ -95,7 +95,7 @@ class Profile extends Component {
   renderUserWrap() {
     const { name, bio, avatar } = this.state.userInfo;
     return (
-      <div className="flex justify-around mb-12">
+      <div className="flex justify-around mb-12 mt-12">
         <img
           className="w-32 h-32 rounded-full shadow-2xl p-2"
           src={DefaultProfile}

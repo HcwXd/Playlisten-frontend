@@ -17,6 +17,7 @@ const GET_PLAYLIST = gql`
     playlist(listId: $listId) {
       owner {
         name
+        id
       }
       id
       name
@@ -129,9 +130,11 @@ class Playlist extends Component {
             <div className="flex items-center">
               <div className="px-4">
                 by{' '}
-                <span className="text-gray-600 cursor-pointer">
-                  {owner.name}
-                </span>
+                <Link href={`/profile?userId=${owner.id}`} prefetch>
+                  <span className="text-gray-600 cursor-pointer">
+                    {owner.name}
+                  </span>
+                </Link>
               </div>
             </div>
             <div className="px-4 pt-2">

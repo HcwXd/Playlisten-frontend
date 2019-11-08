@@ -7,6 +7,7 @@ import * as actions from './actions';
 import Logo from '../../static/imgs/logo.png';
 import Signup from '../../components/Signup';
 import Signin from '../../components/Signin';
+import DefaultProfile from '../../static/imgs/default-profile.jpeg';
 
 class Header extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ class Header extends Component {
 
   render() {
     return (
-      <>
+      <React.Fragment>
         {this.state.showSignup && (
           <Signup toggleSignupForm={this.toggleSignupForm} />
         )}
@@ -52,21 +53,16 @@ class Header extends Component {
           <img className="h-6 mr-4" src={Logo} />
           <nav className="flex items-center">
             {process.browser && localStorage.getItem('userId') ? (
-              <>
+              <React.Fragment>
                 <div data-name="/profile" className="p-2 ml-8">
                   <Link
                     href={`/profile?userId=${localStorage.getItem('userId')}`}
                     prefetch>
                     <div className="flex items-center justify-between">
-                      {/**
-                <img
-                  className="w-8 h-8 rounded-full mr-4"
-                  src={
-                    'https://scontent-tpe1-1.xx.fbcdn.net/v/t1.0-1/c0.0.1904.1904a/69681988_2392214307542292_5502145657873367040_o.jpg?_nc_cat=104&_nc_oc=AQleVdZ81D-o5Cij9mV4HOneYEW8Hb1u2Jj-ZoSYuRIguAE8258P6KYqg-MT2Gydncc&_nc_ht=scontent-tpe1-1.xx&oh=1c795b32174f6f844db9981b44114874&oe=5E2E4F6B'
-                  }
-                />
-                 */}
-
+                      <img
+                        className="w-8 h-8 rounded-full mr-4 shadow"
+                        src={DefaultProfile}
+                      />
                       <a className="cursor-pointer">Profile</a>
                     </div>
                   </Link>
@@ -76,17 +72,14 @@ class Header extends Component {
                     <a>Publish</a>
                   </Link>
                 </div>
-              </>
-            ) : null}
-
-            {process.browser && localStorage.getItem('userId') ? (
-              <div data-name="/publish" className="p-2 ml-8">
-                <a className="cursor-pointer" onClick={this.handleSignout}>
-                  Sign out
-                </a>
-              </div>
+                <div data-name="/publish" className="p-2 ml-8">
+                  <a className="cursor-pointer" onClick={this.handleSignout}>
+                    Sign out
+                  </a>
+                </div>
+              </React.Fragment>
             ) : (
-              <>
+              <React.Fragment>
                 <div data-name="/publish" className="p-2 ml-8">
                   <a className="cursor-pointer" onClick={this.toggleSignupForm}>
                     Sign up
@@ -97,11 +90,11 @@ class Header extends Component {
                     Sign in
                   </a>
                 </div>
-              </>
+              </React.Fragment>
             )}
           </nav>
         </div>
-      </>
+      </React.Fragment>
     );
   }
 }

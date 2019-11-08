@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Router, Link } from '../../routes';
 
 class PlaylistCover extends Component {
   constructor(props) {
@@ -40,11 +41,11 @@ class PlaylistCover extends Component {
           onMouseEnter={this.handleHoverInCover}
           onMouseLeave={this.handleHoverOutCover}>
           {this.state.isHoverOnCover ? (
-            <a href={`/playlist?listId=${id}`}>
+            <Link href={`/playlist?listId=${id}`}>
               <div className="absolute w-full h-full bg-black-75 flex items-center justify-around">
                 <h3 className="text-2xl text-white">{name}</h3>
               </div>
-            </a>
+            </Link>
           ) : null}
           <div className="w-full h-full shadow">
             <img className="w-full h-full" src={cover} alt="Cover" />
