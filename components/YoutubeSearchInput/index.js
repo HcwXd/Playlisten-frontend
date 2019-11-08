@@ -9,9 +9,20 @@ class YoutubeSearchInput extends Component {
     super();
     this.state = {
       suggestions: [],
+      hideDropdown: false,
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleOptionSelected = this.handleOptionSelected.bind(this);
+    this.showDropdown = this.showDropdown.bind(this);
+    this.closeDropdown = this.closeDropdown.bind(this);
+  }
+
+  closeDropdown() {
+    this.setState({ hideDropdown: true });
+  }
+
+  showDropdown() {
+    this.setState({ hideDropdown: false });
   }
 
   handleSearchChange(event) {
@@ -39,10 +50,12 @@ class YoutubeSearchInput extends Component {
     return (
       <div id="youtube-search" className="w-full">
         <Typeahead
-          options={this.state.options}
+          options={this.state.hideDropdown ? [] : this.state.options}
           maxVisible={10}
           defaultClassNames={false}
           onChange={this.handleSearchChange}
+          onBlur={this.closeDropdown}
+          onFocus={this.showDropdown}
           placeholder={
             'Search Youtube / Type a Youtube Song Url / Type a Youtube Playlist Url'
           }
