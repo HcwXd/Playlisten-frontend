@@ -9,6 +9,7 @@ import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import HoverableIcon from '../../components/HoverableIcon';
 import EditIcon from '../../static/imgs/edit.svg';
+import DeleteIcon from '../../static/imgs/delete.svg';
 import PlayIcon from '../../static/imgs/play.svg';
 import PlayHoverIcon from '../../static/imgs/play-hover.svg';
 import { convertYoutubeDurationToMinSec } from '../../utils/generalUtils';
@@ -36,6 +37,14 @@ const GET_PLAYLIST = gql`
   }
 `;
 
+const DELETE_PLAYLIST = gql`
+  mutation($listId: DeletePlaylistInput!) {
+    deletePlaylist(data: $listId) {
+      listId
+    }
+  }
+`;
+
 class Playlist extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +57,7 @@ class Playlist extends Component {
     this.fetchPlaylist = this.fetchPlaylist.bind(this);
     this.renderPlaylist = this.renderPlaylist.bind(this);
     this.handleClickOnCover = this.handleClickOnCover.bind(this);
+    this.deletePlaylist = this.deletePlaylist.bind(this);
   }
 
   async componentDidMount() {
@@ -86,6 +96,18 @@ class Playlist extends Component {
       variables: { listId },
     });
     return data;
+  }
+
+  async deletePlaylist() {
+    const { client } = this.props;
+    const listId = { listId: +this.state.listId };
+    const { data } = await client.mutate({
+      mutation: DELETE_PLAYLIST,
+      variables: { listId },
+    });
+    document.location.href = `/profile?userId=${localStorage.getItem(
+      'userId',
+    )}`;
   }
 
   renderPlaylist() {
@@ -144,17 +166,25 @@ class Playlist extends Component {
               </div>
               {process.browser &&
               owner.id === localStorage.getItem('userId') ? (
-                <div
-                  className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-                  onClick={() => {
-                    Router.push({
-                      pathname: '/edit',
-                      query: { listId: this.state.listId },
-                    });
-                  }}>
-                  <img className="w-4 h-4 mr-2" src={EditIcon} />
-                  Edit
-                </div>
+                <React.Fragment>
+                  <div
+                    className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+                    onClick={() => {
+                      Router.push({
+                        pathname: '/edit',
+                        query: { listId: this.state.listId },
+                      });
+                    }}>
+                    <img className="w-4 h-4 mr-2" src={EditIcon} />
+                    Edit
+                  </div>
+                  <div
+                    className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+                    onClick={this.deletePlaylist}>
+                    <img className="w-4 h-4 mr-2" src={DeleteIcon} />
+                    Delete
+                  </div>
+                </React.Fragment>
               ) : null}
             </div>
           </div>
