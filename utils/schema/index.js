@@ -13,6 +13,7 @@ const schema = gql`
     createUser(data: CreateUserInput): CreateUserPayload!
     signIn(data: SignInInput): SignInPayload!
     updatePlaylist(data: UpdatePlaylistInput!): Playlist!
+    deletePlaylist(data: DeletePlaylistInput!): DeletePlaylistPayload!
   }
 
   type SignInPayload {
@@ -21,10 +22,18 @@ const schema = gql`
     result: String!
   }
 
+  type DeletePlaylistPayload {
+    listId: Int!
+  }
+
   type CreateUserPayload {
     user: User
     token: String
     result: String!
+  }
+
+  input DeletePlaylistInput {
+    listId: Int!
   }
 
   input UpdatePlaylistInput {
