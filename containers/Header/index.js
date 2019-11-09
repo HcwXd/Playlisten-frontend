@@ -55,9 +55,8 @@ class Header extends Component {
             {process.browser && localStorage.getItem('userId') ? (
               <React.Fragment>
                 <div data-name="/profile" className="p-2 ml-8">
-                  <Link
-                    href={`/profile?userId=${localStorage.getItem('userId')}`}
-                    prefetch>
+                  {/** // TODO: User a tag here instead of Link to force refetch */}
+                  <a href={`/profile?userId=${localStorage.getItem('userId')}`}>
                     <div className="flex items-center justify-between">
                       <img
                         className="w-8 h-8 rounded-full mr-4 shadow"
@@ -65,7 +64,7 @@ class Header extends Component {
                       />
                       <a className="cursor-pointer">Profile</a>
                     </div>
-                  </Link>
+                  </a>
                 </div>
                 <div data-name="/publish" className="p-2 ml-8">
                   <Link href="/publish" prefetch>
