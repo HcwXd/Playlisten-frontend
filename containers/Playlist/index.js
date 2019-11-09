@@ -5,6 +5,7 @@ import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 
 import { connect } from 'react-redux';
 import cx from 'classnames';
+import ConfirmModal from '../../components/ConfirmModal';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import HoverableIcon from '../../components/HoverableIcon';
@@ -48,7 +49,12 @@ const DELETE_PLAYLIST = gql`
 class Playlist extends Component {
   constructor(props) {
     super(props);
-    this.state = { isHoverOnCover: false, listId: null, playlist: null };
+    this.state = {
+      isHoverOnCover: false,
+      listId: null,
+      playlist: null,
+      showDeleteConfirm: false,
+    };
     this.handleHoverInCover = this.handleHoverInCover.bind(this);
     this.handleHoverOutCover = this.handleHoverOutCover.bind(this);
     this.handleChangeCurrentPlayingSong = this.handleChangeCurrentPlayingSong.bind(
@@ -58,6 +64,7 @@ class Playlist extends Component {
     this.renderPlaylist = this.renderPlaylist.bind(this);
     this.handleClickOnCover = this.handleClickOnCover.bind(this);
     this.deletePlaylist = this.deletePlaylist.bind(this);
+    this.toggleShowDeletePlaylist = this.toggleShowDeletePlaylist.bind(this);
   }
 
   async componentDidMount() {
@@ -108,6 +115,10 @@ class Playlist extends Component {
     document.location.href = `/profile?userId=${localStorage.getItem(
       'userId',
     )}`;
+  }
+
+  toggleShowDeletePlaylist() {
+    this.setState({ showDeleteConfirm: !this.state.showDeleteConfirm });
   }
 
   renderPlaylist() {
@@ -162,7 +173,7 @@ class Playlist extends Component {
               <div
                 className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
                 onClick={this.handleClickOnCover}>
-                <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play All
+                <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play
               </div>
               {process.browser &&
               owner.id === localStorage.getItem('userId') ? (
@@ -180,7 +191,7 @@ class Playlist extends Component {
                   </div>
                   <div
                     className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-                    onClick={this.deletePlaylist}>
+                    onClick={this.toggleShowDeletePlaylist}>
                     <img className="w-4 h-4 mr-2" src={DeleteIcon} />
                     Delete
                   </div>
@@ -222,9 +233,20 @@ class Playlist extends Component {
   render() {
     if (!this.state.listId) return null;
     return (
-      <div id="playlist" className="py-20 flex items-center justify-around">
-        {this.renderPlaylist()}
-      </div>
+      <React.Fragment>
+        {this.state.showDeleteConfirm ? (
+          <ConfirmModal
+            title={'Do you want to delete this playlist?'}
+            rightAction={this.deletePlaylist}
+            leftAction={this.toggleShowDeletePlaylist}
+            rightLabel={'Delete'}
+            leftLabel={'Cancel'}
+          />
+        ) : null}
+        <div id="playlist" className="py-20 flex items-center justify-around">
+          {this.renderPlaylist()}
+        </div>
+      </React.Fragment>
     );
   }
 }
