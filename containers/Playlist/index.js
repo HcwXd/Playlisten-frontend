@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { gql } from 'apollo-boost';
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
-
 import { connect } from 'react-redux';
 import cx from 'classnames';
+
+import Loader from '../../components/Loader';
 import ConfirmModal from '../../components/ConfirmModal';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
@@ -50,6 +51,7 @@ class Playlist extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: false,
       isHoverOnCover: false,
       listId: null,
       playlist: null,
@@ -68,11 +70,12 @@ class Playlist extends Component {
   }
 
   async componentDidMount() {
+    this.setState({ isLoading: true });
     const params = new URLSearchParams(window.location.search);
     const listId = params.get('listId');
     const data = await this.fetchPlaylist(this.props.client, listId);
     const { playlist } = data;
-    this.setState({ listId, playlist });
+    this.setState({ listId, playlist, isLoading: false });
   }
 
   handleHoverInCover() {
@@ -231,7 +234,6 @@ class Playlist extends Component {
   }
 
   render() {
-    if (!this.state.listId) return null;
     return (
       <React.Fragment>
         {this.state.showDeleteConfirm ? (
@@ -244,7 +246,8 @@ class Playlist extends Component {
           />
         ) : null}
         <div id="playlist" className="py-20 flex items-center justify-around">
-          {this.renderPlaylist()}
+          {this.state.isLoading && <Loader />}
+          {this.state.listId && this.renderPlaylist()}
         </div>
       </React.Fragment>
     );

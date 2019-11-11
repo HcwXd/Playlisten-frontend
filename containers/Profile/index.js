@@ -5,6 +5,7 @@ import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 
+import Loader from '../../components/Loader';
 import DefaultProfile from '../../static/imgs/default-profile.jpeg';
 import PlaylistCover from '../../components/PlaylistCover';
 import { Router, Link } from '../../routes';
@@ -44,7 +45,7 @@ const GET_USER = gql`
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = { userId: '', userInfo: '', playlists: '' };
+    this.state = { userId: '', userInfo: '', playlists: '', isLoading: false };
     this.fetchUser = this.fetchUser.bind(this);
     this.renderPlaylistWrap = this.renderPlaylistWrap.bind(this);
     this.renderRowOfPlaylist = this.renderRowOfPlaylist.bind(this);
@@ -52,13 +53,14 @@ class Profile extends Component {
   }
 
   async componentDidMount() {
+    this.setState({ isLoading: true });
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('userId');
     const data = await this.fetchUser(this.props.client, userId);
     console.log(data);
     const { user } = data;
     const { playlists, ...userInfo } = user;
-    this.setState({ playlists, userInfo, userId });
+    this.setState({ playlists, userInfo, userId, isLoading: false });
   }
 
   async fetchUser(client, userId) {
@@ -112,12 +114,12 @@ class Profile extends Component {
   }
 
   render() {
-    if (!this.state.userId) return null;
     return (
       <div
         id="profile"
         className="py-20 flex flex-col items-center justify-around">
-        {this.state.userInfo ? this.renderUserWrap() : null}
+        {this.state.isLoading && <Loader />}
+        {this.state.userInfo && this.renderUserWrap()}
         {this.state.playlists && this.state.playlists.length > 0
           ? this.renderPlaylistWrap()
           : null}
