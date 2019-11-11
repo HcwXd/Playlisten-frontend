@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import { Router, Link } from '../../routes';
+import Loader from '../Loader';
 
 import { STAGE } from '../../containers/Publish/constant';
 
@@ -24,7 +25,7 @@ const UPDATE_PLAYLIST = gql`
 class AddInfo extends Component {
   constructor(props) {
     super(props);
-    this.state = { tab: 'playlist' };
+    this.state = { tab: 'playlist', isLoading: false };
     this.handleEditSong = this.handleEditSong.bind(this);
     this.handleEditImage = this.handleEditImage.bind(this);
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
@@ -98,10 +99,13 @@ class AddInfo extends Component {
       <div
         className="right-0 absolute p-4 border-l cursor-pointer hover:bg-gray-100 rounded"
         onClick={async () => {
+          if (this.state.isLoading) return;
           if (this.props.title === '') {
             alert('Please add a title for your playlist:)');
             return;
           }
+          this.setState({ isLoading: true });
+
           const playlistInput = {
             name: this.props.title,
             ownerId: localStorage.getItem('userId'),
@@ -150,6 +154,7 @@ class AddInfo extends Component {
               query: { listId: createPlaylist.id },
             });
           }
+          this.setState({ isLoading: false });
         }}>
         Publish
       </div>
@@ -161,6 +166,11 @@ class AddInfo extends Component {
       <ApolloConsumer>
         {client => (
           <div id="AddInfo" className="flex items-center justify-around w-full">
+            {this.state.isLoading && (
+              <div className="fixed">
+                <Loader />
+              </div>
+            )}
             <div className="addInfo_container flex justify-between w-10/12">
               <div className="flex flex-col w-1/2">
                 <div className="flex">
