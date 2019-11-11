@@ -3,7 +3,7 @@ import cx from 'classnames';
 import sha256 from 'sha256';
 import { Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
-import Loader from '../loader';
+import Loader from '../Loader';
 import { validPattern } from '../../utils/configConst';
 import { capitalize } from '../../utils/generalUtils';
 import { Router, Link } from '../../routes';

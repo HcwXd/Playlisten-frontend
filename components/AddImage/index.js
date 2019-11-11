@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { STAGE } from '../../containers/Publish/constant';
 import { IMGUR_UPLOAD_URL } from '../../utils/configConst';
-import Loader from '../loader';
+import Loader from '../Loader';
 
 class AddImage extends Component {
   constructor(props) {
