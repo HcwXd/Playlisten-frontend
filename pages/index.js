@@ -15,7 +15,8 @@ const Posts = () => (
       if (loading) return <p>Loading...</p>;
       if (error) {
         Router.push({
-          pathname: '/publish',
+          pathname: '/profile',
+          query: { userId: 22 },
         });
         return <p>Hello :)</p>;
       }
