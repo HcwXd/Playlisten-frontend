@@ -93,9 +93,7 @@ class Signin extends Component {
           localStorage.setItem('userId', id);
           localStorage.setItem('username', name);
         }
-        Router.push({
-          pathname: '/',
-        });
+        window.location = `/profile?userId=${localStorage.getItem('userId')}`;
       }
       this.setState({ isLoading: false });
     }
