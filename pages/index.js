@@ -3,37 +3,22 @@ import { Query, Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import { Router, Link } from '../routes';
 
-const GET_POSTS_FOR_AUTHOR = gql`
-  query {
-    helloo
+class Index extends React.Component {
+  componentDidMount() {
+    Router.push({
+      pathname: '/profile',
+      query: { userId: 22 },
+    });
   }
-`;
 
-const Posts = () => (
-  <Query query={GET_POSTS_FOR_AUTHOR}>
-    {({ loading, error, data, refetch }) => {
-      if (loading) return <p>Loading...</p>;
-      if (error) {
-        Router.push({
-          pathname: '/profile',
-          query: { userId: 22 },
-        });
-        return <p>Hello :)</p>;
-      }
-      console.log(data);
-
-      return (
-        <div>
-          <ul className="collection">{'Apple'}</ul>
-        </div>
-      );
-    }}
-  </Query>
-);
+  render() {
+    return <p>Hello :)</p>;
+  }
+}
 
 const IndexPage = props => (
   <div>
-    <Posts />
+    <Index />
   </div>
 );
 
