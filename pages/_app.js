@@ -37,7 +37,7 @@ class PlaylistenApp extends App {
         <ApolloProvider client={client}>
           <Provider store={store}>
             <Head>
-              <title></title>
+              <title>Playlisten</title>
             </Head>
             <Component {...pageProps} />
           </Provider>
