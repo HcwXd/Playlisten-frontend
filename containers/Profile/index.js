@@ -73,7 +73,7 @@ class Profile extends Component {
 
   renderRowOfPlaylist(singleRow) {
     return (
-      <div className="flex justify-start w-full">
+      <div key={singleRow[0].id} className="flex justify-start w-full">
         {singleRow.map(playlist => (
           <PlaylistCover key={playlist.id} playlist={playlist} />
         ))}
