@@ -1,0 +1,149 @@
+$theme-color: rgb(113, 192, 249);
+
+.title_wrap {
+  margin-top: 15%;
+  width: 20%;
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+
+  .rotate_wrap {
+    transform: translate(-50%, -50%);
+    width: 84px;
+    height: 84px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+
+    .circle {
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      border: 18px solid $theme-color;
+      border-radius: 50%;
+      display: block;
+      position: absolute;
+    }
+
+    .dot {
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: block;
+      position: absolute;
+      animation: dotRotate 4.8s linear infinite;
+
+      &:hover:before {
+        background-color: #0a2463;
+      }
+
+      &:before {
+        display: block;
+        position: absolute;
+        content: '';
+        top: -42px;
+        left: 50%;
+        width: 24px;
+        height: 24px;
+        margin-left: -12px;
+        border-radius: 50%;
+        background-color: $theme-color;
+        animation: dotEffect 1.2s ease-in-out infinite;
+      }
+    }
+  }
+
+  .title_row {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 84px;
+    height: 84px;
+
+    &:hover {
+      .playlist,
+      .listen {
+        opacity: 1;
+        letter-spacing: 2px;
+      }
+    }
+
+    .playlist,
+    .listen {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
+      font-size: 96px;
+      letter-spacing: 14px;
+      opacity: 0;
+      transition: all 2s cubic-bezier(0.19, 1, 0.22, 1);
+      font-weight: bold;
+    }
+
+    .playlist {
+      right: 0;
+      transform: translate(-40%, -50%);
+    }
+
+    .listen {
+      left: 0;
+      transform: translate(40%, -50%);
+    }
+  }
+}
+
+@keyframes dotRotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dotEffect {
+  50% {
+    top: 102px;
+  }
+
+  0%,
+  50%,
+  100% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(0.5);
+  }
+
+  75% {
+    transform: scale(1.5);
+  }
+}
+
+.trial_btn,
+.signup_btn {
+  display: inline-block;
+  text-align: center;
+  padding: 15px 30px;
+  border-radius: 15px;
+  margin: 0 15px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition-duration: 0.2s;
+  transition-timing-function: linear;
+  width: 220px;
+}
+
+.trial_btn:hover,
+.signup_btn:hover {
+  border-radius: 30px;
+}
+
+.trial_btn {
+  background-color: $theme-color;
+}
+
+.signup_btn {
+  background-color: $theme-color;
+}
