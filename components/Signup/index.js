@@ -180,6 +180,11 @@ class Signup extends Component {
               hasEmailError: true,
               emailErrorType: 'This email format is invalid.',
             });
+          } else if (!value.includes('@gmail.com')) {
+            this.setState({
+              hasEmailError: true,
+              emailErrorType: 'Please use gmail to sign up.',
+            });
           } else {
             this.setState({
               hasEmailError: false,
@@ -272,12 +277,16 @@ class Signup extends Component {
       },
       ['shadow w-full p-4'],
     );
+
+    let placeholder = type;
+    if (type === 'confirmPassword') placeholder = 'confirm password';
+    if (type === 'email') placeholder = 'email (we only support gmail)';
     return (
       <div className="mb-4 w-full">
         <input
           type={type === 'confirmPassword' ? 'password' : type}
           className={inputStyle}
-          placeholder={type}
+          placeholder={placeholder}
           data-name={type}
           value={this.state[type]}
           onChange={this.handleInputOnChange}
