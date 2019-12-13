@@ -55,18 +55,21 @@ class Header extends Component {
             {process.browser && localStorage.getItem('userId') ? (
               <React.Fragment>
                 <div data-name="/profile" className="p-2 ml-8">
-                  <Link
-                    href={`/profile?userId=${localStorage.getItem('userId')}`}>
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <img
-                          className="w-8 h-8 rounded-full mr-4 shadow"
-                          src={DefaultProfile}
-                        />
-                        <a className="cursor-pointer">Profile</a>
-                      </div>
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <img
+                        className="w-8 h-8 rounded-full mr-4 shadow"
+                        src={DefaultProfile}
+                      />
+                      <a
+                        href={`/profile?userId=${localStorage.getItem(
+                          'userId',
+                        )}`}
+                        className="cursor-pointer">
+                        Profile
+                      </a>
                     </div>
-                  </Link>
+                  </div>
                 </div>
                 <div data-name="/publish" className="p-2 ml-8">
                   <Link href="/publish" prefetch>
