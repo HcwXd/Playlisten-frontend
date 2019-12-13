@@ -6,6 +6,7 @@ const schema = gql`
     searchResult(query: String!): [Song!]
     playlist(listId: String!): Playlist
     user(userId: String!): User
+    exploreList(num: Int!): [Playlist]
   }
 
   type Mutation {
@@ -23,7 +24,7 @@ const schema = gql`
   }
 
   type DeletePlaylistPayload {
-    listId: Int!
+    listId: ID!
   }
 
   type CreateUserPayload {
@@ -33,7 +34,7 @@ const schema = gql`
   }
 
   input DeletePlaylistInput {
-    listId: Int!
+    listId: ID!
   }
 
   input UpdatePlaylistInput {
