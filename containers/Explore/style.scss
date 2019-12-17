@@ -1,0 +1,36 @@
+.album {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+  background-size: cover;
+  background-position: center;
+  animation: goUp 10s infinite;
+  animation-timing-function: linear;
+  transition-duration: 1s;
+  cursor: pointer;
+  margin-bottom: 12px;
+
+  &:hover {
+    opacity: 1;
+    animation-play-state: paused;
+    z-index: 100;
+  }
+}
+
+@keyframes goUp {
+  0% {
+    transform: translateY(0%);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
