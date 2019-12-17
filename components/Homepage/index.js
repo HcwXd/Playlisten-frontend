@@ -10,7 +10,7 @@ class Homepage extends Component {
 
   render() {
     return (
-      <div className="mt-32 flex items-center justify-around">
+      <div className="py-32 flex items-center justify-around">
         <div className="w-4/5 flex items-center flex-col">
           <div className="title_wrap">
             <div className="rotate_wrap">
