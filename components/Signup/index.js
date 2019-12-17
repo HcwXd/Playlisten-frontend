@@ -64,7 +64,11 @@ class Signup extends Component {
     if (!this.wrapperRef.current) return;
     if (!this.wrapperRef.current.contains(event.target)) {
       document.removeEventListener('mousedown', this.handleClickOutside);
-      this.props.toggleSignupForm();
+      if (this.props.toggleSignupForm) {
+        this.props.toggleSignupForm();
+      } else {
+        window.location = '/';
+      }
     }
   }
 
