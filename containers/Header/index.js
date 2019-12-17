@@ -50,7 +50,17 @@ class Header extends Component {
         <div
           id="top-header"
           className="top-0 left-0 right-0 z-20 flex items-center justify-between fixed shadow py-2 px-4 bg-white">
-          <img className="h-6 mr-4" src={Logo} />
+          <nav className="flex items-center">
+            <a href="/">
+              <img className="h-6 mr-4" src={Logo} />
+            </a>
+            <div data-name="/explore" className="p-2 ml-8">
+              <Link href="/explore" prefetch>
+                <a>Explore</a>
+              </Link>
+            </div>
+          </nav>
+
           <nav className="flex items-center">
             {process.browser && localStorage.getItem('userId') ? (
               <React.Fragment>
@@ -76,7 +86,7 @@ class Header extends Component {
                     <a>Publish</a>
                   </Link>
                 </div>
-                <div data-name="/publish" className="p-2 ml-8">
+                <div data-name="/signout" className="p-2 ml-8">
                   <a className="cursor-pointer" onClick={this.handleSignout}>
                     Sign out
                   </a>
@@ -84,12 +94,12 @@ class Header extends Component {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <div data-name="/publish" className="p-2 ml-8">
+                <div data-name="/signup" className="p-2 ml-8">
                   <a className="cursor-pointer" onClick={this.toggleSignupForm}>
                     Sign up
                   </a>
                 </div>
-                <div data-name="/publish" className="p-2 ml-8">
+                <div data-name="/signin" className="p-2 ml-8">
                   <a className="cursor-pointer" onClick={this.toggleSigninForm}>
                     Sign in
                   </a>
