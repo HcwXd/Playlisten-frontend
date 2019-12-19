@@ -108,6 +108,9 @@ class Publish extends Component {
   }
 
   render() {
+    if (process.browser && !localStorage.getItem('userId')) {
+      window.location = '/';
+    }
     return (
       <div id="publish" className="py-20 flex items-center justify-around">
         {this.state.stage === 'addSong' ? (
