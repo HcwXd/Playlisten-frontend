@@ -25,6 +25,8 @@ import RandomHoverIcon from '../../static/imgs/random-hover.svg';
 import RepeatHoverIcon from '../../static/imgs/redo-hover.svg';
 import UpIcon from '../../static/imgs/up.svg';
 import UpHoverIcon from '../../static/imgs/up-hover.svg';
+import PlaylistIcon from '../../static/imgs/list.svg';
+import PlaylistHoverIcon from '../../static/imgs/list-hover.svg';
 
 class Player extends Component {
   constructor(props) {
@@ -106,6 +108,7 @@ class Player extends Component {
   renderFullScreenPlayer() {
     if (!this.props.currentPlayingPlaylist) return;
     const { name, cover } = this.props.currentPlayingSongInfo;
+    const { id: listId } = this.props.currentPlayingPlaylist;
     const progress = this.state.currentProgress
       ? this.state.currentProgress.played
       : 0;
@@ -127,6 +130,16 @@ class Player extends Component {
           />
         </div>
         <div className="mt-4 w-11/12 p-4 rounded shadow flex flex-col items-center">
+          <div className="w-full">
+            <a href={`/playlist?listId=${listId}`}>
+              <HoverableIcon
+                size={6}
+                Icon={PlaylistIcon}
+                HoverIcon={PlaylistHoverIcon}
+                style={'rotate-180 cursor-pointer mr-4'}
+              />
+            </a>
+          </div>
           <div className="relative flex flex-col items-center">
             <div className="absolute rounded-full bg-white absolute-center w-8 h-8 shadow-inner"></div>
             <img
