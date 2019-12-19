@@ -284,7 +284,7 @@ class Signup extends Component {
 
     let placeholder = type;
     if (type === 'confirmPassword') placeholder = 'confirm password';
-    if (type === 'email') placeholder = 'email (we only support gmail)';
+    if (type === 'email') placeholder = 'email (we only support gmail now)';
     return (
       <div className="mb-4 w-full">
         <input
