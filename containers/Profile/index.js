@@ -83,7 +83,8 @@ class Profile extends Component {
 
   renderPlaylistWrap() {
     const rowsOfPlaylist = [];
-    this.state.playlists.reverse().forEach((playlist, idx) => {
+    this.state.playlists.sort((b, a) => a.createdAt - b.createdAt);
+    this.state.playlists.forEach((playlist, idx) => {
       if (idx % 3 === 0) rowsOfPlaylist.push([]);
       rowsOfPlaylist[rowsOfPlaylist.length - 1].push(playlist);
     });
