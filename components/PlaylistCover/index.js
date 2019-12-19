@@ -43,7 +43,7 @@ class PlaylistCover extends Component {
           {this.state.isHoverOnCover ? (
             <Link href={`/playlist?listId=${id}`}>
               <div className="absolute w-full h-full bg-black-75 flex items-center justify-around">
-                <h3 className="text-2xl text-white">{name}</h3>
+                <h3 className="text-2xl text-white text-center">{name}</h3>
               </div>
             </Link>
           ) : null}
