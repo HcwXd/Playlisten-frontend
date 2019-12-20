@@ -154,6 +154,9 @@ class Playlist extends Component {
             <div>
               <div className="flex justify-between w-full p-4 pb-0">
                 <h1 className="text-4xl font-bold">{name}</h1>{' '}
+                <div className="text-gray-600">
+                  {timestamp.toLocaleDateString()}
+                </div>
               </div>
               <div className="flex items-center">
                 <div className="px-4">
@@ -163,9 +166,6 @@ class Playlist extends Component {
                       {owner.name}
                     </span>
                   </Link>
-                  <div className="text-gray-600">
-                    {timestamp.toLocaleDateString()}
-                  </div>
                 </div>
               </div>
               <div className="px-4 pt-2">
