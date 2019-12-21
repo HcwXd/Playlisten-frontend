@@ -7,7 +7,7 @@ import { reorder } from '../../utils/generalUtils';
 
 import { STAGE } from '../../containers/Publish/constant';
 import SearchIcon from '../../static/imgs/search.svg';
-import YoutubeSearchInput from '../YoutubeSearchInput';
+import YoutubeSearchInput from './YoutubeSearchInput';
 import SearchResult from './SearchResult';
 
 const GET_SEARCH_RESULT = gql`
