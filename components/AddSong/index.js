@@ -8,6 +8,7 @@ import { reorder } from '../../utils/generalUtils';
 import { STAGE } from '../../containers/Publish/constant';
 import SearchIcon from '../../static/imgs/search.svg';
 import YoutubeSearchInput from '../YoutubeSearchInput';
+import SearchResult from './SearchResult';
 
 const GET_SEARCH_RESULT = gql`
   query($searchQuery: String!) {
@@ -32,7 +33,6 @@ class AddSong extends Component {
     this.handleNextStage = this.handleNextStage.bind(this);
     this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
     this.renderSearchResult = this.renderSearchResult.bind(this);
-    this.handleRenderSearchResult = this.handleRenderSearchResult.bind(this);
     this.handleClickOnSearchResult = this.handleClickOnSearchResult.bind(this);
     this.handleDeleteSongFromPlaylist = this.handleDeleteSongFromPlaylist.bind(
       this,
@@ -51,6 +51,8 @@ class AddSong extends Component {
   }
 
   handleClickOnSearchResult(e) {
+    console.log(e);
+
     const targetSong = this.state.searchResult.find(
       ({ sourceId }) => sourceId === e.target.dataset.id,
     );
@@ -73,24 +75,18 @@ class AddSong extends Component {
       <div className="border flex flex-col w-1/2">
         <p className="p-4 shadow">Select the song you want to add</p>
         <ul className="flex flex-col w-full">
-          {searchResult.map(({ name, sourceId }) => (
-            <li
-              className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer"
+          {searchResult.map(({ name, sourceId, cover }) => (
+            <SearchResult
               key={sourceId}
-              onClick={this.handleClickOnSearchResult}
-              data-id={sourceId}>
-              <div className="p-4" data-id={sourceId}>
-                {name}
-              </div>
-            </li>
+              name={name}
+              cover={cover}
+              sourceId={sourceId}
+              handleClickOnSearchResult={this.handleClickOnSearchResult}
+            />
           ))}
         </ul>
       </div>
     );
-  }
-
-  handleRenderSearchResult() {
-    return this.renderSearchResult(this.state.searchResult);
   }
 
   onDragEnd(result) {
@@ -194,7 +190,7 @@ class AddSong extends Component {
                 </div>
               </div>
               {this.state.searchResult.length > 0
-                ? this.handleRenderSearchResult()
+                ? this.renderSearchResult(this.state.searchResult)
                 : null}
               {playlist.length > 0 ? this.renderCurrentPlaylist() : null}
               {playlist.length > 0 ? (
