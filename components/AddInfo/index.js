@@ -104,6 +104,10 @@ class AddInfo extends Component {
             alert('Please add a title for your playlist:)');
             return;
           }
+          if (!this.props.playlist || this.props.playlist.length === 0) {
+            alert('Please add a song in your playlist:)');
+            return;
+          }
           this.setState({ isLoading: true });
 
           const playlistInput = {
