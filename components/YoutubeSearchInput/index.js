@@ -48,7 +48,7 @@ class YoutubeSearchInput extends Component {
 
   render() {
     return (
-      <div id="youtube-search" className="w-full">
+      <div id="youtube-search" className="w-full z-50">
         <Typeahead
           options={this.state.hideDropdown ? [] : this.state.options}
           maxVisible={10}
