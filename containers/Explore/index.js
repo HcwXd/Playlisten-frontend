@@ -28,7 +28,14 @@ function random(min, max) {
 class Explore extends Component {
   constructor(props) {
     super(props);
-    this.state = { playlists: [], isLoading: false };
+    this.state = {
+      playlists: [],
+      isLoading: false,
+      showPlaylistInfo: false,
+      playlistInfo: null,
+    };
+    this.setPlaylistInfo = this.setPlaylistInfo.bind(this);
+    this.renderPlaylistInfo = this.renderPlaylistInfo.bind(this);
   }
 
   async componentDidMount() {
@@ -40,6 +47,12 @@ class Explore extends Component {
 
     const playlists = exploreList.map(({ id, name, cover }) => {
       return {
+        customizedStyle: {
+          top: `calc(${random(0, 100)}% + 100px)`,
+          right: `calc(${random(0, 100)}% - 100px)`,
+          animationDelay: `${random(-6, 0)}s`,
+          backgroundImage: `url(${cover})`,
+        },
         id,
         name,
         cover: cover === 'cover' ? 'https://ppt.cc/fLMbhx' : cover, // TODO: wait for backend implementation for empty cover
@@ -57,19 +70,49 @@ class Explore extends Component {
     return data;
   }
 
-  renderFloatingPlaylist({ id, name, cover }) {
-    const customizedStyle = {
-      top: `calc(${random(0, 100)}% + 100px)`,
-      right: `calc(${random(0, 100)}% - 100px)`,
-      animationDelay: `${random(-6, 0)}s`,
-      backgroundImage: `url(${cover})`,
-    };
+  renderFloatingPlaylist({ id, name, cover, customizedStyle }) {
     return (
       <a
         href={`/playlist?listId=${id}`}
+        data-name={name}
         key={id}
         className="album shadow"
-        style={customizedStyle}></a>
+        style={customizedStyle}
+        onMouseEnter={this.setPlaylistInfo}
+        onMouseLeave={() => {
+          this.setState({ showPlaylistInfo: false, playlistInfo: null });
+        }}></a>
+    );
+  }
+
+  setPlaylistInfo(e) {
+    const rect = e.target.getBoundingClientRect();
+    this.setState({
+      showPlaylistInfo: true,
+      playlistInfo: {
+        href: e.target.href,
+        name: e.target.dataset.name,
+        customizedStyle: {
+          top: `${rect.top - 160}px`,
+          right: e.target.style.right,
+          backgroundImage: e.target.style.backgroundImage,
+        },
+      },
+    });
+  }
+
+  renderPlaylistInfo() {
+    const { href, customizedStyle, name } = this.state.playlistInfo;
+
+    return (
+      <a
+        href={href}
+        className="album-active shadow flex justify-around items-end"
+        style={customizedStyle}>
+        <div className="text-sm text-center -m-10 bg-black text-white p-2 rounded">
+          {name}
+        </div>
+      </a>
     );
   }
 
@@ -81,6 +124,7 @@ class Explore extends Component {
         {this.state.isLoading && <Loader />}
         {this.state.playlists.length > 0 && (
           <div className="w-full h-full relative">
+            {this.state.showPlaylistInfo && this.renderPlaylistInfo()}
             {this.state.playlists.map(playlist =>
               this.renderFloatingPlaylist(playlist),
             )}

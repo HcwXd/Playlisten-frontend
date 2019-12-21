@@ -1,3 +1,14 @@
+.album-active {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  z-index: 99;
+}
+
 .album {
   position: absolute;
   width: 200px;
