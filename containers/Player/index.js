@@ -37,6 +37,7 @@ class Player extends Component {
       currentDuration: null,
       currentProgress: null,
     };
+    this.ref = this.ref.bind(this);
     this.toggleShowFullScreenPlayer = this.toggleShowFullScreenPlayer.bind(
       this,
     );
@@ -71,9 +72,17 @@ class Player extends Component {
     this.setState({ playing: !this.state.playing });
   }
 
+  ref(player) {
+    this.player = player;
+  }
+
   forwardSong() {
     const { currentPlayingPlaylist, currentPlayingSong } = this.props;
     const { songs } = currentPlayingPlaylist;
+    if (songs.length === 1) {
+      this.player.seekTo(0);
+      return;
+    }
     const currentIdx = songs.findIndex(
       ({ sourceId }) => sourceId === currentPlayingSong,
     );
@@ -91,6 +100,10 @@ class Player extends Component {
   backwardSong() {
     const { currentPlayingPlaylist, currentPlayingSong } = this.props;
     const { songs } = currentPlayingPlaylist;
+    if (songs.length === 1) {
+      this.player.seekTo(0);
+      return;
+    }
     const currentIdx = songs.findIndex(
       ({ sourceId }) => sourceId === currentPlayingSong,
     );
@@ -270,6 +283,7 @@ class Player extends Component {
           <TransitionGroup>
             <div className="opacity-0 w-0 h-0 overflow-hidden">
               <ReactPlayer
+                ref={this.ref}
                 url={`https://www.youtube.com/watch?v=${this.props.currentPlayingSong}`}
                 playing={this.state.playing}
                 onEnded={this.forwardSong}
