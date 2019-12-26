@@ -3,6 +3,7 @@ import { Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import { Router, Link } from '../../routes';
 import Loader from '../Loader';
+import { logEvent } from '../../utils/generalUtils';
 
 import { STAGE } from '../../containers/Publish/constant';
 
@@ -122,6 +123,8 @@ class AddInfo extends Component {
             ],
           };
           if (this.props.type === 'edit') {
+            logEvent('playlist', 'playlist_edit');
+
             console.log(playlistInput);
             const updatedPlaylistInput = {
               listInfo: playlistInput,
@@ -143,6 +146,8 @@ class AddInfo extends Component {
               query: { listId: updatePlaylist.id },
             });
           } else {
+            logEvent('playlist', 'playlist_create');
+
             console.log(playlistInput);
             const { data } = await client.mutate({
               mutation: CREATE_PLAYLIST,

@@ -1,3 +1,5 @@
+import ReactGA from 'react-ga';
+
 export const paddingLeft = value => {
   return `${value < 10 ? '0' : ''}${value}`;
 };
@@ -37,3 +39,26 @@ export const convertYoutubeDurationToMinSec = durationString => {
   }
 };
 export const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1);
+
+export const initGA = () => {
+  console.log('GA init');
+  ReactGA.initialize('UA-136377933-4');
+};
+
+export const logPageView = () => {
+  console.log(`Logging pageview for ${window.location.pathname}`);
+  ReactGA.set({ page: window.location.pathname });
+  ReactGA.pageview(window.location.pathname);
+};
+
+export const logEvent = (category = '', action = '', label = '') => {
+  if (category && action) {
+    ReactGA.event({ category, action, label: `${label}` });
+  }
+};
+
+export const logException = (description = '', fatal = false) => {
+  if (description) {
+    ReactGA.exception({ description, fatal });
+  }
+};

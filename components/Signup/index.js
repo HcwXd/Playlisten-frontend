@@ -5,7 +5,7 @@ import { Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import Loader from '../Loader';
 import { validPattern } from '../../utils/configConst';
-import { capitalize } from '../../utils/generalUtils';
+import { capitalize, logEvent } from '../../utils/generalUtils';
 import { Router, Link } from '../../routes';
 
 const CREATE_USER = gql`
@@ -106,6 +106,7 @@ class Signup extends Component {
     if (result !== 'success') {
       alert('Username has been used');
     } else {
+      logEvent('user', 'signup');
       localStorage.setItem('token', token);
       if (user) {
         const { id, name } = user;

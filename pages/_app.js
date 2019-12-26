@@ -16,6 +16,7 @@ import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { appWithTranslation } from '../i18n';
 import { generateStore } from '../stores/index';
+import { initGA, logPageView } from '../utils/generalUtils';
 
 import '../static/common.scss';
 
@@ -30,6 +31,11 @@ const client = new ApolloClient({
 });
 
 class PlaylistenApp extends App {
+  componentDidMount() {
+    initGA();
+    logPageView();
+  }
+
   render() {
     const { Component, pageProps, store } = this.props;
     return (
