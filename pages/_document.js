@@ -14,6 +14,14 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <meta name="version" data-value={version} />
+          <meta
+            property="og:title"
+            content="Playlisten - Share and Discover Music Playlist"></meta>
+          <meta property="og:type" content="website"></meta>
+          <meta property="og:url" content="https://playlisten.app/"></meta>
+          <meta
+            property="og:image"
+            content="https://i.imgur.com/kUhacyC.jpg"></meta>
 
           <link
             rel="apple-touch-icon"
