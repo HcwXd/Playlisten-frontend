@@ -107,7 +107,9 @@ class Profile extends Component {
           <div className="text-3xl">{name}</div>
           <span className="text-xl text-gray-600">
             {this.state.playlists.length}{' '}
-            <span className="text-gray-500">Playlists</span>
+            <span className="text-gray-500">
+              {this.state.playlists.length > 1 ? 'Playlists' : 'Playlist'}
+            </span>
           </span>
         </div>
       </div>
