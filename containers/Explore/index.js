@@ -8,6 +8,7 @@ import Loader from '../../components/Loader';
 import ConfirmModal from '../../components/ConfirmModal';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
+import { random } from '../../utils/generalUtils';
 import './style.scss';
 
 const GET_EXPLORE_PLAYLISTs = gql`
@@ -19,11 +20,6 @@ const GET_EXPLORE_PLAYLISTs = gql`
     }
   }
 `;
-
-function random(min, max) {
-  const num = Math.floor(Math.random() * (max - min)) + min;
-  return num;
-}
 
 class Explore extends Component {
   constructor(props) {

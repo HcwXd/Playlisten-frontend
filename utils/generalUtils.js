@@ -62,3 +62,8 @@ export const logException = (description = '', fatal = false) => {
     ReactGA.exception({ description, fatal });
   }
 };
+
+export const random = (min, max) => {
+  const num = Math.floor(Math.random() * (max - min)) + min;
+  return num;
+};
