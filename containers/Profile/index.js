@@ -48,7 +48,6 @@ class Profile extends Component {
     this.state = { userId: '', userInfo: '', playlists: '', isLoading: false };
     this.fetchUser = this.fetchUser.bind(this);
     this.renderPlaylistWrap = this.renderPlaylistWrap.bind(this);
-    this.renderRowOfPlaylist = this.renderRowOfPlaylist.bind(this);
     this.renderUserWrap = this.renderUserWrap.bind(this);
   }
 
@@ -71,26 +70,14 @@ class Profile extends Component {
     return data;
   }
 
-  renderRowOfPlaylist(singleRow) {
+  renderPlaylistWrap() {
+    this.state.playlists.sort((b, a) => a.createdAt - b.createdAt);
+
     return (
-      <div key={singleRow[0].id} className="flex justify-start w-full">
-        {singleRow.map(playlist => (
+      <div className="flex flex-wrap items-center w-full lg:w-8/12">
+        {this.state.playlists.map(playlist => (
           <PlaylistCover key={playlist.id} playlist={playlist} />
         ))}
-      </div>
-    );
-  }
-
-  renderPlaylistWrap() {
-    const rowsOfPlaylist = [];
-    this.state.playlists.sort((b, a) => a.createdAt - b.createdAt);
-    this.state.playlists.forEach((playlist, idx) => {
-      if (idx % 3 === 0) rowsOfPlaylist.push([]);
-      rowsOfPlaylist[rowsOfPlaylist.length - 1].push(playlist);
-    });
-    return (
-      <div className="flex flex-col items-center w-full lg:w-8/12">
-        {rowsOfPlaylist.map(singleRow => this.renderRowOfPlaylist(singleRow))}
       </div>
     );
   }
