@@ -243,6 +243,14 @@ class Playlist extends Component {
               ? `${this.state.playlist.name} by ${this.state.playlist.owner.name}`
               : 'Playlisten'}
           </title>
+          <meta
+            property="og:title"
+            content={
+              this.state.playlist
+                ? `${this.state.playlist.name} by ${this.state.playlist.owner.name}`
+                : 'Playlisten'
+            }
+          />
         </Head>
         {this.state.showDeleteConfirm ? (
           <ConfirmModal

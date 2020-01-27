@@ -113,6 +113,14 @@ class Profile extends Component {
               ? `${this.state.userInfo.name}'s Playlisten`
               : 'Playlisten'}
           </title>
+          <meta
+            property="og:title"
+            content={
+              this.state.userInfo
+                ? `${this.state.userInfo.name}'s Playlisten`
+                : 'Playlisten'
+            }
+          />
         </Head>
 
         <div
