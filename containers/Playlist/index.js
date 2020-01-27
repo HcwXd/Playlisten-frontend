@@ -235,19 +235,25 @@ class Playlist extends Component {
   }
 
   render() {
+    const { metaData } = this.props;
+    const { playlist } = this.state;
     return (
       <React.Fragment>
         <Head>
           <title>
-            {this.state.playlist
-              ? `${this.state.playlist.name} by ${this.state.playlist.owner.name}`
+            {metaData
+              ? `${metaData.playlistName} by ${metaData.ownerName}`
+              : playlist
+              ? `${playlist.name} by ${playlist.owner.name}`
               : 'Playlisten'}
           </title>
           <meta
             property="og:title"
             content={
-              this.state.playlist
-                ? `${this.state.playlist.name} by ${this.state.playlist.owner.name}`
+              metaData
+                ? `${metaData.playlistName} by ${metaData.ownerName}`
+                : playlist
+                ? `${playlist.name} by ${playlist.owner.name}`
                 : 'Playlisten'
             }
           />
