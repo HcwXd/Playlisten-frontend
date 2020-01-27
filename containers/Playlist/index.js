@@ -257,6 +257,14 @@ class Playlist extends Component {
                 : 'Playlisten'
             }
           />
+          <meta
+            property="og:description"
+            content={
+              metaData
+                ? `${metaData.playlistDes}`
+                : 'Playlisten - Share and Discover Music Playlist'
+            }
+          />
         </Head>
         {this.state.showDeleteConfirm ? (
           <ConfirmModal

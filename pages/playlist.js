@@ -31,11 +31,11 @@ PlaylistPage.getInitialProps = async ({ query, apolloClient }) => {
     query: GET_PLAYLIST,
     variables: { listId: query.listId },
   });
-  const { owner, name: playlistName, des: songDes } = data.playlist;
+  const { owner, name: playlistName, des: playlistDes } = data.playlist;
   const { name: ownerName } = owner;
 
   return {
-    metaData: { playlistName, songDes, ownerName },
+    metaData: { playlistName, playlistDes, ownerName },
     namespacesRequired: [],
   };
 };
