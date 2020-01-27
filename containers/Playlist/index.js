@@ -4,6 +4,7 @@ import { gql } from 'apollo-boost';
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 import cx from 'classnames';
+import Head from 'next/head';
 
 import Loader from '../../components/Loader';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -236,6 +237,13 @@ class Playlist extends Component {
   render() {
     return (
       <React.Fragment>
+        <Head>
+          <title>
+            {this.state.playlist
+              ? `${this.state.playlist.name} by ${this.state.playlist.owner.name}`
+              : 'Playlisten'}
+          </title>
+        </Head>
         {this.state.showDeleteConfirm ? (
           <ConfirmModal
             title={'Do you want to delete this playlist?'}

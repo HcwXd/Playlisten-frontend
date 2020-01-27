@@ -4,6 +4,7 @@ import { gql } from 'apollo-boost';
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 import cx from 'classnames';
+import Head from 'next/head';
 
 import Loader from '../../components/Loader';
 import DefaultProfile from '../../static/imgs/default-profile.jpeg';
@@ -105,15 +106,25 @@ class Profile extends Component {
 
   render() {
     return (
-      <div
-        id="profile"
-        className="py-20 flex flex-col items-center justify-around">
-        {this.state.isLoading && <Loader />}
-        {this.state.userInfo && this.renderUserWrap()}
-        {this.state.playlists && this.state.playlists.length > 0
-          ? this.renderPlaylistWrap()
-          : null}
-      </div>
+      <React.Fragment>
+        <Head>
+          <title>
+            {this.state.userInfo
+              ? `${this.state.userInfo.name}'s Playlisten`
+              : 'Playlisten'}
+          </title>
+        </Head>
+
+        <div
+          id="profile"
+          className="py-20 flex flex-col items-center justify-around">
+          {this.state.isLoading && <Loader />}
+          {this.state.userInfo && this.renderUserWrap()}
+          {this.state.playlists && this.state.playlists.length > 0
+            ? this.renderPlaylistWrap()
+            : null}
+        </div>
+      </React.Fragment>
     );
   }
 }

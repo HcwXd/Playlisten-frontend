@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'next/router';
 import { gql } from 'apollo-boost';
+import Head from 'next/head';
 
 import { connect } from 'react-redux';
 import cx from 'classnames';
@@ -112,38 +113,43 @@ class Publish extends Component {
       window.location = '/';
     }
     return (
-      <div id="publish" className="py-20 flex items-center justify-around">
-        {this.state.stage === 'addSong' ? (
-          <AddSong
-            handleChangeStage={this.handleChangeStage}
-            playlist={this.state.playlist}
-            handleChangePlaylist={this.handleChangePlaylist}
-          />
-        ) : null}
-        {this.state.stage === 'addImage' ? (
-          <AddImage
-            handleChangeStage={this.handleChangeStage}
-            handleChangeCoverPhoto={this.handleChangeCoverPhoto}
-            coverPreviewUrl={this.state.coverPreviewUrl}
-            coverFile={this.state.coverFile}
-            playlist={this.state.playlist}
-          />
-        ) : null}
-        {this.state.stage === 'addInfo' ? (
-          <AddInfo
-            coverPreviewUrl={this.state.coverPreviewUrl}
-            playlist={this.state.playlist}
-            title={this.state.title}
-            description={this.state.description}
-            handleChangeStage={this.handleChangeStage}
-            handleChangeTitle={this.handleChangeTitle}
-            handleChangeDescription={this.handleChangeDescription}
-            type={this.props.router.route.slice(1)}
-            listId={this.state.listId}
-            createdAt={this.state.createdAt}
-          />
-        ) : null}
-      </div>
+      <React.Fragment>
+        <Head>
+          <title>Publish - Playlisten</title>
+        </Head>
+        <div id="publish" className="py-20 flex items-center justify-around">
+          {this.state.stage === 'addSong' ? (
+            <AddSong
+              handleChangeStage={this.handleChangeStage}
+              playlist={this.state.playlist}
+              handleChangePlaylist={this.handleChangePlaylist}
+            />
+          ) : null}
+          {this.state.stage === 'addImage' ? (
+            <AddImage
+              handleChangeStage={this.handleChangeStage}
+              handleChangeCoverPhoto={this.handleChangeCoverPhoto}
+              coverPreviewUrl={this.state.coverPreviewUrl}
+              coverFile={this.state.coverFile}
+              playlist={this.state.playlist}
+            />
+          ) : null}
+          {this.state.stage === 'addInfo' ? (
+            <AddInfo
+              coverPreviewUrl={this.state.coverPreviewUrl}
+              playlist={this.state.playlist}
+              title={this.state.title}
+              description={this.state.description}
+              handleChangeStage={this.handleChangeStage}
+              handleChangeTitle={this.handleChangeTitle}
+              handleChangeDescription={this.handleChangeDescription}
+              type={this.props.router.route.slice(1)}
+              listId={this.state.listId}
+              createdAt={this.state.createdAt}
+            />
+          ) : null}
+        </div>
+      </React.Fragment>
     );
   }
 }

@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { gql } from 'apollo-boost';
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
+import Head from 'next/head';
 
 import Loader from '../../components/Loader';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -114,19 +115,24 @@ class Explore extends Component {
 
   render() {
     return (
-      <div
-        id="explore"
-        className="p-40 flex items-center justify-around w-screen h-screen">
-        {this.state.isLoading && <Loader />}
-        {this.state.playlists.length > 0 && (
-          <div className="w-full h-full relative">
-            {this.state.showPlaylistInfo && this.renderPlaylistInfo()}
-            {this.state.playlists.map(playlist =>
-              this.renderFloatingPlaylist(playlist),
-            )}
-          </div>
-        )}
-      </div>
+      <React.Fragment>
+        <Head>
+          <title>Explore - Playlisten</title>
+        </Head>
+        <div
+          id="explore"
+          className="p-40 flex items-center justify-around w-screen h-screen">
+          {this.state.isLoading && <Loader />}
+          {this.state.playlists.length > 0 && (
+            <div className="w-full h-full relative">
+              {this.state.showPlaylistInfo && this.renderPlaylistInfo()}
+              {this.state.playlists.map(playlist =>
+                this.renderFloatingPlaylist(playlist),
+              )}
+            </div>
+          )}
+        </div>
+      </React.Fragment>
     );
   }
 }
