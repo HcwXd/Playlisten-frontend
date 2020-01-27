@@ -1,10 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-/**
- * Genreal propose:_app.js in NEXT.js is for customized initial process of pages
- * We using next-redux-wrapper to insert redux stores for our app
- *
- * @since 2018.12
- */
 
 import React from 'react';
 import App, { Container } from 'next/app';
@@ -14,6 +8,7 @@ import { ApolloProvider } from 'react-apollo';
 import fetch from 'node-fetch';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
+import withApollo from 'next-with-apollo';
 import { appWithTranslation } from '../i18n';
 import { generateStore } from '../stores/index';
 import { initGA, logPageView } from '../utils/generalUtils';
@@ -53,4 +48,18 @@ class PlaylistenApp extends App {
   }
 }
 
-export default withRedux(generateStore)(appWithTranslation(PlaylistenApp));
+export default withRedux(generateStore)(
+  appWithTranslation(
+    withApollo(({ initialState }) => {
+      return new ApolloClient({
+        uri: `${process.env.API_URI}/graphql`,
+        fetch,
+        // This cache solve query an array return duplicate first item
+        // Refer to: https://stackoverflow.com/questions/48840223/apollo-duplicates-first-result-to-every-node-in-array-of-edges
+        cache: new InMemoryCache({
+          dataIdFromObject: o => (o._id ? `${o.__typename}:${o._id}` : null),
+        }),
+      });
+    })(PlaylistenApp),
+  ),
+);
