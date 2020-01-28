@@ -21,7 +21,7 @@ const PlaylistPage = ({ metaData }) => (
   <ApolloConsumer>
     {client => (
       <Layout>
-        <Head>
+        {/* <Head>
           <title>
             {metaData
               ? `${metaData.playlistName} by ${metaData.ownerName}`
@@ -43,7 +43,7 @@ const PlaylistPage = ({ metaData }) => (
                 : 'Playlisten - Share and Discover Music Playlist'
             }
           />
-        </Head>
+          </Head> */}
         <Playlist client={client} metaData={metaData} />
       </Layout>
     )}

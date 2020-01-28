@@ -5,6 +5,7 @@ import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import Head from 'next/head';
+import { NextSeo } from 'next-seo';
 
 import Loader from '../../components/Loader';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -237,35 +238,22 @@ class Playlist extends Component {
   render() {
     const { metaData } = this.props;
     const { playlist } = this.state;
+    const metaTitle = metaData
+      ? `${metaData.playlistName} by ${metaData.ownerName}`
+      : playlist
+      ? `${playlist.name} by ${playlist.owner.name}`
+      : 'Playlisten';
     return (
       <React.Fragment>
-        <Head>
-          <title>
-            {metaData
-              ? `${metaData.playlistName} by ${metaData.ownerName}`
-              : playlist
-              ? `${playlist.name} by ${playlist.owner.name}`
-              : 'Playlisten'}
-          </title>
-          <meta
-            property="og:title"
-            content={
-              metaData
-                ? `${metaData.playlistName} by ${metaData.ownerName}`
-                : playlist
-                ? `${playlist.name} by ${playlist.owner.name}`
-                : 'Playlisten'
-            }
-          />
-          <meta
-            property="og:description"
-            content={
-              metaData
-                ? `${metaData.playlistDes}`
-                : 'Playlisten - Share and Discover Music Playlist'
-            }
-          />
-        </Head>
+        <NextSeo
+          title={metaTitle}
+          description="Playlisten - Share and Discover Music Playlist"
+          openGraph={{
+            type: 'website',
+            title: metaTitle,
+            description: 'Playlisten - Share and Discover Music Playlist',
+          }}
+        />
         {this.state.showDeleteConfirm ? (
           <ConfirmModal
             title={'Do you want to delete this playlist?'}
