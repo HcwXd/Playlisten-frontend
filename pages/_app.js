@@ -2,7 +2,6 @@
 
 import React from 'react';
 import App, { Container } from 'next/app';
-import Head from 'next/head';
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import fetch from 'node-fetch';

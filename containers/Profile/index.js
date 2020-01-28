@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { gql } from 'apollo-boost';
-import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
-import cx from 'classnames';
-import Head from 'next/head';
+
 import { NextSeo } from 'next-seo';
 
 import Loader from '../../components/Loader';
@@ -12,10 +10,6 @@ import DefaultProfile from '../../static/imgs/default-profile.jpeg';
 import PlaylistCover from '../../components/PlaylistCover';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
-import HoverableIcon from '../../components/HoverableIcon';
-import PlayIcon from '../../static/imgs/play.svg';
-import PlayHoverIcon from '../../static/imgs/play-hover.svg';
-import { convertYoutubeDurationToMinSec } from '../../utils/generalUtils';
 
 const GET_USER = gql`
   query($userId: String!) {

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Query, Mutation, ApolloConsumer } from 'react-apollo';
+import { ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
-import Head from 'next/head';
 import Layout from '../components/Layout';
 import Playlist from '../containers/Playlist';
 

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 
 import { connect } from 'react-redux';
-import cx from 'classnames';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ReactPlayer from 'react-player';

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { gql } from 'apollo-boost';
-import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
-import cx from 'classnames';
-import Head from 'next/head';
 import { NextSeo } from 'next-seo';
 
 import Loader from '../../components/Loader';

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { gql } from 'apollo-boost';
-import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 import Head from 'next/head';
 
 import Loader from '../../components/Loader';
-import ConfirmModal from '../../components/ConfirmModal';
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import { random } from '../../utils/generalUtils';

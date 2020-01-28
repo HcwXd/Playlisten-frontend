@@ -7,7 +7,6 @@ import * as actions from './actions';
 import Logo from '../../static/imgs/logo.png';
 import Signup from '../../components/Signup';
 import Signin from '../../components/Signin';
-import DefaultProfile from '../../static/imgs/default-profile.jpeg';
 
 class Header extends Component {
   constructor(props) {

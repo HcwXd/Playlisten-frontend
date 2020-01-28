@@ -1,5 +1,5 @@
 import React from 'react';
-import { Query, Mutation, ApolloConsumer } from 'react-apollo';
+import { ApolloConsumer } from 'react-apollo';
 import Layout from '../components/Layout';
 import Publish from '../containers/Publish';
 
