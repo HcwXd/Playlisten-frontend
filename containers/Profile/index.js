@@ -5,6 +5,7 @@ import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import Head from 'next/head';
+import { NextSeo } from 'next-seo';
 
 import Loader from '../../components/Loader';
 import DefaultProfile from '../../static/imgs/default-profile.jpeg';
@@ -105,24 +106,24 @@ class Profile extends Component {
   }
 
   render() {
+    const { metaData } = this.props;
+    const { userInfo } = this.state;
+    const metaTitle = metaData
+      ? `${metaData.userName}'s Playlisten`
+      : userInfo
+      ? `${userInfo.name}'s Playlisten`
+      : 'Playlisten';
     return (
       <React.Fragment>
-        <Head>
-          <title>
-            {this.state.userInfo
-              ? `${this.state.userInfo.name}'s Playlisten`
-              : 'Playlisten'}
-          </title>
-          <meta
-            property="og:title"
-            content={
-              this.state.userInfo
-                ? `${this.state.userInfo.name}'s Playlisten`
-                : 'Playlisten'
-            }
-          />
-        </Head>
-
+        <NextSeo
+          title={metaTitle}
+          description="Playlisten - Share and Discover Music Playlist"
+          openGraph={{
+            type: 'website',
+            title: metaTitle,
+            description: 'Playlisten - Share and Discover Music Playlist',
+          }}
+        />
         <div
           id="profile"
           className="py-20 flex flex-col items-center justify-around">
