@@ -226,7 +226,9 @@ class Playlist extends Component {
                 <div className="w-12 text-right p-4" data-id={sourceId}>
                   {index + 1}
                 </div>
-                <div data-id={sourceId}>{songName}</div>
+                <div className="w-full" data-id={sourceId}>
+                  {songName}
+                </div>
               </div>
               <div className="p-4" data-id={sourceId}>
                 <div data-id={sourceId}>
