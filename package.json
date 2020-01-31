@@ -40,6 +40,7 @@
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-less": "^1.0.2-canary.0",
     "@zeit/next-sass": "^1.0.1",
+    "anchorme": "^1.1.2",
     "apollo-boost": "^0.4.4",
     "axios": "^0.18.0",
     "body-scroll-lock": "^2.6.4",

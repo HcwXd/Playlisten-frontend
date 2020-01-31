@@ -4,6 +4,7 @@ import { gql } from 'apollo-boost';
 import { connect } from 'react-redux';
 import { NextSeo } from 'next-seo';
 import Head from 'next/head';
+import anchorme from 'anchorme';
 
 import Loader from '../../components/Loader';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -154,6 +155,18 @@ class Playlist extends Component {
   renderPlaylistInfo() {
     const { des, name, owner, createdAt } = this.state.playlist;
     const timestamp = new Date(createdAt);
+    const formattedDesc = {
+      __html: anchorme(des, {
+        truncate: 40,
+        attributes: [
+          {
+            name: 'target',
+            value: '_blank',
+          },
+          { name: 'class', value: 'text-gray-600' },
+        ],
+      }),
+    };
 
     return (
       <div className="flex flex-col justify-between h-96 md:w-3/4 w-full">
@@ -175,7 +188,7 @@ class Playlist extends Component {
             </div>
           </div>
           <div className="px-4 pt-2 break-all">
-            <p>{des}</p>
+            <div dangerouslySetInnerHTML={formattedDesc} />
           </div>
         </div>
         <div className="p-2 w-full flex items-center">
