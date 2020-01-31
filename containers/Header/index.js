@@ -135,7 +135,7 @@ class Header extends Component {
     const isMember = process.browser && localStorage.getItem('userId');
 
     return (
-      <div className="fixed w-full h-full flex bg-black z-50">
+      <div className="fixed w-full h-full flex bg-black z-100">
         <div className="absolute right-0 py-2 px-4">
           <img
             className="p-2"
