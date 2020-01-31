@@ -43,6 +43,12 @@
   width: 32rem;
 }
 
+.md\:w-96 {
+  @media (min-width: 768px) {
+    width: 24rem !important;
+  }
+}
+
 .left-100 {
   left: 100%;
 }

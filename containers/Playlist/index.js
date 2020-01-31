@@ -131,7 +131,7 @@ class Playlist extends Component {
     const { cover } = this.state.playlist;
     return (
       <div
-        className="relative"
+        className="relative bg-black flex justify-around"
         onMouseEnter={this.handleHoverInCover}
         onMouseLeave={this.handleHoverOutCover}>
         {this.state.isHoverOnCover ? (
@@ -144,7 +144,7 @@ class Playlist extends Component {
             />
           </div>
         ) : null}
-        <div className="w-96 h-64 border">
+        <div className="w-96 h-64 md:border">
           <img className="w-full h-full" src={cover} alt="Cover" />
         </div>
       </div>
@@ -156,7 +156,7 @@ class Playlist extends Component {
     const timestamp = new Date(createdAt);
 
     return (
-      <div className="flex flex-col justify-between h-96 w-3/4">
+      <div className="flex flex-col justify-between h-96 md:w-3/4 w-full">
         <div>
           <div className="flex justify-between w-full p-4 pb-0">
             <h1 className="text-4xl font-bold">{name}</h1>{' '}
@@ -244,8 +244,8 @@ class Playlist extends Component {
     if (!this.state.playlist) return null;
 
     return (
-      <div className="flex flex-col border w-full lg:w-8/12 ">
-        <div className="flex">
+      <div className="flex flex-col border w-full lg:w-8/12 mb-8">
+        <div className="flex flex-col md:flex-row">
           {this.renderPlaylistCover()}
           {this.renderPlaylistInfo()}
         </div>
@@ -273,14 +273,12 @@ class Playlist extends Component {
             description: 'Playlisten - Share and Discover Music Playlist',
           }}
         />
-        {/** 
         <Head>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
           />
         </Head>
-        */}
         {this.state.showDeleteConfirm ? (
           <ConfirmModal
             title={'Do you want to delete this playlist?'}

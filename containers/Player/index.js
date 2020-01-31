@@ -239,7 +239,7 @@ class Player extends Component {
     return (
       <div
         id="player"
-        className="w-96 bg-white flex flex-col border items-center py-4 rounded-lg">
+        className="md:w-96 w-screen bg-white flex flex-col border items-center py-4 rounded-lg">
         <div className="flex w-full">
           <div className="w-full px-4 truncate">{name}</div>
           <div className="mr-4" onClick={this.toggleShowFullScreenPlayer}>
