@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { gql } from 'apollo-boost';
 import { connect } from 'react-redux';
 import { NextSeo } from 'next-seo';
+import Head from 'next/head';
 
 import Loader from '../../components/Loader';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -66,6 +67,9 @@ class Playlist extends Component {
     this.handleClickOnCover = this.handleClickOnCover.bind(this);
     this.deletePlaylist = this.deletePlaylist.bind(this);
     this.toggleShowDeletePlaylist = this.toggleShowDeletePlaylist.bind(this);
+    this.renderPlaylistCover = this.renderPlaylistCover.bind(this);
+    this.renderPlaylistInfo = this.renderPlaylistInfo.bind(this);
+    this.renderPlaylistSongs = this.renderPlaylistSongs.bind(this);
   }
 
   async componentDidMount() {
@@ -123,111 +127,129 @@ class Playlist extends Component {
     this.setState({ showDeleteConfirm: !this.state.showDeleteConfirm });
   }
 
+  renderPlaylistCover() {
+    const { cover } = this.state.playlist;
+    return (
+      <div
+        className="relative"
+        onMouseEnter={this.handleHoverInCover}
+        onMouseLeave={this.handleHoverOutCover}>
+        {this.state.isHoverOnCover ? (
+          <div className="absolute w-full h-full bg-black-50 flex items-center justify-around">
+            <HoverableIcon
+              size={12}
+              Icon={PlayHoverIcon}
+              HoverIcon={PlayIcon}
+              onClick={this.handleClickOnCover}
+            />
+          </div>
+        ) : null}
+        <div className="w-96 h-64 border">
+          <img className="w-full h-full" src={cover} alt="Cover" />
+        </div>
+      </div>
+    );
+  }
+
+  renderPlaylistInfo() {
+    const { des, name, owner, createdAt } = this.state.playlist;
+    const timestamp = new Date(createdAt);
+
+    return (
+      <div className="flex flex-col justify-between h-96 w-3/4">
+        <div>
+          <div className="flex justify-between w-full p-4 pb-0">
+            <h1 className="text-4xl font-bold">{name}</h1>{' '}
+            <div className="text-gray-600">
+              {timestamp.toLocaleDateString()}
+            </div>
+          </div>
+          <div className="flex items-center">
+            <div className="px-4">
+              by{' '}
+              <Link href={`/profile?userId=${owner.id}`} prefetch>
+                <span className="text-gray-600 cursor-pointer">
+                  {owner.name}
+                </span>
+              </Link>
+            </div>
+          </div>
+          <div className="px-4 pt-2">
+            <p>{des}</p>
+          </div>
+        </div>
+        <div className="p-2 w-full flex items-center">
+          <div
+            className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+            onClick={this.handleClickOnCover}>
+            <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play
+          </div>
+          {process.browser && owner.id === localStorage.getItem('userId') ? (
+            <React.Fragment>
+              <div
+                className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+                onClick={() => {
+                  Router.push({
+                    pathname: '/edit',
+                    query: { listId: this.state.listId },
+                  });
+                }}>
+                <img className="w-4 h-4 mr-2" src={EditIcon} />
+                Edit
+              </div>
+              <div
+                className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+                onClick={this.toggleShowDeletePlaylist}>
+                <img className="w-4 h-4 mr-2" src={DeleteIcon} />
+                Delete
+              </div>
+            </React.Fragment>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+
+  renderPlaylistSongs() {
+    const { songs } = this.state.playlist;
+
+    return (
+      <ul className="songlist_wrap flex flex-col w-full border">
+        {songs.map(
+          ({ sourceId, name: songName, cover: songCover, duration }, index) => (
+            <li
+              key={sourceId}
+              className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between"
+              data-id={sourceId}
+              onClick={this.handleChangeCurrentPlayingSong}>
+              <div className="flex items-center" data-id={sourceId}>
+                <div className="w-12 text-right p-4" data-id={sourceId}>
+                  {index + 1}
+                </div>
+                <div data-id={sourceId}>{songName}</div>
+              </div>
+              <div className="p-4" data-id={sourceId}>
+                <div data-id={sourceId}>
+                  {convertYoutubeDurationToMinSec(duration)}
+                </div>
+              </div>
+            </li>
+          ),
+        )}
+      </ul>
+    );
+  }
+
   renderPlaylist() {
     if (!this.state.playlist) return null;
-    const { cover, des, name, songs, owner, createdAt } = this.state.playlist;
-    const timestamp = new Date(createdAt);
 
     return (
       <div className="flex flex-col border w-full lg:w-8/12 ">
         <div className="flex">
-          <div
-            className="relative"
-            onMouseEnter={this.handleHoverInCover}
-            onMouseLeave={this.handleHoverOutCover}>
-            {this.state.isHoverOnCover ? (
-              <div className="absolute w-full h-full bg-black-50 flex items-center justify-around">
-                <HoverableIcon
-                  size={12}
-                  Icon={PlayHoverIcon}
-                  HoverIcon={PlayIcon}
-                  onClick={this.handleClickOnCover}
-                />
-              </div>
-            ) : null}
-            <div className="w-96 h-64 border">
-              <img className="w-full h-full" src={cover} alt="Cover" />
-            </div>
-          </div>
-          <div className="flex flex-col justify-between h-96 w-3/4">
-            <div>
-              <div className="flex justify-between w-full p-4 pb-0">
-                <h1 className="text-4xl font-bold">{name}</h1>{' '}
-                <div className="text-gray-600">
-                  {timestamp.toLocaleDateString()}
-                </div>
-              </div>
-              <div className="flex items-center">
-                <div className="px-4">
-                  by{' '}
-                  <Link href={`/profile?userId=${owner.id}`} prefetch>
-                    <span className="text-gray-600 cursor-pointer">
-                      {owner.name}
-                    </span>
-                  </Link>
-                </div>
-              </div>
-              <div className="px-4 pt-2">
-                <p>{des}</p>
-              </div>
-            </div>
-            <div className="p-2 w-full flex items-center">
-              <div
-                className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-                onClick={this.handleClickOnCover}>
-                <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play
-              </div>
-              {process.browser &&
-              owner.id === localStorage.getItem('userId') ? (
-                <React.Fragment>
-                  <div
-                    className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-                    onClick={() => {
-                      Router.push({
-                        pathname: '/edit',
-                        query: { listId: this.state.listId },
-                      });
-                    }}>
-                    <img className="w-4 h-4 mr-2" src={EditIcon} />
-                    Edit
-                  </div>
-                  <div
-                    className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-                    onClick={this.toggleShowDeletePlaylist}>
-                    <img className="w-4 h-4 mr-2" src={DeleteIcon} />
-                    Delete
-                  </div>
-                </React.Fragment>
-              ) : null}
-            </div>
-          </div>
+          {this.renderPlaylistCover()}
+          {this.renderPlaylistInfo()}
         </div>
-        <ul className="songlist_wrap flex flex-col w-full border">
-          {songs.map(
-            (
-              { sourceId, name: songName, cover: songCover, duration },
-              index,
-            ) => (
-              <li
-                key={sourceId}
-                className="hover:bg-gray-100 cursor-pointer border-b flex items-center justify-between"
-                data-id={sourceId}
-                onClick={this.handleChangeCurrentPlayingSong}>
-                <div className="flex items-center" data-id={sourceId}>
-                  <div className="w-12 text-right p-4" data-id={sourceId}>
-                    {index + 1}
-                  </div>
-                  <div data-id={sourceId}>{songName}</div>
-                </div>
-                <div className="p-4" data-id={sourceId}>
-                  <div data-id={sourceId}>
-                    {convertYoutubeDurationToMinSec(duration)}
-                  </div>
-                </div>
-              </li>
-            ),
-          )}
-        </ul>
+        {this.renderPlaylistSongs()}
       </div>
     );
   }
@@ -251,6 +273,14 @@ class Playlist extends Component {
             description: 'Playlisten - Share and Discover Music Playlist',
           }}
         />
+        {/** 
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
+          />
+        </Head>
+        */}
         {this.state.showDeleteConfirm ? (
           <ConfirmModal
             title={'Do you want to delete this playlist?'}
