@@ -159,7 +159,7 @@ class Playlist extends Component {
       <div className="flex flex-col justify-between h-96 md:w-3/4 w-full">
         <div>
           <div className="flex justify-between w-full p-4 pb-0">
-            <h1 className="text-4xl font-bold">{name}</h1>{' '}
+            <h1 className="text-4xl font-bold break-all">{name}</h1>{' '}
             <div className="text-gray-600">
               {timestamp.toLocaleDateString()}
             </div>
@@ -174,7 +174,7 @@ class Playlist extends Component {
               </Link>
             </div>
           </div>
-          <div className="px-4 pt-2">
+          <div className="px-4 pt-2 break-all">
             <p>{des}</p>
           </div>
         </div>
