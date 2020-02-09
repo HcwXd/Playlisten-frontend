@@ -2,7 +2,7 @@ module.exports = {
   theme: {
     extend: {
       fontSize: {},
-      colors: {},
+      colors: { facebook: 'rgba(53, 121, 234)' },
     },
   },
   variants: {},
