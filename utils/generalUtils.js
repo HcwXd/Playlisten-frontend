@@ -67,3 +67,9 @@ export const random = (min, max) => {
   const num = Math.floor(Math.random() * (max - min)) + min;
   return num;
 };
+
+export const setLocalStorageLoginInfo = ({ token, id, name }) => {
+  localStorage.setItem('token', token);
+  localStorage.setItem('userId', id);
+  localStorage.setItem('username', name);
+};

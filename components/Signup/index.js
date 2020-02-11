@@ -5,8 +5,13 @@ import { Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import Loader from '../Loader';
 import { validPattern } from '../../utils/configConst';
-import { capitalize, logEvent } from '../../utils/generalUtils';
+import {
+  capitalize,
+  logEvent,
+  setLocalStorageLoginInfo,
+} from '../../utils/generalUtils';
 import AuthAPI from '../../utils/api/apifetcher/auth';
+import { ERROR_TYPE, FIELD_TYPE } from './constants';
 
 import { Router, Link } from '../../routes';
 
@@ -66,7 +71,6 @@ class Signup extends Component {
     this.wrapperRef = React.createRef();
     this.handleInputOnChange = this.handleInputOnChange.bind(this);
     this.handleInputOnBlur = this.handleInputOnBlur.bind(this);
-    this.handleRegist = this.handleRegist.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.doValidate = this.doValidate.bind(this);
@@ -76,6 +80,7 @@ class Signup extends Component {
     this.doRegist = this.doRegist.bind(this);
     this.checkAllInputValid = this.checkAllInputValid.bind(this);
     this.renderFacebookSignupForm = this.renderFacebookSignupForm.bind(this);
+    this.renderSignupForm = this.renderSignupForm.bind(this);
     this.doRegistByFacebook = this.doRegistByFacebook.bind(this);
   }
 
@@ -86,16 +91,13 @@ class Signup extends Component {
       this.setState({ isFacebookSignup });
       const { data } = await AuthAPI.getFacebookSignupInfo();
       const { result, user } = data;
+
       if (result !== 'failed') {
         const { email, facebookAccessToken, facebookId, id, name } = user;
         this.setState({ email, facebookAccessToken, facebookId });
         if (id && name) {
-          localStorage.setItem('token', facebookAccessToken);
-          if (user) {
-            localStorage.setItem('userId', id);
-            localStorage.setItem('username', name);
-          }
-          window.location = `/profile?userId=${localStorage.getItem('userId')}`;
+          setLocalStorageLoginInfo({ token: facebookAccessToken, id, name });
+          window.location = `/profile?userId=${id}`;
         } else {
           this.setState({ isInitLoading: false });
         }
@@ -138,6 +140,7 @@ class Signup extends Component {
   }
 
   async doRegistByFacebook(client) {
+    if (!this.checkInputDone([FIELD_TYPE.USERNAME])) return;
     const userInput = {
       userName: this.state.username,
       email: this.state.email,
@@ -145,6 +148,7 @@ class Signup extends Component {
       facebookAccessToken: this.state.facebookAccessToken,
     };
     this.setState({ isLoading: true });
+
     const { data } = await client.mutate({
       mutation: CREATE_USER_BY_FACEBOOK,
       variables: {
@@ -156,21 +160,20 @@ class Signup extends Component {
     const { result, token, user } = createUserByFacebook;
 
     if (result !== 'success') {
-      alert('Username has been used');
+      alert(ERROR_TYPE.USERNAME_DUPLICATED);
     } else {
       logEvent('user', 'signup');
-      localStorage.setItem('token', token);
       if (user) {
         const { id, name } = user;
-        localStorage.setItem('userId', id);
-        localStorage.setItem('username', name);
+        setLocalStorageLoginInfo({ token, id, name });
+        window.location = `/profile?userId=${id}`;
       }
-      window.location = `/profile?userId=${localStorage.getItem('userId')}`;
     }
     this.setState({ isLoading: false });
   }
 
   async doRegist(client) {
+    if (!this.checkAllInputValid()) return;
     const userInput = {
       userName: this.state.username,
       email: this.state.email,
@@ -188,23 +191,26 @@ class Signup extends Component {
     const { result, token, user } = createUser;
 
     if (result !== 'success') {
-      alert('Username has been used');
+      alert(ERROR_TYPE.USERNAME_DUPLICATED);
     } else {
       logEvent('user', 'signup');
-      localStorage.setItem('token', token);
       if (user) {
         const { id, name } = user;
-        localStorage.setItem('userId', id);
-        localStorage.setItem('username', name);
+        setLocalStorageLoginInfo({ token, id, name });
+        window.location = `/profile?userId=${id}`;
       }
-      window.location = `/profile?userId=${localStorage.getItem('userId')}`;
     }
     this.setState({ isLoading: false });
   }
 
   checkAllInputValid() {
     let isValid = true;
-    ['email', 'password', 'confirmPassword', 'username'].forEach(type => {
+    [
+      FIELD_TYPE.EMAIL,
+      FIELD_TYPE.PASSWORD,
+      FIELD_TYPE.CONFIRM_PASSWORD,
+      FIELD_TYPE.USERNAME,
+    ].forEach(type => {
       if (!this.doValidate(type)) {
         isValid = false;
       }
@@ -212,12 +218,13 @@ class Signup extends Component {
     return isValid;
   }
 
-  handleRegist(client) {
-    if (this.checkAllInputValid()) this.doRegist(client);
-  }
-
   checkInputDone(
-    fields = ['email', 'password', 'confirmPassword', 'username'],
+    fields = [
+      FIELD_TYPE.EMAIL,
+      FIELD_TYPE.PASSWORD,
+      FIELD_TYPE.CONFIRM_PASSWORD,
+      FIELD_TYPE.USERNAME,
+    ],
   ) {
     let result = true;
     for (let i = 0; i < fields.length; i++) {
@@ -242,7 +249,7 @@ class Signup extends Component {
     if (this.state.confirmPassword.length !== 0) {
       this.setState({
         hasConfirmPasswordError: true,
-        confirmPasswordErrorType: 'The password is inconsistent.',
+        confirmPasswordErrorType: ERROR_TYPE.PASSWORD_INCONSISTENT,
       });
       return false;
     }
@@ -264,16 +271,16 @@ class Signup extends Component {
     const value = this.state[type];
     if (value) {
       switch (type) {
-        case 'email':
+        case FIELD_TYPE.EMAIL:
           if (!validPattern.emailPattern.test(value)) {
             this.setState({
               hasEmailError: true,
-              emailErrorType: 'This email format is invalid.',
+              emailErrorType: ERROR_TYPE.EMAIL_INVALID,
             });
           } else if (!value.includes('@gmail.com')) {
             this.setState({
               hasEmailError: true,
-              emailErrorType: 'Please use gmail to sign up.',
+              emailErrorType: ERROR_TYPE.EMAIL_NOT_GMAIL,
             });
           } else {
             this.setState({
@@ -283,19 +290,17 @@ class Signup extends Component {
             return true;
           }
           break;
-        case 'password':
+        case FIELD_TYPE.PASSWORD:
           this.checkConfirmPassword();
           if (value.length < 8) {
             this.setState({
               hasPasswordError: true,
-              passwordErrorType:
-                'Your password should be at least 8 characters long.',
+              passwordErrorType: ERROR_TYPE.PASSWORD_TOO_SHORT,
             });
           } else if (value.length > 20) {
             this.setState({
               hasPasswordError: true,
-              passwordErrorType:
-                'Your password should be less than 20 characters.',
+              passwordErrorType: ERROR_TYPE.PASSWORD_TOO_LONG,
             });
           } else {
             this.setState({
@@ -305,20 +310,18 @@ class Signup extends Component {
             return true;
           }
           break;
-        case 'confirmPassword':
+        case FIELD_TYPE.CONFIRM_PASSWORD:
           return this.checkConfirmPassword();
-        case 'username':
+        case FIELD_TYPE.USERNAME:
           if (!validPattern.usernamePattern.test(value)) {
             this.setState({
               hasUsernameError: true,
-              usernameErrorType:
-                'Username only supported alphabet, number, underline.',
+              usernameErrorType: ERROR_TYPE.USERNAME_INVALID,
             });
           } else if (value.length > 20) {
             this.setState({
               hasUsernameError: true,
-              usernameErrorType:
-                'Your username should be less than 20 characters.',
+              usernameErrorType: ERROR_TYPE.USERNAME_TOO_LONG,
             });
           } else {
             this.setState({
@@ -354,7 +357,6 @@ class Signup extends Component {
   handleKeyUp(e) {
     if (e.key === 'Enter' && this.state.isButtonActive) {
       this.setState({ isButtonActive: false });
-      // this.handleRegist(e);
     }
   }
 
@@ -369,12 +371,18 @@ class Signup extends Component {
     );
 
     let placeholder = type;
-    if (type === 'confirmPassword') placeholder = 'confirm password';
-    if (type === 'email') placeholder = 'email (we only support gmail now)';
+    if (type === FIELD_TYPE.CONFIRM_PASSWORD) {
+      placeholder = 'confirm password';
+    }
+    if (type === FIELD_TYPE.EMAIL) {
+      placeholder = 'email (we only support gmail now)';
+    }
     return (
       <div className="mb-4 w-full">
         <input
-          type={type === 'confirmPassword' ? 'password' : type}
+          type={
+            type === FIELD_TYPE.CONFIRM_PASSWORD ? FIELD_TYPE.PASSWORD : type
+          }
           className={inputStyle}
           placeholder={placeholder}
           data-name={type}
@@ -399,12 +407,14 @@ class Signup extends Component {
           onKeyDown={this.handleKeyDown}
           onKeyUp={this.handleKeyUp}
           className="w-full">
-          {this.renderInputField('username')}
+          {this.renderInputField(FIELD_TYPE.USERNAME)}
         </form>
         <div className="mt-4 border px-4 py-4 rounded cursor-pointer">
           <span
             className={
-              this.checkInputDone(['username']) ? 'text-gray' : 'text-gray-500'
+              this.checkInputDone([FIELD_TYPE.USERNAME])
+                ? 'text-gray'
+                : 'text-gray-500'
             }
             onClick={() => {
               this.doRegistByFacebook(client);
@@ -412,6 +422,40 @@ class Signup extends Component {
             Create Account
           </span>
         </div>
+      </React.Fragment>
+    );
+  }
+
+  renderSignupForm(client) {
+    return (
+      <React.Fragment>
+        <div className="text-xl mb-8">
+          Register to Share Your Music and Story
+        </div>
+        <form
+          onKeyDown={this.handleKeyDown}
+          onKeyUp={this.handleKeyUp}
+          className="w-full">
+          {this.renderInputField(FIELD_TYPE.EMAIL)}
+          {this.renderInputField(FIELD_TYPE.PASSWORD)}
+          {this.renderInputField(FIELD_TYPE.CONFIRM_PASSWORD)}
+          {this.renderInputField(FIELD_TYPE.USERNAME)}
+        </form>
+        <div className="mt-4 border px-4 py-4 rounded cursor-pointer">
+          <span
+            className={this.checkInputDone() ? 'text-gray' : 'text-gray-500'}
+            onClick={() => {
+              this.doRegist(client);
+            }}>
+            Create Account
+          </span>
+        </div>
+        <div className="mt-4 text-gray-500">OR</div>
+        <a href={`${process.env.API_URI}/auth/facebook`}>
+          <div className="mt-4 border border-facebook px-4 py-4 rounded cursor-pointer">
+            <span className="text-facebook">Continue with Facebook</span>
+          </div>
+        </a>
       </React.Fragment>
     );
   }
@@ -427,43 +471,9 @@ class Signup extends Component {
                 id="signup"
                 className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
                 {this.state.isLoading && <Loader />}
-                {this.state.isFacebookSignup ? (
-                  this.renderFacebookSignupForm(client)
-                ) : (
-                  <React.Fragment>
-                    <div className="text-xl mb-8">
-                      Register to Share Your Music and Story
-                    </div>
-                    <form
-                      onKeyDown={this.handleKeyDown}
-                      onKeyUp={this.handleKeyUp}
-                      className="w-full">
-                      {this.renderInputField('email')}
-                      {this.renderInputField('password')}
-                      {this.renderInputField('confirmPassword')}
-                      {this.renderInputField('username')}
-                    </form>
-                    <div className="mt-4 border px-4 py-4 rounded cursor-pointer">
-                      <span
-                        className={
-                          this.checkInputDone() ? 'text-gray' : 'text-gray-500'
-                        }
-                        onClick={() => {
-                          this.handleRegist(client);
-                        }}>
-                        Create Account
-                      </span>
-                    </div>
-                    <div className="mt-4 text-gray-500">OR</div>
-                    <a href={`${process.env.API_URI}/auth/facebook`}>
-                      <div className="mt-4 border border-facebook px-4 py-4 rounded cursor-pointer">
-                        <span className="text-facebook">
-                          Continue with Facebook
-                        </span>
-                      </div>
-                    </a>
-                  </React.Fragment>
-                )}
+                {this.state.isFacebookSignup
+                  ? this.renderFacebookSignupForm(client)
+                  : this.renderSignupForm(client)}
               </div>
             )}
           </div>
