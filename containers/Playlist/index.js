@@ -255,7 +255,13 @@ class Playlist extends Component {
           onClick={this.handleClickOnCover}>
           <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play
         </div>
-
+        {/**
+        <div
+          className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+          onClick={this.handleClickOnCover}>
+          <img className="w-4 h-4 mr-2" src={LikeIcon} /> Like
+        </div>
+         */}
         {process.browser && owner.id === localStorage.getItem('userId') ? (
           <React.Fragment>
             <div
