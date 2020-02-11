@@ -9,11 +9,13 @@ import Signup from '../../components/Signup';
 import Signin from '../../components/Signin';
 import MenuIcon from '../../static/imgs/menu.svg';
 import CancelIcon from '../../static/imgs/cancel-hover.svg';
+import AuthAPI from '../../utils/api/apifetcher/auth';
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLogin: false,
       showSignup: false,
       showSignin: false,
       showMobileMenu: false,
@@ -27,11 +29,22 @@ class Header extends Component {
     this.renderMobileMenu = this.renderMobileMenu.bind(this);
   }
 
-  handleSignout() {
+  async handleSignout() {
     localStorage.clear();
-    Router.push({
-      pathname: '/',
+    this.setState({
+      isLogin: false,
+      showSignup: false,
+      showSignin: false,
+      showMobileMenu: false,
     });
+    await AuthAPI.signOut();
+    window.location = '/';
+  }
+
+  componentDidMount() {
+    if (process.browser && localStorage.getItem('userId')) {
+      this.setState({ isLogin: true });
+    }
   }
 
   toggleSignupForm() {

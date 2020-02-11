@@ -9,4 +9,12 @@ AuthAPI.getFacebookSignupInfo = query => {
   });
 };
 
+AuthAPI.signOut = query => {
+  const url = `${process.env.API_URI}/auth/signOut`;
+  return api.fire({
+    url,
+    method: 'post',
+  });
+};
+
 export default AuthAPI;
