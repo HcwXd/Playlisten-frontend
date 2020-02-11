@@ -13,6 +13,7 @@ import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import HoverableIcon from '../../components/HoverableIcon';
 import EditIcon from '../../static/imgs/edit.svg';
+import LikeIcon from '../../static/imgs/heart.svg';
 import DeleteIcon from '../../static/imgs/delete.svg';
 import PlayIcon from '../../static/imgs/play.svg';
 import PlayHoverIcon from '../../static/imgs/play-hover.svg';
@@ -72,6 +73,7 @@ class Playlist extends Component {
     this.renderPlaylistCover = this.renderPlaylistCover.bind(this);
     this.renderPlaylistInfo = this.renderPlaylistInfo.bind(this);
     this.renderPlaylistSongs = this.renderPlaylistSongs.bind(this);
+    this.renderControlPanel = this.renderControlPanel.bind(this);
   }
 
   async componentDidMount() {
@@ -188,37 +190,9 @@ class Playlist extends Component {
               </Link>
             </div>
           </div>
-          <div className="px-4 pt-2 break-all md:h-24 overflow-scroll">
+          <div className="px-4 pt-2 break-all md:h-32 overflow-scroll">
             <div dangerouslySetInnerHTML={formattedDesc} />
           </div>
-        </div>
-        <div className="p-2 w-full flex items-center">
-          <div
-            className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-            onClick={this.handleClickOnCover}>
-            <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play
-          </div>
-          {process.browser && owner.id === localStorage.getItem('userId') ? (
-            <React.Fragment>
-              <div
-                className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-                onClick={() => {
-                  Router.push({
-                    pathname: '/edit',
-                    query: { listId: this.state.listId },
-                  });
-                }}>
-                <img className="w-4 h-4 mr-2" src={EditIcon} />
-                Edit
-              </div>
-              <div
-                className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-                onClick={this.toggleShowDeletePlaylist}>
-                <img className="w-4 h-4 mr-2" src={DeleteIcon} />
-                Delete
-              </div>
-            </React.Fragment>
-          ) : null}
         </div>
       </div>
     );
@@ -228,7 +202,7 @@ class Playlist extends Component {
     const { songs } = this.state.playlist;
 
     return (
-      <ul className="songlist_wrap flex flex-col w-full border">
+      <ul className="songlist_wrap flex flex-col w-full">
         {songs.map(
           ({ sourceId, name: songName, cover: songCover, duration }, index) => (
             <li
@@ -261,11 +235,48 @@ class Playlist extends Component {
 
     return (
       <div className="flex flex-col border w-full lg:w-8/12 mb-8">
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col md:flex-row border-b">
           {this.renderPlaylistCover()}
           {this.renderPlaylistInfo()}
         </div>
+        {this.renderControlPanel()}
         {this.renderPlaylistSongs()}
+      </div>
+    );
+  }
+
+  renderControlPanel() {
+    const { owner } = this.state.playlist;
+
+    return (
+      <div className="p-2 w-full flex items-center border-b">
+        <div
+          className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+          onClick={this.handleClickOnCover}>
+          <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play
+        </div>
+
+        {process.browser && owner.id === localStorage.getItem('userId') ? (
+          <React.Fragment>
+            <div
+              className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+              onClick={() => {
+                Router.push({
+                  pathname: '/edit',
+                  query: { listId: this.state.listId },
+                });
+              }}>
+              <img className="w-4 h-4 mr-2" src={EditIcon} />
+              Edit
+            </div>
+            <div
+              className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+              onClick={this.toggleShowDeletePlaylist}>
+              <img className="w-4 h-4 mr-2" src={DeleteIcon} />
+              Delete
+            </div>
+          </React.Fragment>
+        ) : null}
       </div>
     );
   }
