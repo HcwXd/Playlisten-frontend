@@ -38,7 +38,7 @@ class Header extends Component {
       showMobileMenu: false,
     });
     await AuthAPI.signOut();
-    window.location = '/';
+    window.location = window.location;
   }
 
   componentDidMount() {
