@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { NextSeo } from 'next-seo';
 import Head from 'next/head';
 import anchorme from 'anchorme';
+import escape from 'escape-html';
 
 import Loader from '../../components/Loader';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -156,7 +157,7 @@ class Playlist extends Component {
     const { des, name, owner, createdAt } = this.state.playlist;
     const timestamp = new Date(createdAt);
     const formattedDesc = {
-      __html: anchorme(des, {
+      __html: anchorme(escape(des).replace(/(?:\r\n|\r|\n)/g, '<br/>'), {
         truncate: 40,
         attributes: [
           {
