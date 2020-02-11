@@ -5,7 +5,9 @@ import { Mutation, ApolloConsumer } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import Loader from '../Loader';
 import { validPattern } from '../../utils/configConst';
-import { capitalize } from '../../utils/generalUtils';
+import { capitalize, setLocalStorageLoginInfo } from '../../utils/generalUtils';
+import { ERROR_TYPE, FIELD_TYPE } from '../Signup/constants';
+
 import { Router, Link } from '../../routes';
 
 const SIGN_IN = gql`
@@ -44,6 +46,7 @@ class Signin extends Component {
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.doValidate = this.doValidate.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.renderSigninForm = this.renderSigninForm.bind(this);
   }
 
   componentDidMount() {
@@ -60,7 +63,7 @@ class Signin extends Component {
 
   checkAllInputValid() {
     let isValid = true;
-    ['username', 'password'].forEach(type => {
+    [FIELD_TYPE.USERNAME, FIELD_TYPE.PASSWORD].forEach(type => {
       if (!this.doValidate(type)) {
         isValid = false;
       }
@@ -86,21 +89,17 @@ class Signin extends Component {
       const { result, token, user } = signIn;
       if (result !== 'success') {
         alert('Sign in failed');
-      } else {
-        localStorage.setItem('token', token);
-        if (user) {
-          const { id, name } = user;
-          localStorage.setItem('userId', id);
-          localStorage.setItem('username', name);
-        }
-        window.location = `/profile?userId=${localStorage.getItem('userId')}`;
+      } else if (user) {
+        const { id, name } = user;
+        setLocalStorageLoginInfo({ token, id, name });
+        window.location = `/profile?userId=${id}`;
       }
       this.setState({ isLoading: false });
     }
   }
 
   checkInputDone() {
-    const fields = ['username', 'password'];
+    const fields = [FIELD_TYPE.USERNAME, FIELD_TYPE.PASSWORD];
     let result = true;
     for (let i = 0; i < fields.length; i++) {
       if (
@@ -126,11 +125,11 @@ class Signin extends Component {
     const value = this.state[type];
     if (value) {
       switch (type) {
-        case 'username':
+        case FIELD_TYPE.USERNAME:
           if (!validPattern.usernamePattern.test(value)) {
             this.setState({
               hasusernameError: true,
-              usernameErrorType: 'This username format is invalid.',
+              usernameErrorType: ERROR_TYPE.USERNAME_INVALID,
             });
           } else {
             this.setState({
@@ -140,18 +139,16 @@ class Signin extends Component {
             return true;
           }
           break;
-        case 'password':
+        case FIELD_TYPE.PASSWORD:
           if (value.length < 8) {
             this.setState({
               hasPasswordError: true,
-              passwordErrorType:
-                'Your password should be at least 8 characters long.',
+              passwordErrorType: ERROR_TYPE.PASSWORD_TOO_SHORT,
             });
           } else if (value.length > 20) {
             this.setState({
               hasPasswordError: true,
-              passwordErrorType:
-                'Your password should be less than 20 characters.',
+              passwordErrorType: ERROR_TYPE.PASSWORD_TOO_LONG,
             });
           } else {
             this.setState({
@@ -187,7 +184,6 @@ class Signin extends Component {
   handleKeyUp(e) {
     if (e.key === 'Enter' && this.state.isButtonActive) {
       this.setState({ isButtonActive: false });
-      // this.handleSignIn(e);
     }
   }
 
@@ -203,7 +199,7 @@ class Signin extends Component {
     return (
       <div className="mb-4 w-full">
         <input
-          type={type === 'confirmPassword' ? 'password' : type}
+          type={type}
           className={inputStyle}
           placeholder={type}
           data-name={type}
@@ -220,6 +216,36 @@ class Signin extends Component {
     );
   }
 
+  renderSigninForm(client) {
+    return (
+      <React.Fragment>
+        <div className="text-xl mb-8">Sign In to Playlisten</div>
+        <form
+          onKeyDown={this.handleKeyDown}
+          onKeyUp={this.handleKeyUp}
+          className="w-full">
+          {this.renderInputField(FIELD_TYPE.USERNAME)}
+          {this.renderInputField(FIELD_TYPE.PASSWORD)}
+        </form>
+        <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
+          <span
+            className={this.checkInputDone() ? 'text-gray' : 'text-gray-500'}
+            onClick={() => {
+              this.handleSignIn(client);
+            }}>
+            Sign In
+          </span>
+        </div>
+        <div className="mt-4 text-gray-500">OR</div>
+        <a href={`${process.env.API_URI}/auth/facebook`}>
+          <div className="mt-4 border border-facebook px-4 py-4 rounded cursor-pointer">
+            <span className="text-facebook">Continue with Facebook</span>
+          </div>
+        </a>
+      </React.Fragment>
+    );
+  }
+
   render() {
     return (
       <ApolloConsumer>
@@ -230,31 +256,7 @@ class Signin extends Component {
               id="signup"
               className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
               {this.state.isLoading && <Loader />}
-              <div className="text-xl mb-8">Sign In to Playlisten</div>
-              <form
-                onKeyDown={this.handleKeyDown}
-                onKeyUp={this.handleKeyUp}
-                className="w-full">
-                {this.renderInputField('username')}
-                {this.renderInputField('password')}
-              </form>
-              <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
-                <span
-                  className={
-                    this.checkInputDone() ? 'text-gray' : 'text-gray-500'
-                  }
-                  onClick={() => {
-                    this.handleSignIn(client);
-                  }}>
-                  Sign In
-                </span>
-              </div>
-              <div className="mt-4 text-gray-500">OR</div>
-              <a href={`${process.env.API_URI}/auth/facebook`}>
-                <div className="mt-4 border border-facebook px-4 py-4 rounded cursor-pointer">
-                  <span className="text-facebook">Continue with Facebook</span>
-                </div>
-              </a>
+              {this.renderSigninForm(client)}
             </div>
           </div>
         )}

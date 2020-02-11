@@ -74,8 +74,6 @@ class Signup extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.doValidate = this.doValidate.bind(this);
-    this.handleEmailExist = this.handleEmailExist.bind(this);
-    this.handleUsernameExist = this.handleUsernameExist.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.doRegist = this.doRegist.bind(this);
     this.checkAllInputValid = this.checkAllInputValid.bind(this);
@@ -123,20 +121,6 @@ class Signup extends Component {
         window.location = '/';
       }
     }
-  }
-
-  handleEmailExist() {
-    this.setState({
-      hasEmailError: true,
-      emailErrorType: 'email_exist',
-    });
-  }
-
-  handleUsernameExist() {
-    this.setState({
-      hasUsernameError: true,
-      usernameErrorType: 'username_exist',
-    });
   }
 
   async doRegistByFacebook(client) {
