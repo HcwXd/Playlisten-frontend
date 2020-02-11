@@ -41,6 +41,7 @@ class Signup extends Component {
     super(props);
     this.state = {
       isLoading: false,
+      isInitLoading: true,
       isFacebookSignup: false,
 
       hasEmailError: false,
@@ -78,8 +79,7 @@ class Signup extends Component {
     this.doRegistByFacebook = this.doRegistByFacebook.bind(this);
   }
 
-  async componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
+  async componentWillMount() {
     const params = new URLSearchParams(window.location.search);
     const isFacebookSignup = params.get('facebook');
     if (isFacebookSignup) {
@@ -96,8 +96,18 @@ class Signup extends Component {
             localStorage.setItem('username', name);
           }
           window.location = `/profile?userId=${localStorage.getItem('userId')}`;
+        } else {
+          this.setState({ isInitLoading: false });
         }
       }
+    } else {
+      this.setState({ isInitLoading: false });
+    }
+  }
+
+  async componentDidMount() {
+    if (!this.state.isFacebookSignup) {
+      document.addEventListener('mousedown', this.handleClickOutside);
     }
   }
 
@@ -411,49 +421,51 @@ class Signup extends Component {
       <ApolloConsumer>
         {client => (
           <div className="fixed w-full h-full flex items-center justify-around bg-black-75 z-50">
-            <div
-              ref={this.wrapperRef}
-              id="signup"
-              className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
-              {this.state.isLoading && <Loader />}
-              {this.state.isFacebookSignup ? (
-                this.renderFacebookSignupForm(client)
-              ) : (
-                <React.Fragment>
-                  <div className="text-xl mb-8">
-                    Register to Share Your Music and Story
-                  </div>
-                  <form
-                    onKeyDown={this.handleKeyDown}
-                    onKeyUp={this.handleKeyUp}
-                    className="w-full">
-                    {this.renderInputField('email')}
-                    {this.renderInputField('password')}
-                    {this.renderInputField('confirmPassword')}
-                    {this.renderInputField('username')}
-                  </form>
-                  <div className="mt-4 border px-4 py-4 rounded cursor-pointer">
-                    <span
-                      className={
-                        this.checkInputDone() ? 'text-gray' : 'text-gray-500'
-                      }
-                      onClick={() => {
-                        this.handleRegist(client);
-                      }}>
-                      Create Account
-                    </span>
-                  </div>
-                  <div className="mt-4 text-gray-500">OR</div>
-                  <a href={`${process.env.API_URI}/auth/facebook`}>
-                    <div className="mt-4 border border-facebook px-4 py-4 rounded cursor-pointer">
-                      <span className="text-facebook">
-                        Continue with Facebook
+            {this.state.isInitLoading ? null : (
+              <div
+                ref={this.wrapperRef}
+                id="signup"
+                className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
+                {this.state.isLoading && <Loader />}
+                {this.state.isFacebookSignup ? (
+                  this.renderFacebookSignupForm(client)
+                ) : (
+                  <React.Fragment>
+                    <div className="text-xl mb-8">
+                      Register to Share Your Music and Story
+                    </div>
+                    <form
+                      onKeyDown={this.handleKeyDown}
+                      onKeyUp={this.handleKeyUp}
+                      className="w-full">
+                      {this.renderInputField('email')}
+                      {this.renderInputField('password')}
+                      {this.renderInputField('confirmPassword')}
+                      {this.renderInputField('username')}
+                    </form>
+                    <div className="mt-4 border px-4 py-4 rounded cursor-pointer">
+                      <span
+                        className={
+                          this.checkInputDone() ? 'text-gray' : 'text-gray-500'
+                        }
+                        onClick={() => {
+                          this.handleRegist(client);
+                        }}>
+                        Create Account
                       </span>
                     </div>
-                  </a>
-                </React.Fragment>
-              )}
-            </div>
+                    <div className="mt-4 text-gray-500">OR</div>
+                    <a href={`${process.env.API_URI}/auth/facebook`}>
+                      <div className="mt-4 border border-facebook px-4 py-4 rounded cursor-pointer">
+                        <span className="text-facebook">
+                          Continue with Facebook
+                        </span>
+                      </div>
+                    </a>
+                  </React.Fragment>
+                )}
+              </div>
+            )}
           </div>
         )}
       </ApolloConsumer>
