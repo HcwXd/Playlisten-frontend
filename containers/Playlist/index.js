@@ -170,7 +170,7 @@ class Playlist extends Component {
     };
 
     return (
-      <div className="flex flex-col justify-between h-96 md:w-3/4 w-full">
+      <div className="flex flex-col justify-between md:w-3/4 w-full">
         <div>
           <div className="flex justify-between w-full p-4 pb-0">
             <h1 className="text-4xl font-bold break-all">{name}</h1>{' '}
@@ -188,7 +188,7 @@ class Playlist extends Component {
               </Link>
             </div>
           </div>
-          <div className="px-4 pt-2 break-all">
+          <div className="px-4 pt-2 break-all md:h-24 overflow-scroll">
             <div dangerouslySetInnerHTML={formattedDesc} />
           </div>
         </div>
