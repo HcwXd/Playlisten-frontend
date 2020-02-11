@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { NextSeo } from 'next-seo';
 
 import Loader from '../../components/Loader';
+import Followers from '../../components/Followers';
 import DefaultProfile from '../../static/imgs/default-profile.jpeg';
 import PlaylistCover from '../../components/PlaylistCover';
 import { Router, Link } from '../../routes';
@@ -41,10 +42,17 @@ const GET_USER = gql`
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = { userId: '', userInfo: '', playlists: '', isLoading: false };
+    this.state = {
+      userId: '',
+      userInfo: '',
+      playlists: '',
+      isLoading: false,
+      showFollowers: false,
+    };
     this.fetchUser = this.fetchUser.bind(this);
     this.renderPlaylistWrap = this.renderPlaylistWrap.bind(this);
     this.renderUserWrap = this.renderUserWrap.bind(this);
+    this.toggleShowFollowers = this.toggleShowFollowers.bind(this);
   }
 
   async componentDidMount() {
@@ -64,6 +72,10 @@ class Profile extends Component {
       variables: { userId },
     });
     return data;
+  }
+
+  toggleShowFollowers() {
+    this.setState({ showFollowers: !this.state.showFollowers });
   }
 
   renderPlaylistWrap() {
@@ -118,6 +130,9 @@ class Profile extends Component {
             description: 'Playlisten - Share and Discover Music Playlist',
           }}
         />
+        {this.state.showFollowers && (
+          <Followers toggleShowFollowers={this.toggleShowFollowers} />
+        )}
         <div
           id="profile"
           className="py-20 flex flex-col items-center justify-around">
