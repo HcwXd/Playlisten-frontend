@@ -87,8 +87,16 @@ class Signup extends Component {
       const { data } = await AuthAPI.getFacebookSignupInfo();
       const { result, user } = data;
       if (result !== 'failed') {
-        const { email, facebookAccessToken, facebookId } = user;
+        const { email, facebookAccessToken, facebookId, id, name } = user;
         this.setState({ email, facebookAccessToken, facebookId });
+        if (id && name) {
+          localStorage.setItem('token', facebookAccessToken);
+          if (user) {
+            localStorage.setItem('userId', id);
+            localStorage.setItem('username', name);
+          }
+          window.location = `/profile?userId=${localStorage.getItem('userId')}`;
+        }
       }
     }
   }

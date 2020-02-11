@@ -249,6 +249,12 @@ class Signin extends Component {
                   Sign In
                 </span>
               </div>
+              <div className="mt-4 text-gray-500">OR</div>
+              <a href={`${process.env.API_URI}/auth/facebook`}>
+                <div className="mt-4 border border-facebook px-4 py-4 rounded cursor-pointer">
+                  <span className="text-facebook">Continue with Facebook</span>
+                </div>
+              </a>
             </div>
           </div>
         )}
