@@ -24,6 +24,18 @@ const client = new ApolloClient({
   cache: new InMemoryCache({
     dataIdFromObject: o => (o._id ? `${o.__typename}:${o._id}` : null),
   }),
+  request: async operation => {
+    if (process.browser && localStorage.getItem('token')) {
+      const token = await localStorage.getItem('token');
+      if (token) {
+        operation.setContext({
+          headers: {
+            'x-token': token,
+          },
+        });
+      }
+    }
+  },
 });
 
 class PlaylistenApp extends App {
@@ -71,6 +83,18 @@ export default withRedux(generateStore)(
         cache: new InMemoryCache({
           dataIdFromObject: o => (o._id ? `${o.__typename}:${o._id}` : null),
         }),
+        request: async operation => {
+          if (process.browser && localStorage.getItem('token')) {
+            const token = await localStorage.getItem('token');
+            if (token) {
+              operation.setContext({
+                headers: {
+                  'x-token': token,
+                },
+              });
+            }
+          }
+        },
       });
     })(PlaylistenApp),
   ),
