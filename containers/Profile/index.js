@@ -19,6 +19,7 @@ const GET_USER = gql`
       name
       bio
       avatar
+      isFollowing
       playlists {
         id
         name
@@ -79,6 +80,7 @@ class Profile extends Component {
       followees: '',
       isLoading: false,
       showFollowers: false,
+      showFollowings: false,
       tab: 'playlist',
     };
     this.fetchUser = this.fetchUser.bind(this);
@@ -94,6 +96,7 @@ class Profile extends Component {
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('userId');
     const data = await this.fetchUser(this.props.client, userId);
+
     console.log(data);
     const { user } = data;
     const {
@@ -101,17 +104,9 @@ class Profile extends Component {
       savedPlaylists,
       followers,
       followees,
+      isFollowing,
       ...userInfo
     } = user;
-
-    let isFollowing = false;
-
-    if (
-      followers.findIndex(({ id }) => id === localStorage.getItem('userId')) !==
-      -1
-    ) {
-      isFollowing = true;
-    }
 
     this.setState({
       playlists,
@@ -134,7 +129,7 @@ class Profile extends Component {
   }
 
   toggleShowFollowers() {
-    this.setState({ showFollowers: !this.state.showFollowers });
+    this.setState({ showFollowers: false, showFollowings: false });
   }
 
   renderPlaylistWrap() {
@@ -180,6 +175,9 @@ class Profile extends Component {
       this.setState({
         playlist: { ...this.state.playlist },
         isFollowing: false,
+        followers: this.state.followers.filter(
+          ({ id }) => id !== localStorage.getItem('userId'),
+        ),
       });
     } else {
       const { data } = await client.mutate({
@@ -191,6 +189,13 @@ class Profile extends Component {
       this.setState({
         playlist: { ...this.state.playlist },
         isFollowing: true,
+        followers: [
+          ...this.state.followers,
+          {
+            id: localStorage.getItem('userId'),
+            name: localStorage.getItem('username'),
+          },
+        ],
       });
     }
   }
@@ -233,11 +238,23 @@ class Profile extends Component {
               {this.state.savedPlaylists.length > 1 ? 'Likes' : 'Like'}
             </div>
 
-            <div className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black">
+            <div
+              className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black"
+              onClick={() => {
+                if (!this.state.showFollowings) {
+                  this.setState({ showFollowings: true });
+                }
+              }}>
               {this.state.followees.length}{' '}
               {this.state.followees.length > 1 ? 'Followings' : 'Following'}
             </div>
-            <div className="text-lg text-gray-600 cursor-pointer px-4 py-2 hover:text-black">
+            <div
+              className="text-lg text-gray-600 cursor-pointer px-4 py-2 hover:text-black"
+              onClick={() => {
+                if (!this.state.showFollowers) {
+                  this.setState({ showFollowers: true });
+                }
+              }}>
               {this.state.followers.length}{' '}
               {this.state.followers.length > 1 ? 'Followers' : 'Follower'}
             </div>
@@ -273,7 +290,17 @@ class Profile extends Component {
       <React.Fragment>
         {this.setSeoHeader()}
         {this.state.showFollowers && (
-          <Followers toggleShowFollowers={this.toggleShowFollowers} />
+          <Followers
+            toggleShowFollowers={this.toggleShowFollowers}
+            followers={this.state.followers}
+          />
+        )}
+        {this.state.showFollowings && (
+          <Followers
+            toggleShowFollowers={this.toggleShowFollowers}
+            followers={this.state.followees}
+            isFollowings
+          />
         )}
         <div
           id="profile"
