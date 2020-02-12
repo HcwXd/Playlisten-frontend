@@ -453,7 +453,7 @@ class Signup extends Component {
               <div
                 ref={this.wrapperRef}
                 id="signup"
-                className="flex flex-col items-center mt-20 border bg-white px-16 py-8 rounded w-128">
+                className="flex flex-col items-center border bg-white px-16 py-8 rounded w-128">
                 {this.state.isLoading && <Loader />}
                 {this.state.isFacebookSignup
                   ? this.renderFacebookSignupForm(client)
