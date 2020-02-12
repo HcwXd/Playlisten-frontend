@@ -38,6 +38,30 @@ const GET_USER = gql`
         }
         savedAt
       }
+      followers {
+        name
+        id
+      }
+      followees {
+        name
+        id
+      }
+    }
+  }
+`;
+
+const FOLLOW = gql`
+  mutation($input: CreateFollowInput!) {
+    createFollow(data: $input) {
+      success
+    }
+  }
+`;
+
+const UNFOLLOW = gql`
+  mutation($input: UnFollowInput!) {
+    unFollow(data: $input) {
+      success
     }
   }
 `;
@@ -48,8 +72,11 @@ class Profile extends Component {
     this.state = {
       userId: '',
       userInfo: '',
+      isFollowing: '',
       playlists: '',
       savedPlaylists: '',
+      followers: '',
+      followees: '',
       isLoading: false,
       showFollowers: false,
       tab: 'playlist',
@@ -59,6 +86,7 @@ class Profile extends Component {
     this.renderUserWrap = this.renderUserWrap.bind(this);
     this.toggleShowFollowers = this.toggleShowFollowers.bind(this);
     this.setSeoHeader = this.setSeoHeader.bind(this);
+    this.handleClickFollow = this.handleClickFollow.bind(this);
   }
 
   async componentDidMount() {
@@ -68,12 +96,31 @@ class Profile extends Component {
     const data = await this.fetchUser(this.props.client, userId);
     console.log(data);
     const { user } = data;
-    const { playlists, savedPlaylists, ...userInfo } = user;
+    const {
+      playlists,
+      savedPlaylists,
+      followers,
+      followees,
+      ...userInfo
+    } = user;
+
+    let isFollowing = false;
+
+    if (
+      followers.findIndex(({ id }) => id === localStorage.getItem('userId')) !==
+      -1
+    ) {
+      isFollowing = true;
+    }
+
     this.setState({
       playlists,
       savedPlaylists,
       userInfo,
       userId,
+      followers,
+      followees,
+      isFollowing,
       isLoading: false,
     });
   }
@@ -111,47 +158,89 @@ class Profile extends Component {
     );
   }
 
+  async handleClickFollow() {
+    if (!localStorage.getItem('userId')) {
+      alert('Please Sign In');
+      return;
+    }
+    const { client } = this.props;
+    const input = {
+      followerId: localStorage.getItem('userId'),
+      followeeId: this.state.userId,
+    };
+
+    const { isFollowing } = this.state;
+    if (isFollowing) {
+      const { data } = await client.mutate({
+        mutation: UNFOLLOW,
+        variables: { input },
+      });
+      console.log(data);
+
+      this.setState({
+        playlist: { ...this.state.playlist },
+        isFollowing: false,
+      });
+    } else {
+      const { data } = await client.mutate({
+        mutation: FOLLOW,
+        variables: { input },
+      });
+      console.log(data);
+
+      this.setState({
+        playlist: { ...this.state.playlist },
+        isFollowing: true,
+      });
+    }
+  }
+
   renderUserWrap() {
     const { name, bio, avatar } = this.state.userInfo;
     return (
       <div className="flex mb-6 mt-12 w-full lg:w-8/12">
         <div className="flex flex-col">
-          <div className="text-3xl mb-4 flex px-4">{name}</div>
+          <div className="mb-4 flex px-4">
+            <div className="text-3xl">{name}</div>
+
+            <div
+              className="ml-8 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
+              onClick={() => {
+                this.handleClickFollow();
+              }}>
+              {this.state.isFollowing ? `Following` : `Follow`}
+            </div>
+          </div>
           <div className="flex">
-            <div className="flex">
-              <div
-                className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black"
-                onClick={() => {
-                  if (this.state.tab !== 'playlist') {
-                    this.setState({ tab: 'playlist' });
-                  }
-                }}>
-                {this.state.playlists.length}{' '}
-                {this.state.playlists.length > 1 ? 'Playlists' : 'Playlist'}
-              </div>
-              <div
-                className="text-lg text-gray-600 cursor-pointer px-4 py-2 hover:text-black"
-                onClick={() => {
-                  if (this.state.tab !== 'likes') {
-                    this.setState({ tab: 'likes' });
-                  }
-                }}>
-                {this.state.savedPlaylists.length}{' '}
-                {this.state.savedPlaylists.length > 1 ? 'Likes' : 'Like'}
-              </div>
+            <div
+              className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black"
+              onClick={() => {
+                if (this.state.tab !== 'playlist') {
+                  this.setState({ tab: 'playlist' });
+                }
+              }}>
+              {this.state.playlists.length}{' '}
+              {this.state.playlists.length > 1 ? 'Playlists' : 'Playlist'}
             </div>
-            {/**
-               <div className="flex">
-              <div className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black">
-                {this.state.playlists.length}{' '}
-                {this.state.playlists.length > 1 ? 'Followings' : 'Following'}
-              </div>
-              <div className="text-lg text-gray-600 cursor-pointer px-4 py-2 hover:text-black">
-                {this.state.playlists.length}{' '}
-                {this.state.playlists.length > 1 ? 'Followers' : 'Follower'}
-              </div>
+            <div
+              className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black"
+              onClick={() => {
+                if (this.state.tab !== 'likes') {
+                  this.setState({ tab: 'likes' });
+                }
+              }}>
+              {this.state.savedPlaylists.length}{' '}
+              {this.state.savedPlaylists.length > 1 ? 'Likes' : 'Like'}
             </div>
-             */}
+
+            <div className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black">
+              {this.state.followees.length}{' '}
+              {this.state.followees.length > 1 ? 'Followings' : 'Following'}
+            </div>
+            <div className="text-lg text-gray-600 cursor-pointer px-4 py-2 hover:text-black">
+              {this.state.followers.length}{' '}
+              {this.state.followers.length > 1 ? 'Followers' : 'Follower'}
+            </div>
           </div>
         </div>
       </div>
