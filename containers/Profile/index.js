@@ -53,6 +53,7 @@ class Profile extends Component {
     this.renderPlaylistWrap = this.renderPlaylistWrap.bind(this);
     this.renderUserWrap = this.renderUserWrap.bind(this);
     this.toggleShowFollowers = this.toggleShowFollowers.bind(this);
+    this.setSeoHeader = this.setSeoHeader.bind(this);
   }
 
   async componentDidMount() {
@@ -111,7 +112,7 @@ class Profile extends Component {
     );
   }
 
-  render() {
+  setSeoHeader() {
     const { metaData } = this.props;
     const { userInfo } = this.state;
     const metaTitle = metaData
@@ -120,16 +121,22 @@ class Profile extends Component {
       ? `${userInfo.name}'s Playlisten`
       : 'Playlisten';
     return (
+      <NextSeo
+        title={metaTitle}
+        description="Playlisten - Share and Discover Music Playlist"
+        openGraph={{
+          type: 'website',
+          title: metaTitle,
+          description: 'Playlisten - Share and Discover Music Playlist',
+        }}
+      />
+    );
+  }
+
+  render() {
+    return (
       <React.Fragment>
-        <NextSeo
-          title={metaTitle}
-          description="Playlisten - Share and Discover Music Playlist"
-          openGraph={{
-            type: 'website',
-            title: metaTitle,
-            description: 'Playlisten - Share and Discover Music Playlist',
-          }}
-        />
+        {this.setSeoHeader()}
         {this.state.showFollowers && (
           <Followers toggleShowFollowers={this.toggleShowFollowers} />
         )}
