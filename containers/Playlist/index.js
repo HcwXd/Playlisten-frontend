@@ -201,11 +201,11 @@ class Playlist extends Component {
           <div className="flex items-center">
             <div className="px-4">
               by{' '}
-              <Link href={`/profile?userId=${owner.id}`} prefetch>
+              <a href={`/profile?userId=${owner.id}`}>
                 <span className="text-gray-600 cursor-pointer">
                   {owner.name}
                 </span>
-              </Link>
+              </a>
             </div>
           </div>
           <div className="px-4 pt-2 break-all md:h-32 overflow-scroll">

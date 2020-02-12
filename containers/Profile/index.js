@@ -26,14 +26,17 @@ const GET_USER = gql`
         cover
         createdAt
         updatedAt
-        songs {
+      }
+      savedPlaylists {
+        playlist {
           id
-          listId
-          sourceId
           name
+          des
           cover
-          duration
+          createdAt
+          updatedAt
         }
+        savedAt
       }
     }
   }
@@ -46,8 +49,10 @@ class Profile extends Component {
       userId: '',
       userInfo: '',
       playlists: '',
+      savedPlaylists: '',
       isLoading: false,
       showFollowers: false,
+      tab: 'playlist',
     };
     this.fetchUser = this.fetchUser.bind(this);
     this.renderPlaylistWrap = this.renderPlaylistWrap.bind(this);
@@ -63,8 +68,14 @@ class Profile extends Component {
     const data = await this.fetchUser(this.props.client, userId);
     console.log(data);
     const { user } = data;
-    const { playlists, ...userInfo } = user;
-    this.setState({ playlists, userInfo, userId, isLoading: false });
+    const { playlists, savedPlaylists, ...userInfo } = user;
+    this.setState({
+      playlists,
+      savedPlaylists,
+      userInfo,
+      userId,
+      isLoading: false,
+    });
   }
 
   async fetchUser(client, userId) {
@@ -80,11 +91,20 @@ class Profile extends Component {
   }
 
   renderPlaylistWrap() {
-    this.state.playlists.sort((b, a) => a.createdAt - b.createdAt);
+    let renderPlaylist;
+
+    if (this.state.tab === 'playlist') {
+      renderPlaylist = this.state.playlists;
+      renderPlaylist.sort((b, a) => a.createdAt - b.createdAt);
+    } else {
+      renderPlaylist = this.state.savedPlaylists;
+      renderPlaylist.sort((b, a) => a.savedAt - b.savedAt);
+      renderPlaylist = renderPlaylist.map(({ playlist }) => playlist);
+    }
 
     return (
       <div className="flex flex-wrap items-center w-full lg:w-8/12">
-        {this.state.playlists.map(playlist => (
+        {renderPlaylist.map(playlist => (
           <PlaylistCover key={playlist.id} playlist={playlist} />
         ))}
       </div>
@@ -94,19 +114,45 @@ class Profile extends Component {
   renderUserWrap() {
     const { name, bio, avatar } = this.state.userInfo;
     return (
-      <div className="flex justify-around mb-12 mt-12">
-        <img
-          className="w-32 h-32 rounded-full shadow-2xl p-2"
-          src={DefaultProfile}
-        />
-        <div className="ml-12">
-          <div className="text-3xl">{name}</div>
-          <span className="text-xl text-gray-600">
-            {this.state.playlists.length}{' '}
-            <span className="text-gray-500">
-              {this.state.playlists.length > 1 ? 'Playlists' : 'Playlist'}
-            </span>
-          </span>
+      <div className="flex mb-6 mt-12 w-full lg:w-8/12">
+        <div className="flex flex-col">
+          <div className="text-3xl mb-4 flex px-4">{name}</div>
+          <div className="flex">
+            <div className="flex">
+              <div
+                className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black"
+                onClick={() => {
+                  if (this.state.tab !== 'playlist') {
+                    this.setState({ tab: 'playlist' });
+                  }
+                }}>
+                {this.state.playlists.length}{' '}
+                {this.state.playlists.length > 1 ? 'Playlists' : 'Playlist'}
+              </div>
+              <div
+                className="text-lg text-gray-600 cursor-pointer px-4 py-2 hover:text-black"
+                onClick={() => {
+                  if (this.state.tab !== 'likes') {
+                    this.setState({ tab: 'likes' });
+                  }
+                }}>
+                {this.state.savedPlaylists.length}{' '}
+                {this.state.savedPlaylists.length > 1 ? 'Likes' : 'Like'}
+              </div>
+            </div>
+            {/**
+               <div className="flex">
+              <div className="text-lg text-gray-600 cursor-pointer px-4 py-2 border-r-2 hover:text-black">
+                {this.state.playlists.length}{' '}
+                {this.state.playlists.length > 1 ? 'Followings' : 'Following'}
+              </div>
+              <div className="text-lg text-gray-600 cursor-pointer px-4 py-2 hover:text-black">
+                {this.state.playlists.length}{' '}
+                {this.state.playlists.length > 1 ? 'Followers' : 'Follower'}
+              </div>
+            </div>
+             */}
+          </div>
         </div>
       </div>
     );
