@@ -72,6 +72,7 @@ class Signin extends Component {
   }
 
   async handleSignIn(client) {
+    if (!this.checkInputDone()) return;
     if (this.checkAllInputValid()) {
       const userInput = {
         userName: this.state.username,
@@ -227,9 +228,13 @@ class Signin extends Component {
           {this.renderInputField(FIELD_TYPE.USERNAME)}
           {this.renderInputField(FIELD_TYPE.PASSWORD)}
         </form>
-        <div className="mt-8 border px-4 py-4 rounded cursor-pointer">
+        <div className="mt-8 border px-4 py-4 rounded">
           <span
-            className={this.checkInputDone() ? 'text-gray' : 'text-gray-500'}
+            className={
+              this.checkInputDone()
+                ? 'text-gray cursor-pointer'
+                : 'text-gray-500'
+            }
             onClick={() => {
               this.handleSignIn(client);
             }}>

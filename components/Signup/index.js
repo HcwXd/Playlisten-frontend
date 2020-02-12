@@ -426,9 +426,13 @@ class Signup extends Component {
           {this.renderInputField(FIELD_TYPE.CONFIRM_PASSWORD)}
           {this.renderInputField(FIELD_TYPE.USERNAME)}
         </form>
-        <div className="mt-4 border px-4 py-4 rounded cursor-pointer">
+        <div className="mt-4 border px-4 py-4 rounded">
           <span
-            className={this.checkInputDone() ? 'text-gray' : 'text-gray-500'}
+            className={
+              this.checkInputDone()
+                ? 'text-gray cursor-pointer'
+                : 'text-gray-500'
+            }
             onClick={() => {
               this.doRegist(client);
             }}>
