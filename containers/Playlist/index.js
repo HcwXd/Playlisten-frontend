@@ -32,6 +32,7 @@ const GET_PLAYLIST = gql`
       cover
       createdAt
       updatedAt
+      isSaved
       songs {
         sourceId
         name
@@ -43,9 +44,25 @@ const GET_PLAYLIST = gql`
 `;
 
 const DELETE_PLAYLIST = gql`
-  mutation($listId: DeletePlaylistInput!) {
-    deletePlaylist(data: $listId) {
+  mutation($input: DeletePlaylistInput!) {
+    deletePlaylist(data: $input) {
       listId
+    }
+  }
+`;
+
+const SAVE_PLAYLIST = gql`
+  mutation($input: SavePlaylistInput!) {
+    savePlaylist(data: $input) {
+      success
+    }
+  }
+`;
+
+const UNSAVE_PLAYLIST = gql`
+  mutation($input: DeleteSavedPlaylistInput!) {
+    deleteSavedPlaylist(data: $input) {
+      success
     }
   }
 `;
@@ -74,6 +91,7 @@ class Playlist extends Component {
     this.renderPlaylistInfo = this.renderPlaylistInfo.bind(this);
     this.renderPlaylistSongs = this.renderPlaylistSongs.bind(this);
     this.renderControlPanel = this.renderControlPanel.bind(this);
+    this.handleLikePlaylist = this.handleLikePlaylist.bind(this);
   }
 
   async componentDidMount() {
@@ -245,8 +263,43 @@ class Playlist extends Component {
     );
   }
 
+  async handleLikePlaylist() {
+    if (!localStorage.getItem('userId')) {
+      alert('Please Sign In');
+      return;
+    }
+    const { client } = this.props;
+    const input = {
+      listId: this.state.listId,
+      userId: localStorage.getItem('userId'),
+    };
+
+    const { isSaved } = this.state.playlist;
+    if (isSaved) {
+      const { data } = await client.mutate({
+        mutation: UNSAVE_PLAYLIST,
+        variables: { input },
+      });
+      console.log(data);
+
+      if (data.deleteSavedPlaylist.success) {
+        this.setState({ playlist: { ...this.state.playlist, isSaved: false } });
+      }
+    } else {
+      const { data } = await client.mutate({
+        mutation: SAVE_PLAYLIST,
+        variables: { input },
+      });
+      console.log(data);
+
+      if (data.savePlaylist.success) {
+        this.setState({ playlist: { ...this.state.playlist, isSaved: true } });
+      }
+    }
+  }
+
   renderControlPanel() {
-    const { owner } = this.state.playlist;
+    const { owner, isSaved } = this.state.playlist;
 
     return (
       <div className="p-2 w-full flex items-center border-b">
@@ -255,13 +308,14 @@ class Playlist extends Component {
           onClick={this.handleClickOnCover}>
           <img className="w-4 h-4 mr-2" src={PlayHoverIcon} /> Play
         </div>
-        {/**
         <div
           className="mr-2 items-center text-black p-2 border cursor-pointer hover:bg-gray-100 rounded flex justify-around"
-          onClick={this.handleClickOnCover}>
-          <img className="w-4 h-4 mr-2" src={LikeIcon} /> Like
+          onClick={() => {
+            this.handleLikePlaylist();
+          }}>
+          <img className="w-4 h-4 mr-2" src={LikeIcon} />
+          {isSaved ? `Unlike` : `Like`}
         </div>
-         */}
         {process.browser && owner.id === localStorage.getItem('userId') ? (
           <React.Fragment>
             <div
