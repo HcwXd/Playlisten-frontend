@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { connect } from 'react-redux';
 import { Router, Link } from '../../routes';
@@ -211,13 +212,19 @@ class Header extends Component {
   render() {
     return (
       <React.Fragment>
-        {this.state.showSignup && (
-          <Signup toggleSignupForm={this.toggleSignupForm} />
-        )}
-        {this.state.showSignin && (
-          <Signin toggleSigninForm={this.toggleSigninForm} />
-        )}
-        {this.state.showMobileMenu && this.renderMobileMenu()}
+        <ReactCSSTransitionGroup
+          transitionName="fadeTransitionAnimation"
+          transitionEnterTimeout={300}
+          transitionLeaveTimeout={100}>
+          {this.state.showSignup && (
+            <Signup toggleSignupForm={this.toggleSignupForm} />
+          )}
+          {this.state.showSignin && (
+            <Signin toggleSigninForm={this.toggleSigninForm} />
+          )}
+          {this.state.showMobileMenu && this.renderMobileMenu()}
+        </ReactCSSTransitionGroup>
+
         <div
           id="top-header"
           className="top-0 left-0 right-0 z-20 flex items-center justify-between fixed shadow py-2 px-4 bg-white">

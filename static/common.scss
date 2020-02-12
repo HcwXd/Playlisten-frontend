@@ -83,4 +83,22 @@
   transition: 300ms ease-in;
 }
 
+.fadeTransitionAnimation-enter {
+  opacity: 0.01;
+}
+
+.fadeTransitionAnimation-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+
+.fadeTransitionAnimation-leave {
+  opacity: 1;
+}
+
+.fadeTransitionAnimation-leave-active {
+  opacity: 0.01;
+  transition: opacity 100ms ease-in;
+}
+
 @tailwind utilities;

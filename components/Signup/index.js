@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import cx from 'classnames';
 import sha256 from 'sha256';
 import { Mutation, ApolloConsumer } from 'react-apollo';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { gql } from 'apollo-boost';
 import Loader from '../Loader';
 import { validPattern } from '../../utils/configConst';
@@ -453,6 +454,7 @@ class Signup extends Component {
               <div
                 ref={this.wrapperRef}
                 id="signup"
+                key="signup"
                 className="flex flex-col items-center border bg-white px-16 py-8 rounded w-128">
                 {this.state.isLoading && <Loader />}
                 {this.state.isFacebookSignup
