@@ -34,6 +34,7 @@ class AddInfo extends Component {
     this.renderPublishPlaylistButton = this.renderPublishPlaylistButton.bind(
       this,
     );
+    this.handlePublishPlaylist = this.handlePublishPlaylist.bind(this);
   }
 
   handleEditImage() {
@@ -71,9 +72,7 @@ class AddInfo extends Component {
         <ul className="flex flex-col w-full">
           <p className="p-4 text-sm">{`There are ${playlist.length} songs in the list`}</p>
           {playlist.map(({ name, sourceId }) => (
-            <li
-              key={sourceId}
-              className="border-t border-b flex items-center hover:bg-gray-100 cursor-pointer">
+            <li key={sourceId} className="border-t border-b flex items-center">
               <div className="px-4 py-2 text-sm">{name}</div>
             </li>
           ))}
@@ -95,75 +94,70 @@ class AddInfo extends Component {
     this.props.handleChangeDescription(e.target.value);
   }
 
+  async handlePublishPlaylist(client) {
+    if (this.state.isLoading) return;
+    if (this.props.title === '') {
+      alert('Please add a title for your playlist:)');
+      return;
+    }
+    if (!this.props.playlist || this.props.playlist.length === 0) {
+      alert('Please add a song in your playlist:)');
+      return;
+    }
+    this.setState({ isLoading: true });
+
+    const playlistInput = {
+      name: this.props.title,
+      ownerId: localStorage.getItem('userId'),
+      des: this.props.description,
+      cover: this.props.coverPreviewUrl,
+      songs: [
+        ...this.props.playlist.map(({ id, __typename, ...others }) => {
+          return { ...others };
+        }),
+      ],
+    };
+
+    if (this.props.type === 'edit') {
+      logEvent('playlist', 'playlist_edit');
+
+      const updatedPlaylistInput = {
+        listInfo: playlistInput,
+        oldId: this.props.listId,
+        createdAt: new Date(this.props.createdAt),
+      };
+
+      const { data } = await client.mutate({
+        mutation: UPDATE_PLAYLIST,
+        variables: {
+          updatedPlaylistInput,
+        },
+      });
+      const { updatePlaylist } = data;
+
+      window.location = `/playlist?listId=${updatePlaylist.id}`;
+    } else {
+      logEvent('playlist', 'playlist_create');
+
+      const { data } = await client.mutate({
+        mutation: CREATE_PLAYLIST,
+        variables: {
+          playlistInput,
+        },
+      });
+      const { createPlaylist } = data;
+
+      window.location = `/playlist?listId=${createPlaylist.id}`;
+    }
+    this.setState({ isLoading: false });
+  }
+
   renderPublishPlaylistButton(client) {
     return (
       <div
         className="right-0 absolute p-4 border-l cursor-pointer hover:bg-gray-100 rounded"
-        onClick={async () => {
-          if (this.state.isLoading) return;
-          if (this.props.title === '') {
-            alert('Please add a title for your playlist:)');
-            return;
-          }
-          if (!this.props.playlist || this.props.playlist.length === 0) {
-            alert('Please add a song in your playlist:)');
-            return;
-          }
-          this.setState({ isLoading: true });
-
-          const playlistInput = {
-            name: this.props.title,
-            ownerId: localStorage.getItem('userId'),
-            des: this.props.description,
-            cover: this.props.coverPreviewUrl,
-            songs: [
-              ...this.props.playlist.map(({ id, __typename, ...others }) => {
-                return { ...others };
-              }),
-            ],
-          };
-          if (this.props.type === 'edit') {
-            logEvent('playlist', 'playlist_edit');
-
-            console.log(playlistInput);
-            const updatedPlaylistInput = {
-              listInfo: playlistInput,
-              oldId: this.props.listId,
-              createdAt: new Date(this.props.createdAt),
-            };
-
-            const { data } = await client.mutate({
-              mutation: UPDATE_PLAYLIST,
-              variables: {
-                updatedPlaylistInput,
-              },
-            });
-            console.log(data);
-            const { updatePlaylist } = data;
-
-            Router.push({
-              pathname: '/playlist',
-              query: { listId: updatePlaylist.id },
-            });
-          } else {
-            logEvent('playlist', 'playlist_create');
-
-            console.log(playlistInput);
-            const { data } = await client.mutate({
-              mutation: CREATE_PLAYLIST,
-              variables: {
-                playlistInput,
-              },
-            });
-            console.log(data);
-            const { createPlaylist } = data;
-
-            Router.push({
-              pathname: '/playlist',
-              query: { listId: createPlaylist.id },
-            });
-          }
-          this.setState({ isLoading: false });
+        onClick={() => {
+          this.handlePublishPlaylist(client);
         }}>
         Publish
       </div>
