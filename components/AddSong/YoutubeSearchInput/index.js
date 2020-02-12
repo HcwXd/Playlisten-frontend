@@ -57,7 +57,7 @@ class YoutubeSearchInput extends Component {
           onBlur={this.closeDropdown}
           onFocus={this.showDropdown}
           placeholder={
-            'Search Youtube / Type a Youtube Song Url / Type a Youtube Playlist Url'
+            'Search Youtube / Type a Youtube Song URL / Type a Youtube Playlist URL'
           }
           className={'w-full'}
           onKeyDown={this.props.handleKeyDown}
