@@ -70,13 +70,19 @@ class Publish extends Component {
     const { playlist } = data;
     const { name, cover, des, songs, createdAt } = playlist;
 
+    // TODO: Should use original songs array when backend fix cover photo issue
+    const editedSongs = songs.map(song => {
+      song.cover = song.cover.replace('undefined', song.sourceId);
+      return song;
+    });
+
     this.setState({
       listId,
       createdAt,
       title: name,
       coverPreviewUrl: cover,
       description: des,
-      playlist: songs,
+      playlist: editedSongs,
     });
   }
 
