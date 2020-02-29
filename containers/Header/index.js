@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-
+import { ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
+
 import { Router, Link } from '../../routes';
 import * as actions from './actions';
 import Logo from '../../static/imgs/logo.png';
@@ -11,6 +12,7 @@ import Signin from '../../components/Signin';
 import MenuIcon from '../../static/imgs/menu.svg';
 import CancelIcon from '../../static/imgs/cancel-hover.svg';
 import AuthAPI from '../../utils/api/apifetcher/auth';
+import Search from '../../components/Search';
 
 class Header extends Component {
   constructor(props) {
@@ -89,55 +91,66 @@ class Header extends Component {
   renderRightHeader() {
     const isMember = process.browser && localStorage.getItem('userId');
     return (
-      <React.Fragment>
-        {/* Desktop header */}
-        <nav className="hidden md:flex items-center">
-          {isMember ? (
-            <React.Fragment>
-              <div data-name="/profile" className="p-2 ml-8">
-                <div className="flex items-center justify-between">
-                  <a
-                    href={`/profile?userId=${localStorage.getItem('userId')}`}
-                    className="cursor-pointer">
-                    Profile
-                  </a>
-                </div>
-              </div>
-              <div data-name="/publish" className="p-2 ml-8">
-                <Link href="/publish" prefetch>
-                  <a>Publish</a>
-                </Link>
-              </div>
-              <div data-name="/signout" className="p-2 ml-8">
-                <a className="cursor-pointer" onClick={this.handleSignout}>
-                  Sign out
-                </a>
-              </div>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <div data-name="/signup" className="p-2 ml-8">
-                <a className="cursor-pointer" onClick={this.toggleSignupForm}>
-                  Sign up
-                </a>
-              </div>
-              <div data-name="/signin" className="p-2 ml-8">
-                <a className="cursor-pointer" onClick={this.toggleSigninForm}>
-                  Sign in
-                </a>
-              </div>
-            </React.Fragment>
-          )}
-        </nav>
-        {/* Mobile header */}
-        <nav className="flex md:hidden items-center">
-          <img
-            className="p-2"
-            src={MenuIcon}
-            onClick={this.toggleShowMobileMenu}
-          />
-        </nav>
-      </React.Fragment>
+      <ApolloConsumer>
+        {client => (
+          <React.Fragment>
+            {/* Desktop header */}
+            <nav className="hidden md:flex items-center">
+              <Search client={client} />
+              {isMember ? (
+                <React.Fragment>
+                  <div data-name="/profile" className="p-2 ml-8">
+                    <div className="flex items-center justify-between">
+                      <a
+                        href={`/profile?userId=${localStorage.getItem(
+                          'userId',
+                        )}`}
+                        className="cursor-pointer">
+                        Profile
+                      </a>
+                    </div>
+                  </div>
+                  <div data-name="/publish" className="p-2 ml-8">
+                    <Link href="/publish" prefetch>
+                      <a>Publish</a>
+                    </Link>
+                  </div>
+                  <div data-name="/signout" className="p-2 ml-8">
+                    <a className="cursor-pointer" onClick={this.handleSignout}>
+                      Sign out
+                    </a>
+                  </div>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <div data-name="/signup" className="p-2 ml-8">
+                    <a
+                      className="cursor-pointer"
+                      onClick={this.toggleSignupForm}>
+                      Sign up
+                    </a>
+                  </div>
+                  <div data-name="/signin" className="p-2 ml-8">
+                    <a
+                      className="cursor-pointer"
+                      onClick={this.toggleSigninForm}>
+                      Sign in
+                    </a>
+                  </div>
+                </React.Fragment>
+              )}
+            </nav>
+            {/* Mobile header */}
+            <nav className="flex md:hidden items-center">
+              <img
+                className="p-2"
+                src={MenuIcon}
+                onClick={this.toggleShowMobileMenu}
+              />
+            </nav>
+          </React.Fragment>
+        )}
+      </ApolloConsumer>
     );
   }
 
