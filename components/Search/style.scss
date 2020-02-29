@@ -7,6 +7,18 @@
     -moz-box-shadow: 0px 1px rgba(0, 0, 0, 0.1);
     box-shadow: 0px 1px rgba(0, 0, 0, 0.1);
   }
+  ::-webkit-input-placeholder {
+    font-size: 400;
+  }
+  ::-moz-placeholder {
+    font-size: 400;
+  }
+  :-ms-input-placeholder {
+    font-size: 400;
+  }
+  :-moz-placeholder {
+    font-size: 400;
+  }
   ul {
     position: absolute;
     background-color: white;
