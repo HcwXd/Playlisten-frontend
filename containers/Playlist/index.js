@@ -135,10 +135,10 @@ class Playlist extends Component {
 
   async deletePlaylist() {
     const { client } = this.props;
-    const listId = { listId: this.state.listId };
+    const input = { listId: this.state.listId };
     const { data } = await client.mutate({
       mutation: DELETE_PLAYLIST,
-      variables: { listId },
+      variables: { input },
     });
     document.location.href = `/profile?userId=${localStorage.getItem(
       'userId',
